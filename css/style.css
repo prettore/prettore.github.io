@@ -82,7 +82,7 @@ header {
   border-bottom: 2px solid;
 }
 
-.inicio a.active {
+.home a.active {
   border-color: var(--accent-color-1);
 }
 
