@@ -1,0 +1,434 @@
+/* Main CSS for Prof. Paulo Rettore Website */
+
+:root {
+  --primary-bg: #1a1a1a;
+  --secondary-bg: #222222;
+  --text-color: #ffffff;
+  --accent-color-1: #0d6efd; /* Blue for Início */
+  --accent-color-2: #ffc107; /* Yellow for About Me */
+  --accent-color-3: #dc3545; /* Red for Research */
+  --accent-color-4: #17a2b8; /* Teal for Lectures */
+  --accent-color-5: #e83e8c; /* Pink for Students */
+  --accent-color-6: #6f42c1; /* Purple for Publications */
+  --link-hover: #cccccc;
+  --section-padding: 2rem 0;
+  --card-bg: #2a2a2a;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Header Styles */
+header {
+  background-color: var(--primary-bg);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+}
+
+.nav-menu li {
+  margin-left: 1.5rem;
+}
+
+.nav-menu a {
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  padding: 0.5rem;
+}
+
+.nav-menu a:hover {
+  color: var(--link-hover);
+}
+
+.nav-menu a.active {
+  border-bottom: 2px solid;
+}
+
+.inicio a.active {
+  border-color: var(--accent-color-1);
+}
+
+.about a.active {
+  border-color: var(--accent-color-2);
+}
+
+.research a.active {
+  border-color: var(--accent-color-3);
+}
+
+.lectures a.active {
+  border-color: var(--accent-color-4);
+}
+
+.students a.active {
+  border-color: var(--accent-color-5);
+}
+
+.publications a.active {
+  border-color: var(--accent-color-6);
+}
+
+/* Hero Section */
+.hero {
+  background-image: url('../images/hero-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Section Styles */
+section {
+  padding: var(--section-padding);
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.section-title h2 {
+  font-size: 2.5rem;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+.section-title h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background-color: var(--accent-color-1);
+}
+
+/* About Section */
+.about-section .section-title h2::after {
+  background-color: var(--accent-color-2);
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.bio, .expertise, .interests {
+  background-color: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 5px;
+}
+
+/* Research Section */
+.research-section .section-title h2::after {
+  background-color: var(--accent-color-3);
+}
+
+.research-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.research-card {
+  background-color: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 5px;
+  transition: transform 0.3s ease;
+}
+
+.research-card:hover {
+  transform: translateY(-5px);
+}
+
+.research-card h3 {
+  margin-bottom: 1rem;
+}
+
+.research-card .date {
+  color: #aaa;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.research-card .read-more {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--accent-color-3);
+  text-decoration: none;
+}
+
+/* Lectures Section */
+.lectures-section .section-title h2::after {
+  background-color: var(--accent-color-4);
+}
+
+.lectures-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.lecture-card {
+  background-color: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 5px;
+  transition: transform 0.3s ease;
+}
+
+.lecture-card:hover {
+  transform: translateY(-5px);
+}
+
+.lecture-card h3 {
+  margin-bottom: 1rem;
+}
+
+/* Students Section */
+.students-section .section-title h2::after {
+  background-color: var(--accent-color-5);
+}
+
+.students-categories h3 {
+  margin: 2rem 0 1rem;
+  border-bottom: 1px solid #444;
+  padding-bottom: 0.5rem;
+}
+
+.student-card {
+  background-color: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 5px;
+  margin-bottom: 1.5rem;
+}
+
+.student-card h4 {
+  margin-bottom: 0.5rem;
+}
+
+.student-card p {
+  margin-bottom: 0.5rem;
+}
+
+.student-card a {
+  color: var(--accent-color-5);
+  text-decoration: none;
+}
+
+/* Publications Section */
+.publications-section .section-title h2::after {
+  background-color: var(--accent-color-6);
+}
+
+.publication-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.publication-link {
+  background-color: var(--card-bg);
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: background-color 0.3s ease;
+}
+
+.publication-link:hover {
+  background-color: #3a3a3a;
+}
+
+.publication-categories h3 {
+  margin: 2rem 0 1rem;
+  border-bottom: 1px solid #444;
+  padding-bottom: 0.5rem;
+}
+
+.publication-item {
+  background-color: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 5px;
+  margin-bottom: 1.5rem;
+}
+
+.publication-item h4 {
+  margin-bottom: 0.5rem;
+}
+
+.publication-item p {
+  margin-bottom: 0.5rem;
+}
+
+.publication-item a {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: var(--accent-color-6);
+  text-decoration: none;
+}
+
+/* Footer */
+footer {
+  background-color: var(--secondary-bg);
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer-nav {
+  display: flex;
+  list-style: none;
+  margin-bottom: 1rem;
+}
+
+.footer-nav li {
+  margin: 0 1rem;
+}
+
+.footer-nav a {
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-nav a:hover {
+  color: var(--link-hover);
+}
+
+.contact-info {
+  margin-bottom: 1rem;
+}
+
+.contact-info a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.copyright {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+  }
+  
+  .logo {
+    margin-bottom: 1rem;
+  }
+  
+  .nav-menu {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .nav-menu li {
+    margin: 0.5rem;
+  }
+  
+  .hero h1 {
+    font-size: 2rem;
+  }
+  
+  .hero p {
+    font-size: 1rem;
+  }
+  
+  .section-title h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    height: 50vh;
+  }
+  
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+  
+  .section-title h2 {
+    font-size: 1.8rem;
+  }
+}
