@@ -254,6 +254,12 @@ section {
 .lecture-card h3 {
   margin-bottom: 1rem;
 }
+.lecture-image {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
 
 /* Students Section */
 .students-section .section-title h2::after {
