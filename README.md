@@ -1,6 +1,6 @@
 # Prof. Paulo Rettore Website
 
-This repository contains the website for Prof. Paulo Rettore, a P.h.D in Computer Science and researcher at Fraunhofer FKIE in Germany.
+This repository contains the website (https://prettore.github.io/) of Prof. Paulo Rettore, a Ph.D. in Computer Science and researcher at Fraunhofer FKIE in Germany.
 
 ## Website Structure
 
