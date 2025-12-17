@@ -184,6 +184,17 @@ section {
   gap: 2rem;
 }
 
+.wordcloud-section {
+    margin-top: 40px;
+    text-align: center;
+}
+
+#wordCloud {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
 .bio, .expertise, .interests {
   background-color: var(--card-bg);
   padding: 1.5rem;
