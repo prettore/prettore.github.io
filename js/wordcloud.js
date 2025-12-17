@@ -60,3 +60,18 @@ function draw(words) {
     )
     .text(d => d.text);
 }
+
+texts
+  .on("mouseover", function () {
+    d3.select(this)
+      .transition()
+      .duration(200)
+      .style("font-size", d => `${d.size * 1.15}px`);
+  })
+  .on("mouseout", function () {
+    d3.select(this)
+      .transition()
+      .duration(200)
+      .style("font-size", d => `${d.size}px`);
+  });
+
