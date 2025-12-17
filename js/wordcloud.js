@@ -6,17 +6,17 @@ const words = [
   { text: "sensor", size: 55, color: "#ff944d" },
   { text: "scenarios", size: 52, color: "#ff9933" },
   { text: "intra-vehicular", size: 48, color: "#9966ff" },
-  { text: "vehicular", size: 45, color: "#66ccff" },
+  { text: "iot", size: 45, color: "#66ccff" },
   { text: "fusion", size: 44, color: "#33cccc" },
   { text: "intelligent", size: 42, color: "#ffcc66" },
-  { text: "space", size: 40, color: "#ff9966" },
+  { text: "resilience", size: 40, color: "#ff9966" },
   { text: "queuing", size: 38, color: "#66ff66" },
-  { text: "rates", size: 36, color: "#ffcc00" },
+  { text: "cybersecurity", size: 36, color: "#ffcc00" },
   { text: "heterogeneous", size: 34, color: "#9966cc" },
   { text: "ever-changing", size: 32, color: "#66ffcc" },
   { text: "communication", size: 30, color: "#ff9933" },
   { text: "military", size: 28, color: "#ff6699" },
-  { text: "authentication", size: 26, color: "#66b3ff" }
+  { text: "context-awareness", size: 26, color: "#66b3ff" }
 ];
 
 const container = document.getElementById("wordCloud");
