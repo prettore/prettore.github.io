@@ -6,6 +6,98 @@
     <title>Students - Dr. Paulo Rettore</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: center;
+        }
+        
+        .chart-wrapper {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .stats-summary {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .stats-summary h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 18px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: #4e79a7;
+            font-size: 18px;
+        }
+        
+        .advising-section {
+            margin-bottom: 50px;
+        }
+        
+        .advising-section h3 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #4e79a7;
+        }
+        
+        .advising-section.concluded h3 {
+            border-bottom-color: #f28e2b;
+        }
+        
+        .degree-subsection {
+            margin-bottom: 30px;
+        }
+        
+        .degree-subsection h4 {
+            font-size: 18px;
+            color: #4e79a7;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .advising-section.concluded .degree-subsection h4 {
+            color: #f28e2b;
+        }
+        
+        .student-count {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -34,192 +126,279 @@
                 <h2>Student Advising Overview</h2>
             </div>
 
-            <!-- Chart -->
-            <canvas id="studentsChart" style="max-width: 600px; margin: 0 auto 40px;"></canvas>
+            <!-- Statistics Container -->
+            <div class="stats-container">
+                <div class="chart-wrapper">
+                    <canvas id="statusChart"></canvas>
+                </div>
+                <div class="stats-summary">
+                    <h3>Summary Statistics</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Current Students:</span>
+                        <span class="stat-value" id="currentTotal">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Concluded Students:</span>
+                        <span class="stat-value" id="concludedTotal">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Students:</span>
+                        <span class="stat-value" id="grandTotal">0</span>
+                    </div>
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #ddd;">
+                        <div class="stat-item">
+                            <span class="stat-label">Current PhD:</span>
+                            <span class="stat-value" id="currentPhd">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Current Master's:</span>
+                            <span class="stat-value" id="currentMasters">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Current Bachelor's:</span>
+                            <span class="stat-value" id="currentBachelor">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <script>
-                const ctx = document.getElementById('studentsChart').getContext('2d');
-                const studentsChart = new Chart(ctx, {
-                    type: 'bar',
+                // Data for current and concluded students
+                const currentStudents = {
+                    phd: 1,
+                    masters: 6,
+                    bachelor: 4
+                };
+                
+                const concludedStudents = {
+                    phd: 0,
+                    masters: 6,
+                    bachelor: 6
+                };
+                
+                const currentTotal = currentStudents.phd + currentStudents.masters + currentStudents.bachelor;
+                const concludedTotal = concludedStudents.phd + concludedStudents.masters + concludedStudents.bachelor;
+                const grandTotal = currentTotal + concludedTotal;
+                
+                // Update summary statistics
+                document.getElementById('currentTotal').textContent = currentTotal;
+                document.getElementById('concludedTotal').textContent = concludedTotal;
+                document.getElementById('grandTotal').textContent = grandTotal;
+                document.getElementById('currentPhd').textContent = currentStudents.phd;
+                document.getElementById('currentMasters').textContent = currentStudents.masters;
+                document.getElementById('currentBachelor').textContent = currentStudents.bachelor;
+                
+                // Create status chart
+                const statusCtx = document.getElementById('statusChart').getContext('2d');
+                const statusChart = new Chart(statusCtx, {
+                    type: 'doughnut',
                     data: {
-                        labels: ['PhD\'s', 'Master\'s', 'Bachelor\'s'],
+                        labels: ['Current Advising', 'Concluded Advising'],
                         datasets: [{
-                            label: 'Students Advised',
-                            data: [1, 12, 10],
-                            backgroundColor: ['#4e79a7', '#f28e2b']
+                            data: [currentTotal, concludedTotal],
+                            backgroundColor: ['#4e79a7', '#f28e2b'],
+                            borderColor: ['#fff', '#fff'],
+                            borderWidth: 2
                         }]
                     },
                     options: {
                         responsive: true,
                         plugins: {
-                            legend: { display: false },
-                            title: {
-                                display: true,
-                                text: 'Number of Students Advised'
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: { precision: 0 }
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    font: { size: 14 }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed + ' students';
+                                    }
+                                }
                             }
                         }
                     }
                 });
             </script>
 
-            <div class="section-title">
-                <h2>PhD Students</h2>
+            <!-- Current Advising Section -->
+            <div class="advising-section current">
+                <h3>Current Advising</h3>
+
+                <div class="degree-subsection">
+                    <h4>PhD Students</h4>
+                    <div class="student-count">1 student</div>
+                    <div class="students-categories">
+                        <div class="student-card">
+                            <h4>Edgar S. Oliveira</h4>
+                            <p>Realistic Tactical Mobility: Characterization, Modeling and Applications. 2025-Current. Thesis. (ICMC-USP, Brazil).</p>
+                            <a href="#" class="download-link">download</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="degree-subsection">
+                    <h4>Master's Students</h4>
+                    <div class="student-count">6 students</div>
+                    <div class="students-categories">
+                        <div class="student-card">
+                            <h4>Sebastian Burfeid</h4>
+                            <p>A multi-agent system to generate and test network systems. 2025-Current. Thesis. (Uni-Bonn, Germany).</p>
+                            <a href="#" class="download-link">download</a>
+                        </div>
+                        
+                        <div class="student-card">
+                            <h4>Shruthi Devaraj</h4>
+                            <p>AI-Based Hybrid System for Train Scheduling Conflict Resolution. 2025-Current. Thesis. (Uni-Bonn, Germany).</p>
+                            <a href="#" class="download-link">download</a>
+                        </div>
+
+                        <div class="student-card">
+                            <h4>Leon Luca Lausberg</h4>
+                            <p>Exploring Abstract Relationships of IoT Devices to Build Resilient Systems. 2025-Current. Thesis. (Uni-Bonn, Germany).</p>
+                            <a href="#" class="download-link">download</a>
+                        </div>
+
+                        <div class="student-card">
+                            <h4>Olid Mohd Sayed</h4>
+                            <p>The impact of cyber threats in Software-Defined IoT Networks: evaluation and solutions. 2023-Current. Thesis. (Uni-Bonn, Germany).</p>
+                            <a href="#" class="download-link">download</a>
+                        </div>
+                        
+                        <div class="student-card">
+                            <h4>MD Ashik Rezwan</h4>
+                            <p>The Impact of mobility in SDN-based protocols: evaluation and solutions. 2023-Current. Thesis. (Uni-Bonn, Germany).</p>
+                            <a href="#" class="download-link">download</a>
+                        </div>
+
+                        <div class="student-card">
+                            <h4>Victor S. Cardel</h4>
+                            <p>A Systematic Review and Q-Learning-based Design of Scheduling Functions for 6TiSCH Networks. 2023-2025. Thesis. (UFBA, Brazil).</p>
+                            <a href="https://repositorio.ufba.br/handle/ri/42742" class="download-link">download</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="degree-subsection">
+                    <h4>Bachelor's Students</h4>
+                    <div class="student-count">4 students</div>
+                    <div class="students-categories">
+                        <div class="student-card">
+                            <h4>Vinicius Augusto</h4>
+                            <p>Generative Network Environments. 2025-Current (IC – Undergraduate Research, DCC-UFMG).</p>
+                            <a href="#" class="download-link">download</a>
+                        </div>
+                    
+                        <div class="student-card">
+                            <h4>Felipe Pires Franco</h4>
+                            <p>Simulating cyber attacks and countermeasures using Cyber Operations Research Gym (CybORG). 2025-Current (IC – Undergraduate Research, DCC-UFMG).</p>
+                            <a href="#" class="download-link">download</a>
+                        </div>
+                    
+                        <div class="student-card">
+                            <h4>Gabriel Luiz Siqueira</h4>
+                            <p>Simulating cyber attacks and countermeasures using Cyber Operations Research Gym (CybORG). 2025-Current (IC – Undergraduate Research, DCC-UFMG).</p>
+                            <a href="#" class="download-link">download</a>
+                        </div>
+                    
+                        <div class="student-card">
+                            <h4>Henrique Nietzsch Melo</h4>
+                            <p>Smart Home Automation. 2025-Current (IC – Undergraduate Research, DCC-UFMG)</p>
+                            <a href="#" class="download-link">download</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="students-categories">
-                <div class="student-card">
-                    <h4>Edgar S. Oliveira</h4>
-                    <p>Realistic Tactical Mobility: Characterization, Modeling and Applications. 2025-Current. Thesis. (ICMC-USP, Brazil).</p>
-                    <a href="#" class="download-link">download</a>
-                </div>
-            </div>
-            <div class="section-title">
-                <h2>Master's Students</h2>
-            </div>
-            <div class="students-categories">
-                <div class="student-card">
-                    <h4>Sebastian Burfeid</h4>
-                    <p>A multi-agent system to generate and test network systems. 2025-Current. Thesis. (Uni-Bonn, Germany).</p>
-                    <a href="#" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>Shruthi Devaraj</h4>
-                    <p>AI-Based Hybrid System for Train Scheduling Conflict Resolution. 2025-Current. Thesis. (Uni-Bonn, Germany).</p>
-                    <a href="#" class="download-link">download</a>
+
+            <!-- Concluded Advising Section -->
+            <div class="advising-section concluded">
+                <h3>Concluded Advising</h3>
+
+                <div class="degree-subsection">
+                    <h4>Master's Students</h4>
+                    <div class="student-count">6 students</div>
+                    <div class="students-categories">
+                        <div class="student-card">
+                            <h4>Sean Heinrich Matthäus Kloth</h4>
+                            <p>Resilient SDN Controller Against Cyber Threats in Tactical Networks. 2024. Thesis. (Uni-Bonn, Germany).</p>
+                            <a href="\data\thesis\Thesis_Sean.pdf" class="download-link">download</a>
+                        </div>
+                        
+                        <div class="student-card">
+                            <h4>Philipp Zißner</h4>
+                            <p>Traffic model based on Heterogeneous Data Fusion to Support Intelligent Transportation Systems. 2022. Thesis. (Uni-Bonn, Germany).</p>
+                            <a href="\data\thesis\Thesis_Philipp.pdf" class="download-link">download</a>
+                        </div>
+                        
+                        <div class="student-card">
+                            <h4>Johannes Loevenich</h4>
+                            <p>A stochastic uncertainty model to measure and improve the robustness of tactical systems in ever-changing communication scenarios. 2021. Thesis. (Uni-Bonn, Germany).</p>
+                            <a href="\data\thesis\Thesis_Johannes.pdf" class="download-link">download</a>
+                        </div>
+                        
+                        <div class="student-card">
+                            <h4>Sharath Maligera Eswarappa</h4>
+                            <p>Adaptive QoS in SDN-enabled heterogeneous mobile tactical networks. 2021. Thesis. (Uni-Bonn, Germany).</p>
+                            <a href="\data\thesis\Thesis_Sharath.pdf" class="download-link">download</a>
+                        </div>
+                        
+                        <div class="student-card">
+                            <h4>Pooja Hanavadi Balaraju</h4>
+                            <p>Shaping Dataflows with Ever-Changing Datarates in Tactical Networks. 2020. Thesis. (RWTH Aachen University, Germany).</p>
+                            <a href="\data\thesis\Thesis_Pooja.pdf" class="download-link">download</a>
+                        </div>
+                        
+                        <div class="student-card">
+                            <h4>Adrián Kevin Toribio Silva</h4>
+                            <p>Design of QoS-constrained Dataflows to Test Store-and-forward Mechanisms in Tactical Networks. 2019. Thesis. (Uni-Bonn, Germany).</p>
+                            <a href="\data\thesis\Thesis_Adrian.pdf" class="download-link">download</a>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="student-card">
-                    <h4>Leon Luca Lausberg</h4>
-                    <p>Exploring Abstract Relationships of IoT Devices to Build Resilient Systems. 2025-Current. Thesis. (Uni-Bonn, Germany).</p>
-                    <a href="#" class="download-link">download</a>
+                <div class="degree-subsection">
+                    <h4>Bachelor's Students</h4>
+                    <div class="student-count">6 students</div>
+                    <div class="students-categories">
+                        <div class="student-card">
+                            <h4>Lucas N. Silva</h4>
+                            <p>A Framework for Analysis and Visualization of Mobility Traces. 2023 (UFOP, Brazil).</p>
+                            <a href="#" class="download-link">download</a>
+                        </div>
+                        
+                        <div class="student-card">
+                            <h4>Tobias Hürten</h4>
+                            <p>A Comparison of Adversarial Attacks against Reinforcement Learning based Applications in Tactical Networks. 2023 (Uni-Bonn, Germany).</p>
+                            <a href="\data\thesis\Thesis_Tobias_Hürten.pdf" class="download-link">download</a>
+                        </div>
+                        
+                        <div class="student-card">
+                            <h4>Luca Liberto</h4>
+                            <p>Comparing Detection Mechanisms for Adversarial Attacks within Reinforcement Learning based Tactical Networks. 2023 (Uni-Bonn, Germany).</p>
+                            <a href="\data\thesis\Thesis_Luca_Liberto.pdf" class="download-link">download</a>
+                        </div>
+                        
+                        <div class="student-card">
+                            <h4>Florian Spelter</h4>
+                            <p>Comparing the Robustness of Reinforcement Learning Based Routing Algorithms Against Adversarial Attacks in Reinforcement Learning. 2023 (Uni-Bonn, Germany).</p>
+                            <a href="\data\thesis\Thesis_Florian_Spelter.pdf" class="download-link">download</a>
+                        </div>
+                        
+                        <div class="student-card">
+                            <h4>Jonas Bode</h4>
+                            <p>Comparing Defenses for Robust Reinforcement Learning against Adversarial Attacks in Tactical Networks. 2023 (Uni-Bonn, Germany).</p>
+                            <a href="\data\thesis\Thesis_Jonas_Bode.pdf" class="download-link">download</a>
+                        </div>
+                        
+                        <div class="student-card">
+                            <h4>Ígor Araújo</h4>
+                            <p>Participatory Social Sensor: A Framework to Social Media Data Acquisition and Analysis. 2019 (UFMG, Brazil).</p>
+                            <a href="https://sol.sbc.org.br/index.php/sbrc_estendido/article/view/7765" class="download-link">download</a>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="student-card">
-                    <h4>Victor S. Cardel</h4>
-                    <p>A Systematic Review and Q-Learning-based Design of Scheduling Functions for 6TiSCH Networks. 2023-2025. Thesis. (UFBA, Brazil).</p>
-                    <a href="https://repositorio.ufba.br/handle/ri/42742" class="download-link">download</a>
-                </div>
-
-                <div class="student-card">
-                    <h4>Olid Mohd Sayed</h4>
-                    <p>The impact of cyber threats in Software-Defined IoT Networks: evaluation and solutions. 2023-Current. Thesis. (Uni-Bonn, Germany).</p>
-                    <a href="#" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>MD Ashik Rezwan</h4>
-                    <p>The Impact of mobility in SDN-based protocols: evaluation and solutions. 2023-Current. Thesis. (Uni-Bonn, Germany).</p>
-                    <a href="#" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>Sean Heinrich Matthäus Kloth</h4>
-                    <p>Resilient SDN Controller Against Cyber Threats in Tactical Networks. 2024. Thesis. (Uni-Bonn, Germany).</p>
-                    <a href="\data\thesis\Thesis_Sean.pdf" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>Philipp Zißner</h4>
-                    <p>Traffic model based on Heterogeneous Data Fusion to Support Intelligent Transportation Systems. 2022. Thesis. (Uni-Bonn, Germany).</p>
-                    <a href="\data\thesis\Thesis_Philipp.pdf" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>Johannes Loevenich</h4>
-                    <p>A stochastic uncertainty model to measure and improve the robustness of tactical systems in ever-changing communication scenarios. 2021. Thesis. (Uni-Bonn, Germany).</p>
-                    <a href="\data\thesis\Thesis_Johannes.pdf" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>Sharath Maligera Eswarappa</h4>
-                    <p>Adaptive QoS in SDN-enabled heterogeneous mobile tactical networks. 2021. Thesis. (Uni-Bonn, Germany).</p>
-                    <a href="\data\thesis\Thesis_Sharath.pdf" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>Pooja Hanavadi Balaraju</h4>
-                    <p>Shaping Dataflows with Ever-Changing Datarates in Tactical Networks. 2020. Thesis. (RWTH Aachen University, Germany).</p>
-                    <a href="\data\thesis\Thesis_Pooja.pdf" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>Adrián Kevin Toribio Silva</h4>
-                    <p>Design of QoS-constrained Dataflows to Test Store-and-forward Mechanisms in Tactical Networks. 2019. Thesis. (Uni-Bonn, Germany).</p>
-                    <a href="\data\thesis\Thesis_Adrian.pdf" class="download-link">download</a>
-                </div>
-
-            </div>
-
-            <div class="section-title">
-                <h2>Bachelor's Students</h2>
-            </div>
-            <div class="students-categories">
-
-                <div class="student-card">
-                    <h4>Vinicius Augusto</h4>
-                    <p>Generative Network Environments. 2025-Current (IC – Undergraduate Research, DCC-UFMG).</p>
-                    <a href="#" class="download-link">download</a>
-                </div>
-            
-                <div class="student-card">
-                    <h4>Felipe Pires Franco</h4>
-                    <p>Simulating cyber attacks and countermeasures using Cyber Operations Research Gym (CybORG). 2025-Current (IC – Undergraduate Research, DCC-UFMG).</p>
-                    <a href="#" class="download-link">download</a>
-                </div>
-            
-                <div class="student-card">
-                    <h4>Gabriel Luiz Siqueira</h4>
-                    <p>Simulating cyber attacks and countermeasures using Cyber Operations Research Gym (CybORG). 2025-Current (IC – Undergraduate Research, DCC-UFMG).</p>
-                    <a href="#" class="download-link">download</a>
-                </div>
-            
-                <div class="student-card">
-                    <h4>Henrique Nietzsch Melo</h4>
-                    <p>Smart Home Automation. 2025-Current (IC – Undergraduate Research, DCC-UFMG)</p>
-                    <a href="#" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>Lucas N. Silva</h4>
-                    <p>A Framework for Analysis and Visualization of Mobility Traces. 2023 (UFOP, Brazil).</p>
-                    <a href="#" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>Tobias Hürten</h4>
-                    <p>A Comparison of Adversarial Attacks against Reinforcement Learning based Applications in Tactical Networks. 2023 (Uni-Bonn, Germany).</p>
-                    <a href="\data\thesis\Thesis_Tobias_Hürten.pdf" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>Luca Liberto</h4>
-                    <p>Comparing Detection Mechanisms for Adversarial Attacks within Reinforcement Learning based Tactical Networks. 2023 (Uni-Bonn, Germany).</p>
-                    <a href="\data\thesis\Thesis_Luca_Liberto.pdf" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>Florian Spelter</h4>
-                    <p>Comparing the Robustness of Reinforcement Learning Based Routing Algorithms Against Adversarial Attacks in Reinforcement Learning. 2023 (Uni-Bonn, Germany).</p>
-                    <a href="\data\thesis\Thesis_Florian_Spelter.pdf" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>Jonas Bode</h4>
-                    <p>Comparing Defenses for Robust Reinforcement Learning against Adversarial Attacks in Tactical Networks. 2023 (Uni-Bonn, Germany).</p>
-                    <a href="\data\thesis\Thesis_Jonas_Bode.pdf" class="download-link">download</a>
-                </div>
-                
-                <div class="student-card">
-                    <h4>Ígor Araújo</h4>
-                    <p>Participatory Social Sensor: A Framework to Social Media Data Acquisition and Analysis. 2019 (UFMG, Brazil).</p>
-                    <a href="https://sol.sbc.org.br/index.php/sbrc_estendido/article/view/7765" class="download-link">download</a>
-                </div>
-
             </div>
         </div>
     </section>
@@ -236,7 +415,7 @@
                 <li><a href="publications.html">Publications</a></li>
             </ul>
             <div class="contact-info">
-                               <a href="mailto:rettore@dcc.ufmg.br">rettore@dcc.ufmg.br</a>
+                <a href="mailto:rettore@dcc.ufmg.br">rettore@dcc.ufmg.br</a>
             </div>
             <div class="copyright">
                 <p>Dr. Paulo Rettore</p>
