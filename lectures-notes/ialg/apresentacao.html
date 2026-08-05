@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação da Disciplina - IAlg</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" id="theme">
+    <style>
+        /* Customizações UFLA para os slides */
+        :root {
+            --ufla-green: #008B45;
+            --ufla-blue: #003366;
+        }
+        
+        .reveal .slide-background {
+            background-color: #ffffff;
+        }
+        
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--ufla-blue);
+            text-transform: none;
+            font-weight: bold;
+        }
+        
+        .reveal h1 {
+            font-size: 2.5em;
+        }
+        
+        .reveal h2 {
+            font-size: 1.8em;
+            border-bottom: 3px solid var(--ufla-green);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .reveal p, .reveal li {
+            color: #333333;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        
+        .reveal .highlight {
+            color: var(--ufla-green);
+            font-weight: bold;
+        }
+        
+        .reveal .box {
+            background-color: #f5f5f5;
+            border-left: 5px solid var(--ufla-green);
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            border-radius: 5px;
+        }
+        
+        .reveal .warning-box {
+            background-color: #fff3cd;
+            border-left: 5px solid #ff9900;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            border-radius: 5px;
+        }
+        
+        .reveal .success-box {
+            background-color: #d4edda;
+            border-left: 5px solid var(--ufla-green);
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            border-radius: 5px;
+        }
+        
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .logo-container img {
+            height: 60px;
+        }
+        
+        .title-slide .subtitle {
+            color: var(--ufla-green);
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        
+        .title-slide .author {
+            margin-top: 50px;
+            font-size: 0.8em;
+            color: #666;
+        }
+        
+        .icon-text {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            font-size: 0.85em;
+        }
+        
+        .icon-text span {
+            font-size: 2em;
+            margin-right: 15px;
+            min-width: 50px;
+        }
+        
+        .three-column {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .three-column div {
+            flex: 1;
+            background: #f0f8ff;
+            padding: 15px;
+            border-top: 4px solid var(--ufla-blue);
+            border-radius: 5px;
+            font-size: 0.75em;
+        }
+        
+        .three-column div h4 {
+            margin-top: 0;
+            font-size: 0.9em;
+        }
+        
+        .step-list {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        
+        .step-list li {
+            margin: 12px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .step-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--ufla-green);
+            font-weight: bold;
+        }
+        
+        table {
+            font-size: 0.75em;
+            margin: 20px auto;
+        }
+        
+        table th {
+            background-color: var(--ufla-blue);
+            color: white;
+            padding: 8px;
+        }
+        
+        table td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .emoji-large {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <!-- Substituir pelo caminho correto da logo da UFLA se necessário -->
+        <img src="assets/ufla-logo.svg" alt="UFLA" onerror="this.style.display='none'">
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- Slide 1: Título -->
+            <section class="title-slide">
+                <h1>🎓 GAC124</h1>
+                <div class="subtitle">Introdução aos Algoritmos (IAlg)</div>
+                <div class="author">
+                    <p><strong>Prof. Paulo Henrique Lopes Rettore</strong></p>
+                    <p>Universidade Federal de Lavras</p>
+                    <p>Semestre Letivo: 2026/2</p>
+                </div>
+            </section>
+
+            <!-- Slide 2: Objetivos -->
+            <section>
+                <h2>🎯 Objetivos da Disciplina</h2>
+                <ul>
+                    <li>✓ Representar problemas através de <span class="highlight">lógica de programação</span></li>
+                    <li>✓ Dominar conceitos básicos e construção de algoritmos</li>
+                    <li>✓ Reconhecer e dominar elementos básicos:
+                        <ul style="font-size: 0.85em;">
+                            <li>Estruturas sequenciais, condicionais e de repetição</li>
+                            <li>Modularização e recursão</li>
+                            <li>Vetores, matrizes, strings e registros</li>
+                        </ul>
+                    </li>
+                    <li>✓ Utilizar arquivos, ponteiros e alocação dinâmica</li>
+                    <li>✓ Resolver <span class="highlight">problemas do mundo real</span> utilizando algoritmos</li>
+                </ul>
+            </section>
+
+            <!-- Slide 3: Por que aprender -->
+            <section>
+                <h2>💡 Por que aprender Algoritmos?</h2>
+                <div class="emoji-large">🧠 💻 🚀</div>
+                <div class="box">
+                    <p><strong>Raciocínio lógico</strong> é a base de tudo em programação!</p>
+                </div>
+                <ul style="font-size: 0.85em;">
+                    <li>🎯 Uso eficaz do computador para resolver problemas</li>
+                    <li>🧩 Desenvolvimento do pensamento algorítmico</li>
+                    <li>📈 Cada vez mais a sociedade precisa de Computação</li>
+                    <li>🏗️ Base para qualquer área da Tecnologia da Informação</li>
+                </ul>
+            </section>
+
+            <!-- Slide 4: Estrutura em Blocos -->
+            <section>
+                <h2>📚 Estrutura da Disciplina</h2>
+                <p>Organizada em <strong>3 blocos temáticos</strong> (18 semanas):</p>
+                
+                <div class="three-column">
+                    <div>
+                        <h4>🏛️ BLOCO 1</h4>
+                        <p><strong>Fundamentos</strong></p>
+                        <p>Semanas 1-7<br>Conceitos básicos de programação</p>
+                    </div>
+                    <div>
+                        <h4>📦 BLOCO 2</h4>
+                        <p><strong>Estruturas de Dados</strong></p>
+                        <p>Semanas 8-12<br>Armazenamento e manipulação</p>
+                    </div>
+                    <div>
+                        <h4>🚀 BLOCO 3</h4>
+                        <p><strong>Integração Avançada</strong></p>
+                        <p>Semanas 13-18<br>Algoritmos complexos</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: Metodologia -->
+            <section>
+                <h2>🎓 Metodologia de Ensino</h2>
+                <div class="icon-text">
+                    <span>🔄</span>
+                    <div><strong>Sala de Aula Invertida:</strong> Conteúdo teórico visto antes (vídeos/slides) e aulas para prática/dúvidas.</div>
+                </div>
+                <div class="icon-text">
+                    <span>🛠️</span>
+                    <div><strong>Aprendizagem Baseada em Projetos (PBL):</strong> Aplicação prática através do desenvolvimento de um projeto.</div>
+                </div>
+                <div class="icon-text">
+                    <span>📅</span>
+                    <div><strong>Aulas ANP (Sábados):</strong> Estudo do conteúdo no Campus Virtual.</div>
+                </div>
+                <div class="icon-text">
+                    <span>💻</span>
+                    <div><strong>Aulas Práticas (Terças e Quintas):</strong> Fixação de conceitos, resolução de problemas no Dredd e mentoria do projeto.</div>
+                </div>
+            </section>
+
+            <!-- Slide 6: Ambiente de Desenvolvimento -->
+            <section>
+                <h2>🖥️ Ambiente de Desenvolvimento</h2>
+                <div class="emoji-large">C++ 🐧 Linux</div>
+                <div class="success-box">
+                    <p>O computador é o laboratório preferencial. Implementações em <strong>C++</strong>, com preferência para ambiente <strong>Linux</strong>.</p>
+                </div>
+                <ul style="font-size: 0.85em;">
+                    <li>📚 <strong>Campus Virtual:</strong> Lições, vídeos, entrega de projeto</li>
+                    <li>✅ <strong>Dredd:</strong> Sistema de correção automática de exercícios</li>
+                    <li>📝 <strong>Geany:</strong> IDE recomendada para programação C++</li>
+                </ul>
+            </section>
+
+            <!-- Slide 7: Acesso Campus Virtual -->
+            <section>
+                <h2>🌐 Acesso ao Campus Virtual</h2>
+                <div class="emoji-large">📱 💻 🔐</div>
+                <div class="success-box">
+                    <p><strong>Realize seu acesso ao Campus Virtual:</strong></p>
+                    <p style="margin-top: 10px;"><a href="https://campusvirtual.ufla.br" target="_blank" style="color: var(--ufla-blue); font-weight: bold;">https://campusvirtual.ufla.br</a></p>
+                </div>
+                <ul class="step-list" style="font-size: 0.8em;">
+                    <li>Use suas credenciais institucionais UFLA</li>
+                    <li>Procure pela disciplina GAC124 - IAlg</li>
+                    <li>Acesse as lições, vídeos e atividades ANP</li>
+                    <li>Participe dos fóruns de discussão</li>
+                </ul>
+            </section>
+
+            <!-- Slide 8: Acesso Dredd -->
+            <section>
+                <h2>✅ Acesso ao Dredd</h2>
+                <div class="emoji-large">🤖 ✔️ 📊</div>
+                <div class="success-box">
+                    <p><strong>Realize o acesso ao Dredd:</strong></p>
+                    <p style="margin-top: 10px;"><a href="https://dredd.dac.ufla.br" target="_blank" style="color: var(--ufla-blue); font-weight: bold;">https://dredd.dac.ufla.br</a></p>
+                </div>
+                <p style="font-size: 0.8em; margin-top: 15px;"><strong>Caso ainda não tenha cadastro no Dredd:</strong></p>
+                <ul class="step-list" style="font-size: 0.75em;">
+                    <li>Clique em "CADASTRAR"</li>
+                    <li>Use seu e-mail institucional</li>
+                    <li>Confira seu número de matrícula e curso</li>
+                    <li>Verifique o e-mail confirmando sua inscrição</li>
+                </ul>
+            </section>
+
+            <!-- Slide 9: Sistema de Avaliação -->
+            <section>
+                <h2>📊 Sistema de Avaliação</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Atividade</th>
+                            <th>Pontos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Prova 1 (Semana 7)</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>Prova 2 (Semana 16)</td>
+                            <td>25</td>
+                        </tr>
+                        <tr>
+                            <td>Projeto Prático (Equipe)</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>Atividades em Sala (Dredd)</td>
+                            <td>25</td>
+                        </tr>
+                        <tr>
+                            <td>Atividades ANP (Campus Virtual)</td>
+                            <td>10</td>
+                        </tr>
+                        <tr style="font-weight: bold; background-color: var(--ufla-light-green);">
+                            <td>TOTAL</td>
+                            <td>100</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Slide 10: Regras e IAGen -->
+            <section>
+                <h2>⚠️ Regras Importantes (Resolução CEPE)</h2>
+                <div class="warning-box" style="border-left-color: #cc0000;">
+                    <p>Restrições severas ao uso de Inteligência Artificial Generativa (ChatGPT, Copilot, etc.) nas avaliações.</p>
+                </div>
+                <ul style="font-size: 0.8em;">
+                    <li><strong>Provas Presenciais:</strong> NENHUMA consulta permitida. Proibido celulares, internet ou IAGen.</li>
+                    <li><strong>Atividades Dredd:</strong> Apenas consulta ao material das aulas. Proibidos dispositivos eletrônicos pessoais e IAGen.</li>
+                    <li style="margin-top: 15px;"><em>"O ChatGPT não vai fazer sua prova. Trabalhar duro e lutar é uma forma importante de aprender."</em></li>
+                </ul>
+            </section>
+
+            <!-- Slide 11: Frequência -->
+            <section>
+                <h2>📋 Aferição de Frequência</h2>
+                <div class="icon-text">
+                    <span>📍</span>
+                    <div><strong>Aulas Práticas:</strong> Chamada oral, lista ou entrega de exercícios.</div>
+                </div>
+                <div class="icon-text">
+                    <span>⚠️</span>
+                    <div><strong>Estar presente fisicamente não garante presença!</strong> É preciso participar/entregar atividades.</div>
+                </div>
+                <div class="icon-text">
+                    <span>📚</span>
+                    <div><strong>Aulas ANP:</strong> É necessário atingir pelo menos 70% da pontuação nas lições da semana.</div>
+                </div>
+            </section>
+
+            <!-- Slide 12: Papel do Aluno -->
+            <section>
+                <h2>👨‍🎓 Papel do Aluno</h2>
+                <div class="emoji-large">🎯 📖 💪</div>
+                <p style="font-size: 0.85em; margin-bottom: 20px;"><strong>Espera-se do aluno:</strong></p>
+                <ul style="font-size: 0.8em;">
+                    <li>✏️ Preparação adequada para as aulas, buscando fazer as lições, assistir às videoaulas e ler os slides</li>
+                    <li>🔍 Anotar suas dúvidas sobre o assunto</li>
+                    <li>🌟 Buscar ampliar o conhecimento, verificando outras possibilidades de uso do conteúdo</li>
+                    <li>🏋️ Realização de exercícios diversos para fixação dos conteúdos</li>
+                </ul>
+                <div class="box" style="margin-top: 20px; font-size: 0.75em;">
+                    <p><strong>💡 Lembre-se:</strong> A aprendizagem é construída <strong>por você</strong>, em um percurso próprio e contínuo. <strong>Você é o principal responsável pela sua própria evolução na disciplina.</strong></p>
+                </div>
+            </section>
+
+            <!-- Slide 13: Ajuda Extra-classe -->
+            <section>
+                <h2>🤝 Ajuda Extra-classe</h2>
+                <div class="icon-text">
+                    <span>👥</span>
+                    <div><strong>Monitores:</strong> A disciplina possui monitores para ajudar com suas dúvidas.</div>
+                </div>
+                <div class="icon-text">
+                    <span>👨‍🏫</span>
+                    <div><strong>Docentes:</strong> Você pode enviar suas dúvidas aos docentes e ter atendimento agendado, se necessário.</div>
+                </div>
+                <div class="icon-text">
+                    <span>🏥</span>
+                    <div><strong>Programas de Apoio UFLA:</strong> Atendimento psicológico, assistência social, e outros programas de auxílio.</div>
+                </div>
+                <p style="font-size: 0.75em; margin-top: 20px; color: var(--ufla-green);"><strong>Não hesite em buscar ajuda quando precisar!</strong></p>
+            </section>
+
+            <!-- Slide 14: Atendimento dos Docentes -->
+            <section>
+                <h2>📧 Atendimento dos Docentes</h2>
+                <div class="emoji-large">💬 📬</div>
+                <div class="success-box">
+                    <p><strong>Você pode contar conosco!</strong></p>
+                </div>
+                <ul style="font-size: 0.85em;">
+                    <li>💬 <strong>Fórum do Campus Virtual:</strong> Utilize para dúvidas gerais e discussões</li>
+                    <li>📧 <strong>E-mail:</strong> Envie suas dúvidas a qualquer hora</li>
+                    <li>⏰ <strong>Resposta rápida:</strong> Nos esforçamos para responder o mais breve possível</li>
+                </ul>
+                <div class="box" style="margin-top: 20px; font-size: 0.8em;">
+                    <p>Dúvidas sobre conteúdo, exercícios, projeto ou qualquer aspecto da disciplina? Não fique com dúvida! Pergunte!</p>
+                </div>
+            </section>
+
+            <!-- Slide 15: Recuperação de Aulas -->
+            <section>
+                <h2>🔄 Recuperação de Aulas e Trabalhos</h2>
+                <div class="box">
+                    <p>A recuperação de aulas e trabalhos escolares seguem as diretrizes das resoluções CEPE em vigor:</p>
+                </div>
+                <ul style="font-size: 0.8em;">
+                    <li><strong>Resolução CEPE nº 98/2026:</strong><br>
+                        <a href="https://prograd.ufla.br/sobre/base-juridica/12-legislacao/1332-regulamento-graduacao-ufla-98" target="_blank" style="color: var(--ufla-blue);">Regulamento de Graduação UFLA</a>
+                    </li>
+                    <li style="margin-top: 10px;"><strong>Instrução Normativa PROGRAD nº 1/2026:</strong><br>
+                        <a href="https://prograd.ufla.br/legislacao/instrucoes-normativas/12-legislacao/1327-in-1-2026" target="_blank" style="color: var(--ufla-blue);">Instruções Normativas</a>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Slide 16: Conceito de Abandono -->
+            <section>
+                <h2>⚠️ Conceito de Abandono (A)</h2>
+                <div class="warning-box">
+                    <p><strong>Art. 121:</strong> Será considerado reprovado por abandono (A) o estudante que, na conclusão do semestre letivo, ausentar-se em pelo menos <strong>50% (cinquenta por cento) das aulas</strong>, por componente curricular.</p>
+                </div>
+                <div class="warning-box" style="margin-top: 15px;">
+                    <p><strong>⚠️ Parágrafo único:</strong> O estudante reprovado por abandono <strong>perderá prioridade de matrícula</strong> no componente curricular em que foi reprovado, independentemente do tempo decorrido entre o abandono e a nova tentativa de matrícula.</p>
+                </div>
+                <p style="font-size: 0.75em; margin-top: 15px; color: #cc0000;"><strong>Portanto: Compareça às aulas e participe!</strong></p>
+            </section>
+
+            <!-- Slide 17: Recomendação Fundamental -->
+            <section>
+                <h2>🏆 Recomendação Fundamental</h2>
+                <div style="text-align: center; margin-top: 50px;">
+                    <div class="emoji-large">📝 ✍️ 💻</div>
+                    <h3 style="color: var(--ufla-green); font-size: 1.3em;">Esboce a solução mentalmente ou no papel antes de começar a programar.</h3>
+                    <br>
+                    <p style="font-size: 0.9em;"><em>"Não adianta implementar o que não se consegue resolver no papel."</em></p>
+                </div>
+            </section>
+
+            <!-- Slide 18: Bibliografia -->
+            <section>
+                <h2>📚 Bibliografia Básica</h2>
+                <ul style="font-size: 0.8em; text-align: left;">
+                    <li style="margin-bottom: 15px;">
+                        <strong>Forbellone, A. L. V & Eberspacher, H. F.</strong><br>
+                        <em>Lógica de Programação: A Construção de Algoritmos e Estruturas de Dados.</em><br>
+                        3.ed. São Paulo: Prentice-Hall, 2005.
+                    </li>
+                    <li>
+                        <strong>Piva Junior, D.; Nakamiti, G. S.; Engelbrecht, A. de M. & Bianchi, F.</strong><br>
+                        <em>Algoritmos e Programação de Computadores.</em><br>
+                        Rio de Janeiro, Campus, 2012.
+                    </li>
+                </ul>
+                <div class="box" style="margin-top: 20px; font-size: 0.75em;">
+                    <p>Estes livros são referências essenciais para aprofundar seu conhecimento em algoritmos e programação em C++.</p>
+                </div>
+            </section>
+
+            <!-- Slide 19: Fim -->
+            <section>
+                <h2>🎉 Bom Semestre a Todos!</h2>
+                <div class="emoji-large">🚀 💪 🎓</div>
+                <br>
+                <p style="font-size: 0.9em;">Estamos prontos para ajudá-los nesta jornada de aprendizado!</p>
+                <br>
+                <p style="font-size: 0.85em;">Acesse o repositório da disciplina para mais materiais.</p>
+                <p><a href="index.html" style="color: var(--ufla-blue); font-weight: bold;">Voltar para a página principal</a></p>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: true,
+            transition: 'slide',
+            controls: true,
+            progress: true
+        });
+    </script>
+</body>
+</html>
