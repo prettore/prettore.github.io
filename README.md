@@ -1,43 +1,46 @@
-# Prof. Paulo Rettore Website
+# Site do Prof. Dr. Paulo Rettore
 
-This repository contains the website (https://prettore.github.io/) of Prof. Paulo Rettore, a Ph.D. in Computer Science and researcher at Fraunhofer FKIE in Germany.
+Este repositório contém o site acadêmico estático do **Prof. Dr. Paulo Rettore**, publicado em [prettore.github.io](https://prettore.github.io/).
 
-## Website Structure
+## Atualizações desta versão
 
-The website is built with HTML, CSS, and JavaScript and includes the following sections:
-- Homepage
-- About Me
-- Research
-- Lectures
-- Students
-- Publications
+O site agora mantém o inglês como idioma inicial e oferece um seletor persistente para alternar entre **English** e **Português** em todas as páginas. A tradução é aplicada dinamicamente pelo `script.js`, sem duplicar páginas HTML, e a preferência escolhida é preservada no navegador.
 
-## GitHub Pages Deployment
+A identidade textual foi padronizada para **Prof. Dr. Paulo Rettore**. O padrão visual preto foi substituído por um tema mais claro, convidativo e responsivo, com superfícies brancas, fundo azul-claro, acentos azul-petróleo e sombras suaves. Também foram corrigidos caminhos Windows-style em links de aulas e teses, referências inconsistentes a `css/` e `js/`, o estado ativo da navegação, a acessibilidade básica do menu e o bug de interação da word cloud.
 
-This website is configured to be deployed using GitHub Pages. The site is built as a static website with no build process required.
+Como os anexos originais recebidos não continham a pasta de imagens, o site possui um fallback visual em SVG para que os cards não exibam ícones de imagem quebrada. Quando os assets originais forem adicionados, eles serão usados automaticamente.
 
-## Local Development
+## Estrutura do site
 
-To run this website locally:
-1. Clone the repository
-2. Navigate to the repository folder
-3. Start a local server (e.g., `python -m http.server 8000`)
-4. Open your browser and go to `http://localhost:8000`
+| Arquivo | Função |
+|---|---|
+| `index.html` | Página inicial |
+| `about-me.html` | Biografia, especialidades e word cloud |
+| `research.html` | Grupo RISE e visão geral da pesquisa |
+| `research-tactical-networks.html` | Detalhe de Redes Táticas |
+| `research-data-fusion.html` | Detalhe de Fusão de Dados em Sistemas de Transporte |
+| `lectures.html` | Aulas e notas |
+| `students.html` | Orientações atuais e concluídas, com gráfico |
+| `publications.html` | Perfis acadêmicos, datasets e curso breve |
+| `style.css` | Tema, layout, responsividade e acessibilidade visual |
+| `script.js` | Seletor de idioma, navegação, menu móvel e fallbacks |
+| `wordcloud.js` | Word cloud responsiva e sensível ao idioma |
+| `CNAME` | Configuração de domínio personalizado |
 
-## File Structure
+## Desenvolvimento local
 
-- `index.html` - Homepage
-- `about-me.html` - About Me section
-- `research.html` - Research overview
-- `research-tactical-networks.html` - Detailed page for Tactical Networks research
-- `research-data-fusion.html` - Detailed page for Data Fusion research
-- `lectures.html` - Lectures section
-- `students.html` - Students section
-- `publications.html` - Publications section
-- `css/` - Contains all styling files
-- `js/` - Contains JavaScript files
-- `images/` - Contains all images used in the website
+Como o site é estático e não exige build, execute na raiz do repositório:
 
-## License
+```bash
+python3 -m http.server 8000
+```
 
-This project is for educational purposes only.
+Depois, abra `http://localhost:8000/index.html` no navegador. Para testar o idioma português, selecione **Português** no cabeçalho; a escolha será mantida entre páginas.
+
+## Publicação no GitHub Pages
+
+O projeto pode ser publicado diretamente a partir da branch principal, sem etapa de compilação. Consulte `DEPLOYMENT.md` para o procedimento de configuração e atualização do GitHub Pages.
+
+## Licença
+
+Este projeto é destinado a fins educacionais e acadêmicos.

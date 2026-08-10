@@ -1,77 +1,31 @@
-const words = [
-  { text: "network", size: 90, color: "#ff4d4d" },
-  { text: "data", size: 80, color: "#4dd2ff" },
-  { text: "tactical", size: 65, color: "#ffd11a" },
-  { text: "systems", size: 60, color: "#ff6666" },
-  { text: "sensor", size: 55, color: "#ff944d" },
-  { text: "scenarios", size: 52, color: "#ff9933" },
-  { text: "intra-vehicular", size: 48, color: "#9966ff" },
-  { text: "iot", size: 45, color: "#66ccff" },
-  { text: "fusion", size: 44, color: "#33cccc" },
-  { text: "intelligent", size: 42, color: "#ffcc66" },
-  { text: "resilience", size: 40, color: "#ff9966" },
-  { text: "queuing", size: 38, color: "#66ff66" },
-  { text: "cybersecurity", size: 36, color: "#ffcc00" },
-  { text: "heterogeneous", size: 34, color: "#9966cc" },
-  { text: "ever-changing", size: 32, color: "#66ffcc" },
-  { text: "communication", size: 30, color: "#ff9933" },
-  { text: "military", size: 28, color: "#ff6699" },
-  { text: "context-awareness", size: 26, color: "#66b3ff" }
-];
+(() => {
+  const container = document.getElementById('wordCloud');
+  if (!container || typeof d3 === 'undefined' || typeof d3.layout === 'undefined') return;
 
-const container = document.getElementById("wordCloud");
-const width = container.offsetWidth;
-const height = 420;
+  const palette = ['#1769aa', '#0f8b8d', '#d97706', '#7c3aed', '#be123c', '#15803d'];
+  const wordSets = {
+    en: ['network', 'data', 'tactical', 'systems', 'sensor', 'scenarios', 'intra-vehicular', 'IoT', 'fusion', 'intelligent', 'resilience', 'queuing', 'cybersecurity', 'heterogeneous', 'ever-changing', 'communication', 'military', 'context-awareness'],
+    'pt-BR': ['redes', 'dados', 'tática', 'sistemas', 'sensores', 'cenários', 'intraveicular', 'IoT', 'fusão', 'inteligência', 'resiliência', 'filas', 'cibersegurança', 'heterogêneo', 'dinâmico', 'comunicação', 'militar', 'contexto']
+  };
+  const sizes = [90, 80, 65, 60, 55, 52, 48, 45, 44, 42, 40, 38, 36, 34, 32, 30, 28, 26];
 
-const svg = d3.select("#wordCloud")
-  .append("svg")
-  .attr("width", width)
-  .attr("height", height);
+  function render(lang) {
+    const width = Math.max(280, Math.min(container.clientWidth || 720, 900));
+    const height = width < 500 ? 300 : 380;
+    d3.select(container).selectAll('*').remove();
+    const svg = d3.select(container).append('svg').attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img').attr('aria-label', lang === 'pt-BR' ? 'Nuvem de palavras das pesquisas' : 'Research keyword cloud');
+    const words = wordSets[lang] || wordSets.en;
+    const data = words.map((text, index) => ({ text, size: sizes[index], color: palette[index % palette.length] }));
+    d3.layout.cloud().size([width, height]).words(data).padding(4).rotate((d) => d.text === 'intra-vehicular' || d.text === 'intraveicular' ? 90 : 0).font('Arial, sans-serif').fontSize((d) => d.size * (width < 500 ? 0.72 : 1)).spiral('archimedean').on('end', (placed) => {
+      const texts = svg.append('g').attr('transform', `translate(${width / 2}, ${height / 2})`).selectAll('text').data(placed).enter().append('text').style('font-size', (d) => `${d.size}px`).style('font-family', 'Arial, sans-serif').style('font-weight', '700').style('fill', (d) => d.color).attr('text-anchor', 'middle').attr('transform', (d) => `translate(${d.x}, ${d.y}) rotate(${d.rotate})`).text((d) => d.text).on('mouseover', function () {
+        d3.select(this).transition().duration(160).style('opacity', 0.62);
+      }).on('mouseout', function () {
+        d3.select(this).transition().duration(160).style('opacity', 1);
+      });
+    }).start();
+  }
 
-const layout = d3.layout.cloud()
-  .size([width, height])
-  .words(words)
-  .padding(4)
-  .rotate(d => {
-    if (d.text === "intra-vehicular") return 90;
-    if (d.text === "vehicular") return 90;
-    return 0;
-  })
-  .font("Helvetica, Arial, sans-serif")
-  .fontSize(d => d.size)
-  .spiral("archimedean")
-  .on("end", draw);
-
-layout.start();
-
-function draw(words) {
-  svg.append("g")
-    .attr("transform", `translate(${width / 2}, ${height / 2})`)
-    .selectAll("text")
-    .data(words)
-    .enter()
-    .append("text")
-    .style("font-size", d => `${d.size}px`)
-    .style("font-family", "Helvetica, Arial, sans-serif")
-    .style("fill", d => d.color)
-    .attr("text-anchor", "middle")
-    .attr("transform", d =>
-      `translate(${d.x}, ${d.y}) rotate(${d.rotate})`
-    )
-    .text(d => d.text);
-}
-
-texts
-  .on("mouseover", function () {
-    d3.select(this)
-      .transition()
-      .duration(200)
-      .style("font-size", d => `${d.size * 1.15}px`);
-  })
-  .on("mouseout", function () {
-    d3.select(this)
-      .transition()
-      .duration(200)
-      .style("font-size", d => `${d.size}px`);
-  });
-
+  render(document.documentElement.lang || 'en');
+  window.addEventListener('languageChanged', (event) => render(event.detail.lang));
+  window.addEventListener('resize', () => render(document.documentElement.lang || 'en'));
+})();

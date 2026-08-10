@@ -1,98 +1,81 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me - Dr. Paulo Rettore</title>
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>About Me - Prof. Dr. Paulo Rettore</title>
+<link href="css/style.css" rel="stylesheet"/>
 </head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="container header-content">
-            <div class="logo">
-                <a href="index.html">Dr. Paulo Rettore</a>
-            </div>
-            <nav>
-                <ul class="nav-menu">
-                    <li class="home"><a href="index.html">Home</a></li>
-                    <li class="about"><a href="about-me.html" class="active">About Me</a></li>
-                    <li class="research"><a href="research.html">Research</a></li>
-                    <li class="lectures"><a href="lectures.html">Lectures</a></li>
-                    <li class="students"><a href="students.html">Students</a></li>
-                    <li class="publications"><a href="publications.html">Publications</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <!-- About Section -->
-    <section class="about-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>About Me</h2>
-            </div>
-            <div class="about-content">
-                <div class="bio">
-                  <h3>Short Bio</h3>
-                    <p>Paulo H. L. Rettore is a Professor at the Federal University of Lavras (UFLA), Brazil. His research interests include intelligent environments, such as transportation systems, smart cities, smart farms, and smart homes, with a focus on heterogeneous data fusion, data mining, applied artificial intelligence, and resilient systems and networks.</p>
-                    <p>He received his B.Sc. in Computer Science in 2009, his M.Sc. in Computer Science from the Federal University of São Carlos (UFSCar) in 2012, and his Ph.D. in Computer Science from the Federal University of Minas Gerais (UFMG) in 2019. He previously worked as a researcher at Fraunhofer FKIE in Bonn, Germany (2019–2025) and completed a postdoctoral fellowship at UFMG (2025-2026) before joining UFLA.</p>
-                <div class="expertise">
-                    <h3>Expertise</h3>
-                    <ul>
-                        <li>Computer Networks</li>
-                        <li>Smart Environments (Intelligent Transportation Systems, Smart Cities, Smart Farms, Smart Homes)</li>
-                        <li>Software-defined Networking (SDN)</li>
-                        <li>Mobile Ad-hoc Networks (VANETs, Tactical Networks)</li>
-                        <li>Data Science (Big Data, Data Fusion, NLP, ML, AI)</li>
-                    </ul>
-                </div>
-                <div class="interests">
-                    <h3>Areas of Interest</h3>
-                    <ul>
-                        <li>Tactical Networks</li>
-                        <li>Resilient Systems for Smart Environments</li>
-                        <li>Heterogeneous Data Fusion</li>
-                        <li>Internet of Things (IoT)</li>
-                        <li>Computer Networking - Wireless Sensor Networks</li>
-                    </ul>
-                    <div class="wordcloud-section">
-                        <h3>Research Keywords</h3>
-                        <div id="wordCloud"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container footer-content">
-            <ul class="footer-nav">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about-me.html">About Me</a></li>
-                <li><a href="research.html">Research</a></li>
-                <li><a href="lectures.html">Lectures</a></li>
-                <li><a href="students.html">Students</a></li>
-                <li><a href="publications.html">Publications</a></li>
-            </ul>
-            <div class="contact-info">
-                                <a href="mailto:rettore@dcc.ufmg.br">rettore@dcc.ufmg.br</a>
-            </div>
-            <div class="copyright">
-                <p>Dr. Paulo Rettore</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="js/script.js"></script>
-    <!-- D3.js -->
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    
-    <!-- D3 Cloud -->
-    <script src="https://unpkg.com/d3-cloud/build/d3.layout.cloud.js"></script>
-    
-    <script src="js/wordcloud.js"></script>
-
+<body data-page="about-me.html"><header>
+<div class="container header-content">
+<div class="logo">
+<a href="index.html">Prof. Dr. Paulo Rettore</a>
+</div>
+<nav aria-label="Primary navigation">
+<ul class="nav-menu">
+<li class="home"><a href="index.html">Home</a></li>
+<li class="about"><a aria-current="page" class="active" href="about-me.html">About Me</a></li>
+<li class="research"><a href="research.html">Research</a></li>
+<li class="lectures"><a href="lectures.html">Lectures</a></li>
+<li class="students"><a href="students.html">Students</a></li>
+<li class="publications"><a href="publications.html">Publications</a></li>
+</ul>
+</nav>
+<div class="language-switcher"><label for="language-select">Language</label><select aria-label="Choose language" id="language-select"><option value="en">English</option><option value="pt-BR">Português</option></select></div></div>
+</header><section class="about-section">
+<div class="container">
+<div class="section-title">
+<h2>About Me</h2>
+</div>
+<div class="about-content">
+<div class="bio">
+<h3>Short Bio</h3>
+<p>Paulo H. L. Rettore is a Professor at the Federal University of Lavras (UFLA), Brazil. His research interests include intelligent environments, such as transportation systems, smart cities, smart farms, and smart homes, with a focus on heterogeneous data fusion, data mining, applied artificial intelligence, and resilient systems and networks.</p>
+<p>He received his B.Sc. in Computer Science in 2009, his M.Sc. in Computer Science from the Federal University of São Carlos (UFSCar) in 2012, and his Ph.D. in Computer Science from the Federal University of Minas Gerais (UFMG) in 2019. He previously worked as a researcher at Fraunhofer FKIE in Bonn, Germany (2019–2025) and completed a postdoctoral fellowship at UFMG (2025-2026) before joining UFLA.</p>
+<div class="expertise">
+<h3>Expertise</h3>
+<ul>
+<li>Computer Networks</li>
+<li>Smart Environments (Intelligent Transportation Systems, Smart Cities, Smart Farms, Smart Homes)</li>
+<li>Software-defined Networking (SDN)</li>
+<li>Mobile Ad-hoc Networks (VANETs, Tactical Networks)</li>
+<li>Data Science (Big Data, Data Fusion, NLP, ML, AI)</li>
+</ul>
+</div>
+<div class="interests">
+<h3>Areas of Interest</h3>
+<ul>
+<li>Tactical Networks</li>
+<li>Resilient Systems for Smart Environments</li>
+<li>Heterogeneous Data Fusion</li>
+<li>Internet of Things (IoT)</li>
+<li>Computer Networking - Wireless Sensor Networks</li>
+</ul>
+<div class="wordcloud-section">
+<h3>Research Keywords</h3>
+<div id="wordCloud"></div>
+</div>
+</div>
+</div>
+</div>
+</div></section><footer>
+<div class="container footer-content">
+<ul class="footer-nav">
+<li><a href="index.html">Home</a></li>
+<li><a href="about-me.html">About Me</a></li>
+<li><a href="research.html">Research</a></li>
+<li><a href="lectures.html">Lectures</a></li>
+<li><a href="students.html">Students</a></li>
+<li><a href="publications.html">Publications</a></li>
+</ul>
+<div class="contact-info">
+<a href="mailto:rettore@dcc.ufmg.br">rettore@dcc.ufmg.br</a>
+</div>
+<div class="copyright">
+<p>Prof. Dr. Paulo Rettore</p>
+</div>
+</div>
+</footer>
+<script src="js/script.js"></script><script src="https://d3js.org/d3.v7.min.js"></script><script src="https://unpkg.com/d3-cloud/build/d3.layout.cloud.js"></script>
+<script src="js/wordcloud.js"></script>
 </body>
 </html>

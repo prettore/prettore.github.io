@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Students - Dr. Paulo Rettore</title>
+    <title>Students - Prof. Dr. Paulo Rettore</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -99,12 +99,12 @@
         }
     </style>
 </head>
-<body>
+<body data-page="students.html">
     <!-- Header -->
     <header>
         <div class="container header-content">
             <div class="logo">
-                <a href="index.html">Dr. Paulo Rettore</a>
+                <a href="index.html">Prof. Dr. Paulo Rettore</a>
             </div>
             <nav>
                 <ul class="nav-menu">
@@ -116,6 +116,13 @@
                     <li class="publications"><a href="publications.html">Publications</a></li>
                 </ul>
             </nav>
+        <div class="language-switcher">
+            <label for="language-select">Language</label>
+            <select id="language-select" aria-label="Choose language">
+                <option value="en">English</option>
+                <option value="pt-BR">Português</option>
+            </select>
+        </div>
         </div>
     </header>
 
@@ -190,7 +197,7 @@
                 
                 // Create status chart
                 const statusCtx = document.getElementById('statusChart').getContext('2d');
-                const statusChart = new Chart(statusCtx, {
+                window.statusChart = new Chart(statusCtx, {
                     type: 'doughnut',
                     data: {
                         labels: ['Current Advising', 'Concluded Advising'],
@@ -363,19 +370,19 @@
                         <div class="student-card">
                             <h4>Shruthi Devaraj</h4>
                             <p>AI-Based Hybrid System for Train Scheduling Conflict Resolution. 2025-Current. Thesis. (Uni-Bonn, Germany).</p>
-                            <a href="\data\thesis\Thesis_Shruthi.pdf" class="download-link">download</a>
+                            <a href="data/thesis/Thesis_Shruthi.pdf" class="download-link">download</a>
                         </div> 
                         
                         <div class="student-card">
                             <h4>Olid Mohd Sayed</h4>
                             <p>The impact of cyber threats in Software-Defined IoT Networks: evaluation and solutions. 2023-Current. Thesis. (Uni-Bonn, Germany).</p>
-                            <a href="\data\thesis\Thesis_Olid.pdf" class="download-link">download</a>
+                            <a href="data/thesis/Thesis_Olid.pdf" class="download-link">download</a>
                         </div>
                         
                         <div class="student-card">
                             <h4>MD Ashik Rezwan</h4>
                             <p>The Impact of mobility in SDN-based protocols: evaluation and solutions. 2023-Current. Thesis. (Uni-Bonn, Germany).</p>
-                            <a href="\data\thesis\Thesis_Ashik.pdf" class="download-link">download</a>
+                            <a href="data/thesis/Thesis_Ashik.pdf" class="download-link">download</a>
                         </div>
                         
                         <div class="student-card">
@@ -387,37 +394,37 @@
                         <div class="student-card">
                             <h4>Sean Heinrich Matthäus Kloth</h4>
                             <p>Resilient SDN Controller Against Cyber Threats in Tactical Networks. 2024. Thesis. (Uni-Bonn, Germany).</p>
-                            <a href="\data\thesis\Thesis_Sean.pdf" class="download-link">download</a>
+                            <a href="data/thesis/Thesis_Sean.pdf" class="download-link">download</a>
                         </div>
                         
                         <div class="student-card">
                             <h4>Philipp Zißner</h4>
                             <p>Traffic model based on Heterogeneous Data Fusion to Support Intelligent Transportation Systems. 2022. Thesis. (Uni-Bonn, Germany).</p>
-                            <a href="\data\thesis\Thesis_Philipp.pdf" class="download-link">download</a>
+                            <a href="data/thesis/Thesis_Philipp.pdf" class="download-link">download</a>
                         </div>
                         
                         <div class="student-card">
                             <h4>Johannes Loevenich</h4>
                             <p>A stochastic uncertainty model to measure and improve the robustness of tactical systems in ever-changing communication scenarios. 2021. Thesis. (Uni-Bonn, Germany).</p>
-                            <a href="\data\thesis\Thesis_Johannes.pdf" class="download-link">download</a>
+                            <a href="data/thesis/Thesis_Johannes.pdf" class="download-link">download</a>
                         </div>
                         
                         <div class="student-card">
                             <h4>Sharath Maligera Eswarappa</h4>
                             <p>Adaptive QoS in SDN-enabled heterogeneous mobile tactical networks. 2021. Thesis. (Uni-Bonn, Germany).</p>
-                            <a href="\data\thesis\Thesis_Sharath.pdf" class="download-link">download</a>
+                            <a href="data/thesis/Thesis_Sharath.pdf" class="download-link">download</a>
                         </div>
                         
                         <div class="student-card">
                             <h4>Pooja Hanavadi Balaraju</h4>
                             <p>Shaping Dataflows with Ever-Changing Datarates in Tactical Networks. 2020. Thesis. (RWTH Aachen University, Germany).</p>
-                            <a href="\data\thesis\Thesis_Pooja.pdf" class="download-link">download</a>
+                            <a href="data/thesis/Thesis_Pooja.pdf" class="download-link">download</a>
                         </div>
                         
                         <div class="student-card">
                             <h4>Adrián Kevin Toribio Silva</h4>
                             <p>Design of QoS-constrained Dataflows to Test Store-and-forward Mechanisms in Tactical Networks. 2019. Thesis. (Uni-Bonn, Germany).</p>
-                            <a href="\data\thesis\Thesis_Adrian.pdf" class="download-link">download</a>
+                            <a href="data/thesis/Thesis_Adrian.pdf" class="download-link">download</a>
                         </div>
                     </div>
                 </div>
@@ -436,25 +443,25 @@
                         <div class="student-card">
                             <h4>Tobias Hürten</h4>
                             <p>A Comparison of Adversarial Attacks against Reinforcement Learning based Applications in Tactical Networks. 2023 (Uni-Bonn, Germany).</p>
-                            <a href="\data\thesis\Thesis_Tobias_Hürten.pdf" class="download-link">download</a>
+                            <a href="data/thesis/Thesis_Tobias_Hürten.pdf" class="download-link">download</a>
                         </div>
                         
                         <div class="student-card">
                             <h4>Luca Liberto</h4>
                             <p>Comparing Detection Mechanisms for Adversarial Attacks within Reinforcement Learning based Tactical Networks. 2023 (Uni-Bonn, Germany).</p>
-                            <a href="\data\thesis\Thesis_Luca_Liberto.pdf" class="download-link">download</a>
+                            <a href="data/thesis/Thesis_Luca_Liberto.pdf" class="download-link">download</a>
                         </div>
                         
                         <div class="student-card">
                             <h4>Florian Spelter</h4>
                             <p>Comparing the Robustness of Reinforcement Learning Based Routing Algorithms Against Adversarial Attacks in Reinforcement Learning. 2023 (Uni-Bonn, Germany).</p>
-                            <a href="\data\thesis\Thesis_Florian_Spelter.pdf" class="download-link">download</a>
+                            <a href="data/thesis/Thesis_Florian_Spelter.pdf" class="download-link">download</a>
                         </div>
                         
                         <div class="student-card">
                             <h4>Jonas Bode</h4>
                             <p>Comparing Defenses for Robust Reinforcement Learning against Adversarial Attacks in Tactical Networks. 2023 (Uni-Bonn, Germany).</p>
-                            <a href="\data\thesis\Thesis_Jonas_Bode.pdf" class="download-link">download</a>
+                            <a href="data/thesis/Thesis_Jonas_Bode.pdf" class="download-link">download</a>
                         </div>
                         
                         <div class="student-card">
@@ -483,7 +490,7 @@
                 <a href="mailto:rettore@dcc.ufmg.br">rettore@dcc.ufmg.br</a>
             </div>
             <div class="copyright">
-                <p>Dr. Paulo Rettore</p>
+                <p>Prof. Dr. Paulo Rettore</p>
             </div>
         </div>
     </footer>
