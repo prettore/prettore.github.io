@@ -3,87 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lectures - Dr. Paulo Rettore</title>
+    <title>Lectures - Prof. Dr. Paulo Rettore</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <!-- Header -->
+<body data-page="lectures.html">
     <header>
         <div class="container header-content">
             <div class="logo">
-                <a href="index.html">Dr. Paulo Rettore</a>
+                <a href="index.html">Prof. Dr. Paulo Rettore</a>
             </div>
-            <nav>
+            <nav aria-label="Primary navigation">
                 <ul class="nav-menu">
                     <li class="home"><a href="index.html">Home</a></li>
                     <li class="about"><a href="about-me.html">About Me</a></li>
                     <li class="research"><a href="research.html">Research</a></li>
-                    <li class="lectures"><a href="lectures.html" class="active">Lectures</a></li>
+                    <li class="lectures"><a href="lectures.html" class="active" aria-current="page">Lectures</a></li>
                     <li class="students"><a href="students.html">Students</a></li>
                     <li class="publications"><a href="publications.html">Publications</a></li>
                 </ul>
             </nav>
+            <div class="language-switcher">
+                <label for="language-select">Language</label>
+                <select id="language-select" aria-label="Choose language">
+                    <option value="en">English</option>
+                    <option value="pt-BR">Português</option>
+                </select>
+            </div>
         </div>
     </header>
 
-    <!-- Lectures Section -->
-    <section class="lectures-section">
+    <main class="lectures-section">
         <div class="container">
             <div class="section-title">
                 <h2>Lectures - Notes</h2>
             </div>
-            
+
             <div class="lectures-grid">
                 <div class="lecture-card">
-                    <a href="\lectures-notes\ialg\" target="_blank">
+                    <a href="lectures-notes/ialg/" target="_blank" rel="noopener">
                         <img src="images/programming.png" alt="Computer Programming" class="lecture-image">
                     </a>
                     <h3>Introduction to Algorithms</h3>
                     <p>This lecture explores basic structures essential for computer programming.</p>
                 </div>
-                <!-- New Lecture Card: Operating System -->
+
                 <div class="lecture-card">
-                    <a href="\lectures-notes\so-1\" target="_blank">
+                    <a href="lectures-notes/so-1/" target="_blank" rel="noopener">
                         <img src="images/operating-system.png" alt="Operating System" class="lecture-image">
                     </a>
                     <h3>Operating System</h3>
                     <p>This lecture introduces operating systems, focusing on processes, memory management, file systems, and the role of the OS in managing hardware and software resources.</p>
                 </div>
-                
+
                 <div class="lecture-card">
-                    <a href="\lectures-notes\ai-1\" target="_blank">
+                    <a href="lectures-notes/ai-1/" target="_blank" rel="noopener">
                         <img src="images/artificial-intelligence.png" alt="Artificial Intelligence" class="lecture-image">
                     </a>
                     <h3>Artificial Intelligence</h3>
                     <p>This lecture examines the principles of AI, its applicability, and its impact on society.</p>
                 </div>
-            
+
                 <div class="lecture-card">
-                    <a href="\lectures-notes\db-1\" target="_blank">
+                    <a href="lectures-notes/db-1/" target="_blank" rel="noopener">
                         <img src="images/database.png" alt="Data Base" class="lecture-image">
                     </a>
                     <h3>Data Base</h3>
                     <p>This lecture covers the principles of database design, management, and implementation, focusing on relational databases and SQL.</p>
                 </div>
-                
+
                 <div class="lecture-card">
-                    <a href="\lectures-notes\sc-1\" target="_blank">
-                    <img src="images/smart-cities.png" alt="Smart Cities" class="lecture-image">
+                    <a href="lectures-notes/sc-1/" target="_blank" rel="noopener">
+                        <img src="images/smart-cities.png" alt="Smart Cities" class="lecture-image">
                     </a>
                     <h3>Smart Cities</h3>
                     <p>This lecture delves into integrating technology and data analytics in urban environments to enhance residents' infrastructure, services, and quality of life.</p>
                 </div>
-            
+
                 <div class="lecture-card">
-                    <a href="\lectures-notes\" target="_blank">
+                    <a href="lectures-notes/" target="_blank" rel="noopener">
                         <img src="images/computer-networks.png" alt="Computer Networks" class="lecture-image">
                     </a>
                     <h3>Computer Networks</h3>
                     <p>This lecture examines the principles, protocols, and architectures of computer networks, with a focus on the Internet and its underlying technologies.</p>
                 </div>
-            
+
                 <div class="lecture-card">
-                    <a href="\lectures-notes\" target="_blank">
+                    <a href="lectures-notes/" target="_blank" rel="noopener">
                         <img src="images/algorithm.png" alt="Algorithms and Data Structure" class="lecture-image">
                     </a>
                     <h3>Algorithms and Data Structure</h3>
@@ -91,7 +96,7 @@
                 </div>
 
                 <div class="lecture-card">
-                    <a href="\lectures-notes\" target="_blank">
+                    <a href="lectures-notes/" target="_blank" rel="noopener">
                         <img src="images/web-development.png" alt="Web Development" class="lecture-image">
                     </a>
                     <h3>Web Development</h3>
@@ -99,9 +104,8 @@
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
-    <!-- Footer -->
     <footer>
         <div class="container footer-content">
             <ul class="footer-nav">
@@ -116,7 +120,7 @@
                 <a href="mailto:rettore@dcc.ufmg.br">rettore@dcc.ufmg.br</a>
             </div>
             <div class="copyright">
-                <p>Dr. Paulo Rettore</p>
+                <p>Prof. Dr. Paulo Rettore</p>
             </div>
         </div>
     </footer>
