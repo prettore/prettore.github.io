@@ -1,9 +1,22 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>About Me - Prof. Dr. Paulo Rettore</title>
 <link href="css/style.css" rel="stylesheet"/>
+<style>
+    /* Ajustes exclusivos desta página: os blocos Expertise e Areas of Interest
+       ficam dentro do cartão biográfico e não devem herdar altura de uma grade. */
+    .about-section .about-content { display: block; }
+    .about-section .bio,
+    .about-section .expertise,
+    .about-section .interests { min-height: 0; }
+    .about-section .expertise,
+    .about-section .interests { margin-top: 1.5rem; }
+    .about-section #wordCloud { min-height: 300px; }
+    .about-section #wordCloud svg { display: block; width: 100%; height: auto; margin: 0 auto; }
+</style>
 </head>
 <body data-page="about-me.html"><header>
 <div class="container header-content">
