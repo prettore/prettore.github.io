@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" rel="stylesheet"/><title>Aula 12 — Ordenação: Métodos Simples</title><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css" rel="stylesheet"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css" rel="stylesheet"/><link href="../css/style.css" rel="stylesheet"/><style id="aula03-template">
+        :root {
+            --ufla-green: #008B45;
+            --ufla-blue: #003366;
+            --soft-green: #eef8f1;
+            --soft-blue: #edf4fb;
+            --soft-orange: #fff4ed;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .reveal {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .reveal .slides {
+            width: 100%;
+            height: 100%;
+        }
+
+        .reveal section {
+            width: 100%;
+            height: 100%;
+            padding: 40px !important;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .reveal .slide-background { background: #ffffff; }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--ufla-blue);
+            text-transform: none;
+            font-weight: 800;
+            width: 100%;
+        }
+
+        .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+
+        .reveal h2 {
+            font-size: clamp(1.18em, 4vw, 1.8em);
+            border-bottom: 3px solid var(--ufla-green);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .reveal h3 { font-size: clamp(0.9em, 3vw, 1.25em); }
+
+        .reveal p, .reveal li {
+            color: #333333;
+            font-size: clamp(0.65em, 1.9vw, 0.88em);
+            line-height: 1.45;
+        }
+
+        .reveal ul, .reveal ol {
+            width: 100%;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .reveal li {
+            text-align: left;
+            margin: 7px 0;
+        }
+
+        .highlight { color: var(--ufla-green); font-weight: 800; }
+
+        .logo-container {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            z-index: 10;
+        }
+
+        .logo-container img { height: clamp(35px, 8vw, 58px); }
+
+        .title-slide .subtitle {
+            color: var(--ufla-green);
+            font-size: clamp(0.9em, 3vw, 1.2em);
+            margin-top: 18px;
+        }
+
+        .title-slide .author {
+            margin-top: 48px;
+            font-size: clamp(0.62em, 1.8vw, 0.8em);
+            color: #555;
+        }
+
+        .emoji-large {
+            font-size: clamp(2em, 8vw, 3em);
+            margin: 12px 0;
+        }
+
+        .box, .info-box, .warning-box, .success-box {
+            width: 90%;
+            max-width: 950px;
+            margin: 14px auto;
+            padding: 14px 18px;
+            text-align: left;
+            border-radius: 4px;
+        }
+
+        .box { background: #f5f5f5; border-left: 5px solid var(--ufla-green); }
+        .info-box { background: var(--soft-blue); border-left: 5px solid var(--ufla-blue); }
+        .warning-box { background: var(--soft-orange); border-left: 5px solid #d85c42; }
+        .success-box { background: var(--soft-green); border-left: 5px solid var(--ufla-green); }
+
+        .code-box {
+            width: 90%;
+            max-width: 950px;
+            background: #f1f2f1;
+            border-top: 5px solid var(--ufla-blue);
+            padding: 15px 20px;
+            margin: 14px auto;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(0.57em, 1.75vw, 0.75em);
+            line-height: 1.4;
+            white-space: pre-wrap;
+            color: #172630;
+        }
+
+        .three-column, .two-column {
+            width: 90%;
+            margin: 14px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+        }
+
+        .three-column > div {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .two-column > div {
+            flex: 1;
+            min-width: 260px;
+            padding: 14px;
+            background: var(--soft-blue);
+            border-top: 5px solid var(--ufla-blue);
+        }
+
+        .three-column h4, .two-column h4 {
+            margin: 0 0 8px;
+            color: var(--ufla-blue);
+            font-size: clamp(0.8em, 2vw, 1em);
+        }
+
+        .step-list {
+            width: 90%;
+            max-width: 940px;
+            margin: 10px auto;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .step-list li::before {
+            content: "→";
+            color: var(--ufla-green);
+            font-weight: 800;
+            position: absolute;
+            left: 0;
+        }
+
+        table {
+            width: 90%;
+            max-width: 1000px;
+            margin: 10px auto;
+            border-collapse: collapse;
+            font-size: clamp(0.58em, 1.55vw, 0.75em);
+            color: #333;
+        }
+
+        th {
+            background: var(--ufla-blue);
+            color: white;
+            text-align: left;
+            padding: 8px;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #d8e4dc;
+            text-align: left;
+        }
+
+        tr:nth-child(even) { background: #f4faf6; }
+
+        .sequence-flow {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            width: 90%;
+            max-width: 950px;
+            gap: 16px;
+            margin: 16px auto;
+            text-align: center;
+        }
+
+        .sequence-flow > div {
+            padding: 14px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .sequence-flow > div:nth-child(2) {
+            background: var(--soft-blue);
+            border-top-color: var(--ufla-blue);
+        }
+
+        .sequence-flow h3 { margin: 0 0 8px; }
+@media (max-width: 768px) {
+            .reveal section { padding: 18px !important; }
+            .three-column > div, .two-column > div { min-width: 100%; }
+            .sequence-flow { grid-template-columns: 1fr; }
+            table { font-size: clamp(0.46em, 1.6vw, 0.68em); }
+            th, td { padding: 5px; }
+            .code-box { font-size: clamp(0.48em, 1.55vw, 0.68em); }
+        }
+    
+
+/* Extensão para códigos extensos: o slide não muda de escala. */
+.code-box {
+    max-height: 56vh;
+    overflow: auto;
+    scrollbar-width: thin;
+    white-space: pre-wrap;
+}
+pre.code-box { white-space: pre; }
+.code-box::-webkit-scrollbar { width: 8px; height: 8px; }
+.code-box::-webkit-scrollbar-thumb { background: #9bb9a7; border-radius: 4px; }
+@media (max-width: 768px) {
+    .code-box { max-height: 54vh; }
+}
+</style></head><body class="slides-page"><div class="logo-container"><img alt="UFLA" src="../assets/ufla-logo.webp"/></div><div class="reveal"><div class="slides">
+<section class="title-slide">
+<h1>🎓 Aula 12</h1>
+<div class="subtitle">Ordenação de Vetores: Métodos Básicos</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section>
+<section><h2>🎯 Por que ordenar?</h2><p>Ordenar é reorganizar um conjunto em ordem crescente ou decrescente. Isso facilita a leitura, a comparação e a recuperação posterior dos dados.</p><div class="three-column"><div><h4>Notas</h4><p>Menor para maior.</p></div><div><h4>Nomes</h4><p>Ordem alfabética.</p></div><div><h4>Busca</h4><p>Vetor ordenado permite busca binária.</p></div></div></section>
+<section><h2>🔄 A ideia comum</h2><p>Os métodos simples percorrem o vetor, comparam elementos e fazem trocas ou deslocamentos até que a ordem desejada seja alcançada.</p><div class="sequence-flow"><div><h3>Comparar</h3><p>Encontre elementos fora de ordem.</p></div><div><h3>Reorganizar</h3><p>Troque ou desloque valores.</p></div><div><h3>Repetir</h3><p>Continue até ordenar.</p></div></div></section>
+<section><h2>🔎 Selection Sort</h2><p>Em cada posição, procure o menor elemento do trecho ainda não ordenado e coloque-o na posição correta.</p><pre class="code-box"><code>for (int i = 0; i &lt; n - 1; i++) {
+    int menor = i;
+    for (int j = i + 1; j &lt; n; j++) {
+        if (v[j] &lt; v[menor])
+            menor = j;
+    }
+    swap(v[i], v[menor]);
+}</code></pre></section>
+<section><h2>🧩 Selection Sort em ação</h2><pre class="code-box"><code>v = {7, 3, 5, 1}
+
+i = 0: menor é 1  → {1, 3, 5, 7}
+i = 1: menor é 3  → permanece
+i = 2: menor é 5  → permanece</code></pre><div class="info-box"><p>Após cada passagem externa, uma nova posição inicial fica correta.</p></div></section>
+<section><h2>🃏 Insertion Sort</h2><p>Constrói uma parte ordenada do vetor, inserindo cada novo elemento no lugar adequado.</p><pre class="code-box"><code>for (int i = 1; i &lt; n; i++) {
+    int chave = v[i];
+    int j = i - 1;
+    while (j &gt;= 0 and v[j] &gt; chave) {
+        v[j + 1] = v[j];
+        j--;
+    }
+    v[j + 1] = chave;
+}</code></pre></section>
+<section><h2>📌 Insertion Sort: por que deslocar?</h2><pre class="code-box"><code>parte ordenada: {2, 6, 9}
+novo valor: 5
+
+desloque 9 e 6 uma posição
+insira 5: {2, 5, 6, 9}</code></pre><div class="success-box"><p>Ele funciona bem quando o vetor já está quase ordenado ou é pequeno.</p></div></section>
+<section><h2>🐚 Shell Sort: saltos maiores</h2><p>O Shell Sort aplica a ideia de inserção em elementos separados por um intervalo (<em>gap</em>) e reduz esse intervalo ao longo do processo.</p><div class="three-column"><div><h4>Gap grande</h4><p>Move elementos distantes.</p></div><div><h4>Gap menor</h4><p>Refina a ordem.</p></div><div><h4>Gap 1</h4><p>Termina como Insertion Sort.</p></div></div><div class="warning-box"><p>O resultado depende da sequência de gaps escolhida; por isso, a análise é mais complexa.</p></div></section>
+<section><h2>⚖️ Comparando os métodos</h2><table><tr><th>Método</th><th>Ideia central</th><th>Uso didático</th></tr><tr><td>Selection</td><td>Seleciona o menor do trecho.</td><td>Fácil de visualizar.</td></tr><tr><td>Insertion</td><td>Insere no trecho ordenado.</td><td>Bom para vetor pequeno/quase ordenado.</td></tr><tr><td>Shell</td><td>Insertion com gaps.</td><td>Melhora movimentos distantes.</td></tr></table><div class="info-box"><p>Os métodos simples têm custo quadrático no caso geral, mas ensinam muito sobre vetores, índices e laços aninhados.</p></div></section>
+<section class="practice-slide">
+<h2>🧩 Prática em aula</h2>
+<p>Implemente Selection Sort para ordenar cinco inteiros e mostre o vetor antes e depois.</p>
+<div class="success-box"><p><strong>Gabarito orientador:</strong> Use dois for aninhados, guarde o índice do menor valor e faça uma troca por passagem externa.</p></div>
+
+</section><section class="references-slide">
+<h2>📚 Referências e materiais</h2>
+<p>Use estas fontes para consultas pontuais depois da aula:</p>
+<ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/algorithm" target="_blank">cppreference — algoritmos</a></li><li><a href="https://beecrowd.com/" target="_blank">beecrowd — exercícios de ordenação</a></li><li><a href="https://cpp.sh/" target="_blank">C++ Shell — testes rápidos</a></li></ul>
+<div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
+
+</section><section class="summary-slide">
+<h2>📌 Resumo da aula</h2>
+<ul class="step-list"><li>Selection Sort escolhe o menor elemento do trecho.</li><li>Insertion Sort insere cada elemento no trecho ordenado.</li><li>Shell Sort usa gaps para mover elementos distantes.</li><li>Índices e limites dos laços determinam a correção.</li></ul>
+
+</section><section class="next-slide">
+<p class="next-label">PRÓXIMA AULA</p>
+<h1>⏭️ Próxima aula</h1>
+<div class="subtitle">Arquivos binários e arquivos tipados</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script></body></html>

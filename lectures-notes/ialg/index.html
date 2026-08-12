@@ -3,15 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Introdução aos Algoritmos (IAlg) - Prof. Paulo H. L. Rettore</title>
+    <title>Introdução aos Algoritmos (IAlg) - Prof. Paulo Rettore</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .schedule-item {
+            display: block !important;
+            line-height: 1.45;
+        }
+
+        .schedule-item strong {
+            color: var(--ufla-blue);
+            white-space: nowrap;
+        }
+
+        .schedule-item .schedule-content {
+            display: block;
+            margin-top: 4px;
+        }
+
+        .schedule-note {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+    </style>
 </head>
 <body>
     <header>
         <div class="container header-content">
             <div>
                 <div class="site-title">Introdução aos Algoritmos (IAlg)</div>
-                <div class="site-subtitle">Prof. Paulo Henrique Lopes Rettore</div>
+                <div class="site-subtitle">Prof. Paulo Rettore</div>
             </div>
             <!-- Espaço para logo UFLA -->
             <img src="assets/ufla-logo.svg" alt="UFLA Logo" class="logo" onerror="this.style.display='none'">
@@ -33,72 +55,69 @@
 
     <main class="container">
         <h1>Bem-vindo à disciplina Introdução aos Algoritmos</h1>
-        
-        <p>Esta disciplina tem como objetivo desenvolver o raciocínio lógico-matemático e o pensamento algorítmico, capacitando os alunos a representar e resolver problemas diversos através de lógica de programação em C/C++.</p>
-        
-        <br>
-        <a href="apresentacao.html" class="presentation-link">
-            ▶️ Ver Apresentação Inicial da Disciplina
-        </a>
+
+        <p>Esta disciplina tem como objetivo desenvolver o raciocínio lógico-matemático e o pensamento algorítmico, capacitando os alunos a representar e resolver problemas diversos por meio da programação em <strong>C++</strong>.</p>
 
         <div class="blocks-container">
             <!-- Bloco 1 -->
             <div class="block-card" id="bloco1">
                 <h2 class="block-title">Bloco 1: Fundamentos</h2>
-                <p>Semanas 1-7: Conceitos básicos de programação</p>
+                <p>Semanas 1–7: conceitos básicos de programação</p>
+                <p class="schedule-note">Cada item abaixo corresponde a uma semana do plano de ensino.</p>
                 <br>
                 <ul class="lecture-list">
-                    <li><a href="bloco1/aula01.html">Aula 01: Conceitos Básicos de Algoritmos <span>(Semana 1)</span></a></li>
-                    <li><a href="bloco1/aula02.html">Aula 02: Operadores e Expressões <span>(Semana 2)</span></a></li>
-                    <li><a href="bloco1/aula03.html">Aula 03: Entrada e Saída de Dados <span>(Semana 3)</span></a></li>
-                    <li><a href="bloco1/aula04.html">Aula 04: Estruturas Condicionais <span>(Semana 4)</span></a></li>
-                    <li><a href="bloco1/aula05.html">Aula 05: Estruturas de Repetição <span>(Semana 5)</span></a></li>
-                    <li><a href="bloco1/aula06.html">Aula 06: Modularização e Funções <span>(Semana 6)</span></a></li>
-                    <li><a href="bloco1/aula07.html">Aula 07: Revisão Bloco 1 <span>(Semana 7)</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="apresentacao.html"><strong>Semana 01</strong> [Apresentação]<span class="schedule-content">Apresentação da disciplina; ambiente de desenvolvimento (Campus Virtual, DREDD e IDE Geany).</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco1/aula01.html"><strong>Semana 02</strong> [Aula 01]<span class="schedule-content">Conceito formal de algoritmos; formas de representação; linguagens de programação e raciocínio lógico; componentes de algoritmos; sistema de numeração; variáveis; tipos de dados; declaração de variáveis.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco1/aula02.html"><strong>Semana 03</strong> [Aula 02]<span class="schedule-content">Operadores de atribuição e aritméticos; entrada e saída de dados; estrutura sequencial; formatação e boas práticas de código.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco1/aula03.html"><strong>Semana 04</strong> [Aula 03]<span class="schedule-content">Estrutura condicional com <code>if-else</code> e <code>switch-case</code>; operadores relacionais e lógicos; seletores unidirecional e bidirecional; condicionais aninhadas; solução de problemas.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco1/aula04.html"><strong>Semana 05</strong> [Aula 04]<span class="schedule-content">Estruturas de repetição simples e aninhadas com <code>while</code> e <code>do-while</code>.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco1/aula05.html"><strong>Semana 06</strong> [Aula 05]<span class="schedule-content">Modularização e subprogramas.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco1/aula06.html"><strong>Semana 07</strong> [Aula 06]<span class="schedule-content">Aplicação da Prova 1; vetores de tamanho fixo; estrutura de repetição <code>for</code>.</span></a></li>
                 </ul>
             </div>
 
             <!-- Bloco 2 -->
             <div class="block-card" id="bloco2">
                 <h2 class="block-title">Bloco 2: Estruturas de Dados</h2>
-                <p>Semanas 8-12: Armazenamento e manipulação</p>
+                <p>Semanas 8–12: armazenamento e manipulação de dados</p>
+                <p class="schedule-note">Os conteúdos são integrados às atividades práticas e ao projeto.</p>
                 <br>
                 <ul class="lecture-list">
-                    <li><a href="bloco2/aula08.html">Aula 08: Vetores e For <span>(Semana 7/8)</span></a></li>
-                    <li><a href="bloco2/aula09.html">Aula 09: Matrizes <span>(Semana 8)</span></a></li>
-                    <li><a href="bloco2/aula10.html">Aula 10: Strings e getline() <span>(Semana 9)</span></a></li>
-                    <li><a href="bloco2/aula11.html">Aula 11: Alocação Dinâmica <span>(Semana 10)</span></a></li>
-                    <li><a href="bloco2/aula12.html">Aula 12: Busca Binária e Recursão <span>(Semana 10)</span></a></li>
-                    <li><a href="bloco2/aula13.html">Aula 13: Registros (Structs) <span>(Semana 11)</span></a></li>
-                    <li><a href="bloco2/aula14.html">Aula 14: Redimensionamento <span>(Semana 12)</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco2/aula07.html"><strong>Semana 08</strong> [Aula 07]<span class="schedule-content">Matrizes.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco2/aula08.html"><strong>Semana 09</strong> [Aula 08]<span class="schedule-content">Strings e uso do <code>getline()</code>.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco2/aula09.html"><strong>Semana 10</strong> [Aula 09]<span class="schedule-content">Alocação dinâmica de memória; ponteiros; busca binária; recursão.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco2/aula10.html"><strong>Semana 11</strong> [Aula 10]<span class="schedule-content">Registros e vetores de registros; WebMedia.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco2/aula11.html"><strong>Semana 12</strong> [Aula 11]<span class="schedule-content">Redimensionamento de vetores.</span></a></li>
                 </ul>
             </div>
 
             <!-- Bloco 3 -->
             <div class="block-card" id="bloco3">
                 <h2 class="block-title">Bloco 3: Integração Avançada</h2>
-                <p>Semanas 13-18: Algoritmos complexos</p>
+                <p>Semanas 13–18: algoritmos complexos e integração</p>
+                <p class="schedule-note">As últimas semanas articulam os conteúdos no projeto e nas avaliações.</p>
                 <br>
                 <ul class="lecture-list">
-                    <li><a href="bloco3/aula15.html">Aula 15: Ordenação Básica <span>(Semana 13)</span></a></li>
-                    <li><a href="bloco3/aula16.html">Aula 16: Arquivos Binários <span>(Semana 14)</span></a></li>
-                    <li><a href="bloco3/aula17.html">Aula 17: Ordenação Eficiente <span>(Semana 15)</span></a></li>
-                    <li><a href="bloco3/aula18.html">Aula 18: Revisão e Projeto <span>(Semana 16)</span></a></li>
-                    <li><a href="bloco3/aula19.html">Aula 19: Avaliação Final <span>(Semana 17-18)</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco2/aula12.html"><strong>Semana 13</strong> [Aula 12]<span class="schedule-content">Ordenação de vetores: métodos básicos; CIUFLA.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco3/aula13.html"><strong>Semana 14</strong> [Aula 13]<span class="schedule-content">Arquivos binários e arquivos tipados.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco3/aula14.html"><strong>Semana 15</strong> [Aula 14]<span class="schedule-content">Ordenação de vetores: métodos avançados.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco3/aula15.html"><strong>Semana 16</strong> [Projeto/Prova 2]<span class="schedule-content">Entrega do projeto e aplicação da Prova 2.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco3/aula16.html"><strong>Semana 17</strong> [Projeto/2ª chamada]<span class="schedule-content">Avaliação do projeto e segunda chamada da Prova 2.</span></a></li>
+                    <li><a class="schedule-item" target="_blank" rel="noopener noreferrer" href="bloco3/aula17.html"><strong>Semana 18</strong> [Avaliação adicional]<span class="schedule-content">Semana para aplicação de avaliação adicional.</span></a></li>
                 </ul>
             </div>
         </div>
 
         <div class="complementary-section" id="cp1">
             <h2>Materiais Complementares (CP-1)</h2>
-            <p>As notas de aula originais da disciplina Computer Programming (CP-1) continuam disponíveis como material complementar de estudo.</p>
-            <a href="cp1-complementar/index.html" class="cp1-link">Acessar Notas de Aula CP-1</a>
+            <p>Notas de aula da disciplina Programação de Computadores (Computer Programming - CP).</p>
+            <a href="cp1-complementar/index.html" class="cp1-link" target="_blank" rel="noopener noreferrer">Acessar Notas de Aula CP-1</a>
         </div>
     </main>
 
     <footer>
         <div class="container">
-            <p>Prof. Paulo Henrique Lopes Rettore | Universidade Federal de Lavras (UFLA)</p>
+            <p>Prof. Paulo Rettore | Universidade Federal de Lavras (UFLA)</p>
             <p>Disciplina: GAC124 - Introdução aos Algoritmos</p>
         </div>
     </footer>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" rel="stylesheet"/><title>Aula 11 — Redimensionamento de Vetores</title><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css" rel="stylesheet"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css" rel="stylesheet"/><link href="../css/style.css" rel="stylesheet"/><style id="aula03-template">
+        :root {
+            --ufla-green: #008B45;
+            --ufla-blue: #003366;
+            --soft-green: #eef8f1;
+            --soft-blue: #edf4fb;
+            --soft-orange: #fff4ed;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .reveal {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .reveal .slides {
+            width: 100%;
+            height: 100%;
+        }
+
+        .reveal section {
+            width: 100%;
+            height: 100%;
+            padding: 40px !important;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .reveal .slide-background { background: #ffffff; }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--ufla-blue);
+            text-transform: none;
+            font-weight: 800;
+            width: 100%;
+        }
+
+        .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+
+        .reveal h2 {
+            font-size: clamp(1.18em, 4vw, 1.8em);
+            border-bottom: 3px solid var(--ufla-green);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .reveal h3 { font-size: clamp(0.9em, 3vw, 1.25em); }
+
+        .reveal p, .reveal li {
+            color: #333333;
+            font-size: clamp(0.65em, 1.9vw, 0.88em);
+            line-height: 1.45;
+        }
+
+        .reveal ul, .reveal ol {
+            width: 100%;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .reveal li {
+            text-align: left;
+            margin: 7px 0;
+        }
+
+        .highlight { color: var(--ufla-green); font-weight: 800; }
+
+        .logo-container {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            z-index: 10;
+        }
+
+        .logo-container img { height: clamp(35px, 8vw, 58px); }
+
+        .title-slide .subtitle {
+            color: var(--ufla-green);
+            font-size: clamp(0.9em, 3vw, 1.2em);
+            margin-top: 18px;
+        }
+
+        .title-slide .author {
+            margin-top: 48px;
+            font-size: clamp(0.62em, 1.8vw, 0.8em);
+            color: #555;
+        }
+
+        .emoji-large {
+            font-size: clamp(2em, 8vw, 3em);
+            margin: 12px 0;
+        }
+
+        .box, .info-box, .warning-box, .success-box {
+            width: 90%;
+            max-width: 950px;
+            margin: 14px auto;
+            padding: 14px 18px;
+            text-align: left;
+            border-radius: 4px;
+        }
+
+        .box { background: #f5f5f5; border-left: 5px solid var(--ufla-green); }
+        .info-box { background: var(--soft-blue); border-left: 5px solid var(--ufla-blue); }
+        .warning-box { background: var(--soft-orange); border-left: 5px solid #d85c42; }
+        .success-box { background: var(--soft-green); border-left: 5px solid var(--ufla-green); }
+
+        .code-box {
+            width: 90%;
+            max-width: 950px;
+            background: #f1f2f1;
+            border-top: 5px solid var(--ufla-blue);
+            padding: 15px 20px;
+            margin: 14px auto;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(0.57em, 1.75vw, 0.75em);
+            line-height: 1.4;
+            white-space: pre-wrap;
+            color: #172630;
+        }
+
+        .three-column, .two-column {
+            width: 90%;
+            margin: 14px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+        }
+
+        .three-column > div {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .two-column > div {
+            flex: 1;
+            min-width: 260px;
+            padding: 14px;
+            background: var(--soft-blue);
+            border-top: 5px solid var(--ufla-blue);
+        }
+
+        .three-column h4, .two-column h4 {
+            margin: 0 0 8px;
+            color: var(--ufla-blue);
+            font-size: clamp(0.8em, 2vw, 1em);
+        }
+
+        .step-list {
+            width: 90%;
+            max-width: 940px;
+            margin: 10px auto;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .step-list li::before {
+            content: "→";
+            color: var(--ufla-green);
+            font-weight: 800;
+            position: absolute;
+            left: 0;
+        }
+
+        table {
+            width: 90%;
+            max-width: 1000px;
+            margin: 10px auto;
+            border-collapse: collapse;
+            font-size: clamp(0.58em, 1.55vw, 0.75em);
+            color: #333;
+        }
+
+        th {
+            background: var(--ufla-blue);
+            color: white;
+            text-align: left;
+            padding: 8px;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #d8e4dc;
+            text-align: left;
+        }
+
+        tr:nth-child(even) { background: #f4faf6; }
+
+        .sequence-flow {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            width: 90%;
+            max-width: 950px;
+            gap: 16px;
+            margin: 16px auto;
+            text-align: center;
+        }
+
+        .sequence-flow > div {
+            padding: 14px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .sequence-flow > div:nth-child(2) {
+            background: var(--soft-blue);
+            border-top-color: var(--ufla-blue);
+        }
+
+        .sequence-flow h3 { margin: 0 0 8px; }
+@media (max-width: 768px) {
+            .reveal section { padding: 18px !important; }
+            .three-column > div, .two-column > div { min-width: 100%; }
+            .sequence-flow { grid-template-columns: 1fr; }
+            table { font-size: clamp(0.46em, 1.6vw, 0.68em); }
+            th, td { padding: 5px; }
+            .code-box { font-size: clamp(0.48em, 1.55vw, 0.68em); }
+        }
+    
+
+/* Extensão para códigos extensos: o slide não muda de escala. */
+.code-box {
+    max-height: 56vh;
+    overflow: auto;
+    scrollbar-width: thin;
+    white-space: pre-wrap;
+}
+pre.code-box { white-space: pre; }
+.code-box::-webkit-scrollbar { width: 8px; height: 8px; }
+.code-box::-webkit-scrollbar-thumb { background: #9bb9a7; border-radius: 4px; }
+@media (max-width: 768px) {
+    .code-box { max-height: 54vh; }
+}
+</style></head><body class="slides-page"><div class="logo-container"><img alt="UFLA" src="../assets/ufla-logo.webp"/></div><div class="reveal"><div class="slides">
+<section class="title-slide">
+<h1>🎓 Aula 11</h1>
+<div class="subtitle">Redimensionamento de Vetores</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section>
+<section><h2>🎯 Quando o vetor enche</h2><p>Um vetor dinâmico alocado com <code>new</code> tem capacidade fixa. Ele não aumenta no mesmo endereço.</p><div class="sequence-flow"><div><h3>Tamanho</h3><p>Quantidade usada.</p></div><div><h3>Capacidade</h3><p>Quantidade que cabe.</p></div><div><h3>Cheio?</h3><p>É preciso criar outro vetor.</p></div></div><div class="info-box"><p>Redimensionar significa alocar uma nova região maior, copiar dados e liberar a antiga.</p></div></section>
+<section><h2>📦 Vetor dinâmico básico</h2><pre class="code-box"><code>int capacidade = 4;
+int tamanho = 0;
+int* v = new int[capacidade];
+
+v[tamanho] = 10;
+tamanho++;</code></pre><div class="success-box"><p><code>tamanho</code> informa quantos elementos são válidos; <code>capacidade</code> informa quanto espaço foi reservado.</p></div></section>
+<section><h2>⚠️ Por que não mudar o endereço?</h2><p>Um ponteiro guarda o endereço inicial do vetor. O programa não pode simplesmente afirmar que há mais posições depois do bloco atual.</p><div class="warning-box"><p>As posições seguintes podem pertencer a outro dado, ou nem estar disponíveis. Por isso, é necessário pedir um novo bloco ao sistema.</p></div></section>
+<section><h2>🪜 Passos do redimensionamento</h2><ol class="step-list"><li>Calcule a nova capacidade, por exemplo o dobro.</li><li>Crie um vetor temporário maior.</li><li>Copie os elementos válidos.</li><li>Libere o vetor antigo com <code>delete[]</code>.</li><li>Faça o ponteiro principal apontar para o novo vetor.</li></ol></section>
+<section><h2>🔁 Copiando com um for</h2><pre class="code-box"><code>int novaCapacidade = capacidade * 2;
+int* temp = new int[novaCapacidade];
+
+for (int i = 0; i &lt; tamanho; i++)
+    temp[i] = v[i];
+
+delete[] v;
+v = temp;
+capacidade = novaCapacidade;</code></pre><div class="info-box"><p>Copie apenas até <code>tamanho</code>, porque somente essas posições possuem dados válidos.</p></div></section>
+<section><h2>🛠️ Usando std::copy</h2><pre class="code-box"><code>#include &lt;algorithm&gt;
+
+int* temp = new int[novaCapacidade];
+copy(v, v + tamanho, temp);
+
+delete[] v;
+v = temp;</code></pre><div class="success-box"><p><code>std::copy</code> expressa a mesma ideia: copiar o intervalo que vai de <code>v</code> até <code>v + tamanho</code>.</p></div></section>
+<section><h2>➕ Inserindo com aumento automático</h2><pre class="code-box"><code>if (tamanho == capacidade) {
+    // criar temp maior, copiar e atualizar v
+}
+
+v[tamanho] = novoValor;
+tamanho++;</code></pre><p>O teste ocorre antes de inserir. Assim, sempre existe espaço na próxima posição.</p></section>
+<section><h2>🛡️ Erros comuns</h2><div class="three-column"><div><h4>Esquecer delete[]</h4><p>Vaza memória.</p></div><div><h4>Copiar capacidade</h4><p>Pode copiar lixo em posições não usadas.</p></div><div><h4>Usar ponteiro antigo</h4><p>Após <code>delete[]</code>, ele não é mais válido.</p></div></div><div class="warning-box"><p>Depois de transferir o vetor novo, considere atribuir <code>nullptr</code> aos ponteiros que não devem mais ser usados.</p></div></section>
+<section><h2>🧩 Desafio: lista que cresce</h2><p>Leia inteiros até receber <code>-1</code>. Comece com capacidade 2 e dobre a capacidade quando necessário.</p><ol class="step-list"><li>Guarde <code>tamanho</code> e <code>capacidade</code>.</li><li>Redimensione antes de inserir quando estiver cheio.</li><li>Ao final, imprima todos os valores e libere a memória.</li></ol><div class="info-box"><p>Essa é a ideia central por trás de estruturas que crescem dinamicamente, como vetores dinâmicos de bibliotecas.</p></div></section>
+<section class="practice-slide">
+<h2>🧩 Prática em aula</h2>
+<p>Leia inteiros até -1, começando com capacidade 2, e dobre a capacidade quando o vetor estiver cheio.</p>
+<div class="success-box"><p><strong>Gabarito orientador:</strong> Mantenha tamanho e capacidade separados; aloque, copie, libere o vetor antigo e atualize o ponteiro.</p></div>
+
+</section><section class="references-slide">
+<h2>📚 Referências e materiais</h2>
+<p>Use estas fontes para consultas pontuais depois da aula:</p>
+<ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/language/new" target="_blank">cppreference — new-expression</a></li><li><a href="https://en.cppreference.com/w/cpp/language/delete" target="_blank">cppreference — delete-expression</a></li><li><a href="https://cpp.sh/" target="_blank">C++ Shell — testes rápidos</a></li></ul>
+<div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
+
+</section><section class="summary-slide">
+<h2>📌 Resumo da aula</h2>
+<ul class="step-list"><li>Vetores dinâmicos não mudam de tamanho no mesmo endereço.</li><li>Redimensionar significa alocar, copiar, liberar e atualizar.</li><li>tamanho e capacidade representam informações diferentes.</li><li>Vetor criado com new[] deve ser liberado com delete[].</li></ul>
+
+</section><section class="next-slide">
+<p class="next-label">PRÓXIMA AULA</p>
+<h1>⏭️ Próxima aula</h1>
+<div class="subtitle">Ordenação de vetores: métodos básicos</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script></body></html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" rel="stylesheet"/><title>Aula 10 — Registros</title><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css" rel="stylesheet"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css" rel="stylesheet"/><link href="../css/style.css" rel="stylesheet"/><style id="aula03-template">
+        :root {
+            --ufla-green: #008B45;
+            --ufla-blue: #003366;
+            --soft-green: #eef8f1;
+            --soft-blue: #edf4fb;
+            --soft-orange: #fff4ed;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .reveal {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .reveal .slides {
+            width: 100%;
+            height: 100%;
+        }
+
+        .reveal section {
+            width: 100%;
+            height: 100%;
+            padding: 40px !important;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .reveal .slide-background { background: #ffffff; }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--ufla-blue);
+            text-transform: none;
+            font-weight: 800;
+            width: 100%;
+        }
+
+        .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+
+        .reveal h2 {
+            font-size: clamp(1.18em, 4vw, 1.8em);
+            border-bottom: 3px solid var(--ufla-green);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .reveal h3 { font-size: clamp(0.9em, 3vw, 1.25em); }
+
+        .reveal p, .reveal li {
+            color: #333333;
+            font-size: clamp(0.65em, 1.9vw, 0.88em);
+            line-height: 1.45;
+        }
+
+        .reveal ul, .reveal ol {
+            width: 100%;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .reveal li {
+            text-align: left;
+            margin: 7px 0;
+        }
+
+        .highlight { color: var(--ufla-green); font-weight: 800; }
+
+        .logo-container {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            z-index: 10;
+        }
+
+        .logo-container img { height: clamp(35px, 8vw, 58px); }
+
+        .title-slide .subtitle {
+            color: var(--ufla-green);
+            font-size: clamp(0.9em, 3vw, 1.2em);
+            margin-top: 18px;
+        }
+
+        .title-slide .author {
+            margin-top: 48px;
+            font-size: clamp(0.62em, 1.8vw, 0.8em);
+            color: #555;
+        }
+
+        .emoji-large {
+            font-size: clamp(2em, 8vw, 3em);
+            margin: 12px 0;
+        }
+
+        .box, .info-box, .warning-box, .success-box {
+            width: 90%;
+            max-width: 950px;
+            margin: 14px auto;
+            padding: 14px 18px;
+            text-align: left;
+            border-radius: 4px;
+        }
+
+        .box { background: #f5f5f5; border-left: 5px solid var(--ufla-green); }
+        .info-box { background: var(--soft-blue); border-left: 5px solid var(--ufla-blue); }
+        .warning-box { background: var(--soft-orange); border-left: 5px solid #d85c42; }
+        .success-box { background: var(--soft-green); border-left: 5px solid var(--ufla-green); }
+
+        .code-box {
+            width: 90%;
+            max-width: 950px;
+            background: #f1f2f1;
+            border-top: 5px solid var(--ufla-blue);
+            padding: 15px 20px;
+            margin: 14px auto;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(0.57em, 1.75vw, 0.75em);
+            line-height: 1.4;
+            white-space: pre-wrap;
+            color: #172630;
+        }
+
+        .three-column, .two-column {
+            width: 90%;
+            margin: 14px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+        }
+
+        .three-column > div {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .two-column > div {
+            flex: 1;
+            min-width: 260px;
+            padding: 14px;
+            background: var(--soft-blue);
+            border-top: 5px solid var(--ufla-blue);
+        }
+
+        .three-column h4, .two-column h4 {
+            margin: 0 0 8px;
+            color: var(--ufla-blue);
+            font-size: clamp(0.8em, 2vw, 1em);
+        }
+
+        .step-list {
+            width: 90%;
+            max-width: 940px;
+            margin: 10px auto;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .step-list li::before {
+            content: "→";
+            color: var(--ufla-green);
+            font-weight: 800;
+            position: absolute;
+            left: 0;
+        }
+
+        table {
+            width: 90%;
+            max-width: 1000px;
+            margin: 10px auto;
+            border-collapse: collapse;
+            font-size: clamp(0.58em, 1.55vw, 0.75em);
+            color: #333;
+        }
+
+        th {
+            background: var(--ufla-blue);
+            color: white;
+            text-align: left;
+            padding: 8px;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #d8e4dc;
+            text-align: left;
+        }
+
+        tr:nth-child(even) { background: #f4faf6; }
+
+        .sequence-flow {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            width: 90%;
+            max-width: 950px;
+            gap: 16px;
+            margin: 16px auto;
+            text-align: center;
+        }
+
+        .sequence-flow > div {
+            padding: 14px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .sequence-flow > div:nth-child(2) {
+            background: var(--soft-blue);
+            border-top-color: var(--ufla-blue);
+        }
+
+        .sequence-flow h3 { margin: 0 0 8px; }
+@media (max-width: 768px) {
+            .reveal section { padding: 18px !important; }
+            .three-column > div, .two-column > div { min-width: 100%; }
+            .sequence-flow { grid-template-columns: 1fr; }
+            table { font-size: clamp(0.46em, 1.6vw, 0.68em); }
+            th, td { padding: 5px; }
+            .code-box { font-size: clamp(0.48em, 1.55vw, 0.68em); }
+        }
+    
+
+/* Extensão para códigos extensos: o slide não muda de escala. */
+.code-box {
+    max-height: 56vh;
+    overflow: auto;
+    scrollbar-width: thin;
+    white-space: pre-wrap;
+}
+pre.code-box { white-space: pre; }
+.code-box::-webkit-scrollbar { width: 8px; height: 8px; }
+.code-box::-webkit-scrollbar-thumb { background: #9bb9a7; border-radius: 4px; }
+@media (max-width: 768px) {
+    .code-box { max-height: 54vh; }
+}
+</style></head><body class="slides-page"><div class="logo-container"><img alt="UFLA" src="../assets/ufla-logo.webp"/></div><div class="reveal"><div class="slides">
+<section class="title-slide">
+<h1>🎓 Aula 10</h1>
+<div class="subtitle">Registros e Vetores de Registros</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section>
+<section><h2>🎯 Uma entidade, vários dados</h2><p>Um registro reúne informações de <strong>tipos diferentes</strong> que descrevem a mesma entidade.</p><div class="three-column"><div><h4>Aluno</h4><p>Nome, matrícula e notas.</p></div><div><h4>Produto</h4><p>Código, descrição e preço.</p></div><div><h4>Livro</h4><p>Título, autor e ano.</p></div></div><div class="info-box"><p>Em C++, registros são criados com <code>struct</code>.</p></div></section>
+<section><h2>🧱 Criando uma struct</h2><pre class="code-box"><code>struct Aluno {
+    string nome;
+    int matricula;
+    double nota1;
+    double nota2;
+};</code></pre><p>Os campos de uma <code>struct</code> podem ter tipos diferentes, mas todos pertencem ao mesmo aluno.</p></section>
+<section><h2>🔎 Acessando campos</h2><pre class="code-box"><code>Aluno a;
+a.nome = "Ana";
+a.matricula = 20260001;
+a.nota1 = 85.0;
+
+double media = (a.nota1 + a.nota2) / 2.0;</code></pre><div class="success-box"><p>Use o operador ponto <code>.</code> para acessar os campos de uma variável do tipo registro.</p></div></section>
+<section><h2>⌨️ Leitura de um registro</h2><pre class="code-box"><code>Aluno a;
+cout &lt;&lt; "Matrícula: ";
+cin &gt;&gt; a.matricula;
+cin.ignore();
+cout &lt;&lt; "Nome: ";
+getline(cin, a.nome);
+cin &gt;&gt; a.nota1 &gt;&gt; a.nota2;</code></pre><div class="warning-box"><p>Ao misturar <code>cin</code> e <code>getline()</code>, descarte a quebra de linha com <code>cin.ignore()</code>.</p></div></section>
+<section><h2>📚 Vetor de registros</h2><pre class="code-box"><code>const int N = 3;
+Aluno turma[N];
+
+for (int i = 0; i &lt; N; i++) {
+    cin &gt;&gt; turma[i].matricula;
+    cin.ignore();
+    getline(cin, turma[i].nome);
+}</code></pre><p>O vetor representa várias entidades; cada posição é um registro completo.</p></section>
+<section><h2>🧮 Funções com registros</h2><pre class="code-box"><code>double media(const Aluno&amp; a) {
+    return (a.nota1 + a.nota2) / 2.0;
+}
+
+void imprime(const Aluno&amp; a) {
+    cout &lt;&lt; a.nome &lt;&lt; ": " &lt;&lt; media(a);
+}</code></pre><div class="info-box"><p>O <code>const Aluno&amp;</code> evita cópia desnecessária e informa que a função não deve alterar o registro.</p></div></section>
+<section><h2>📦 Atribuição de registros</h2><pre class="code-box"><code>Aluno origem = {"Ana", 20260001, 80, 90};
+Aluno copia;
+
+copia = origem;
+copia.nome = "Bia";</code></pre><div class="success-box"><p>A atribuição copia todos os campos. Depois, os dois registros são independentes.</p></div></section>
+<section><h2>🧠 Uma nota sobre memória</h2><p>Um registro ocupa espaço para todos os seus campos. O compilador pode incluir pequenos espaços internos para alinhar os dados na memória.</p><div class="warning-box"><p>Para a maior parte dos programas introdutórios, a prioridade é modelar os dados com clareza; detalhes de alinhamento aparecem em situações mais avançadas.</p></div></section>
+<section class="practice-slide">
+<h2>🧩 Prática em aula</h2>
+<p>Modele um Produto com código, nome e preço. Leia três produtos e mostre o mais caro.</p>
+<div class="success-box"><p><strong>Gabarito orientador:</strong> Crie uma struct, armazene os registros em um vetor e percorra as posições procurando o maior preço.</p></div>
+
+</section><section class="references-slide">
+<h2>📚 Referências e materiais</h2>
+<p>Use estas fontes para consultas pontuais depois da aula:</p>
+<ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/language/classes" target="_blank">cppreference — classes e structs</a></li><li><a href="https://beecrowd.com/" target="_blank">beecrowd — exercícios de registros</a></li><li><a href="https://campusvirtual.ufla.br/" target="_blank">Campus Virtual UFLA — materiais WebMedia</a></li></ul>
+<div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
+
+</section><section class="summary-slide">
+<h2>📌 Resumo da aula</h2>
+<ul class="step-list"><li>struct agrupa campos relacionados de tipos diferentes.</li><li>O operador ponto acessa os campos do registro.</li><li>Vetor de registros representa várias entidades.</li><li>Funções podem receber registros por referência constante.</li></ul>
+
+</section><section class="next-slide">
+<p class="next-label">PRÓXIMA AULA</p>
+<h1>⏭️ Próxima aula</h1>
+<div class="subtitle">Redimensionamento de vetores</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script></body></html>

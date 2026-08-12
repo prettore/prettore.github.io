@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" rel="stylesheet"/><title>Aula 14 — Ordenação: Métodos Avançados</title><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css" rel="stylesheet"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css" rel="stylesheet"/><link href="../css/style.css" rel="stylesheet"/><style id="aula03-template">
+        :root {
+            --ufla-green: #008B45;
+            --ufla-blue: #003366;
+            --soft-green: #eef8f1;
+            --soft-blue: #edf4fb;
+            --soft-orange: #fff4ed;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .reveal {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .reveal .slides {
+            width: 100%;
+            height: 100%;
+        }
+
+        .reveal section {
+            width: 100%;
+            height: 100%;
+            padding: 40px !important;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .reveal .slide-background { background: #ffffff; }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--ufla-blue);
+            text-transform: none;
+            font-weight: 800;
+            width: 100%;
+        }
+
+        .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+
+        .reveal h2 {
+            font-size: clamp(1.18em, 4vw, 1.8em);
+            border-bottom: 3px solid var(--ufla-green);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .reveal h3 { font-size: clamp(0.9em, 3vw, 1.25em); }
+
+        .reveal p, .reveal li {
+            color: #333333;
+            font-size: clamp(0.65em, 1.9vw, 0.88em);
+            line-height: 1.45;
+        }
+
+        .reveal ul, .reveal ol {
+            width: 100%;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .reveal li {
+            text-align: left;
+            margin: 7px 0;
+        }
+
+        .highlight { color: var(--ufla-green); font-weight: 800; }
+
+        .logo-container {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            z-index: 10;
+        }
+
+        .logo-container img { height: clamp(35px, 8vw, 58px); }
+
+        .title-slide .subtitle {
+            color: var(--ufla-green);
+            font-size: clamp(0.9em, 3vw, 1.2em);
+            margin-top: 18px;
+        }
+
+        .title-slide .author {
+            margin-top: 48px;
+            font-size: clamp(0.62em, 1.8vw, 0.8em);
+            color: #555;
+        }
+
+        .emoji-large {
+            font-size: clamp(2em, 8vw, 3em);
+            margin: 12px 0;
+        }
+
+        .box, .info-box, .warning-box, .success-box {
+            width: 90%;
+            max-width: 950px;
+            margin: 14px auto;
+            padding: 14px 18px;
+            text-align: left;
+            border-radius: 4px;
+        }
+
+        .box { background: #f5f5f5; border-left: 5px solid var(--ufla-green); }
+        .info-box { background: var(--soft-blue); border-left: 5px solid var(--ufla-blue); }
+        .warning-box { background: var(--soft-orange); border-left: 5px solid #d85c42; }
+        .success-box { background: var(--soft-green); border-left: 5px solid var(--ufla-green); }
+
+        .code-box {
+            width: 90%;
+            max-width: 950px;
+            background: #f1f2f1;
+            border-top: 5px solid var(--ufla-blue);
+            padding: 15px 20px;
+            margin: 14px auto;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(0.57em, 1.75vw, 0.75em);
+            line-height: 1.4;
+            white-space: pre-wrap;
+            color: #172630;
+        }
+
+        .three-column, .two-column {
+            width: 90%;
+            margin: 14px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+        }
+
+        .three-column > div {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .two-column > div {
+            flex: 1;
+            min-width: 260px;
+            padding: 14px;
+            background: var(--soft-blue);
+            border-top: 5px solid var(--ufla-blue);
+        }
+
+        .three-column h4, .two-column h4 {
+            margin: 0 0 8px;
+            color: var(--ufla-blue);
+            font-size: clamp(0.8em, 2vw, 1em);
+        }
+
+        .step-list {
+            width: 90%;
+            max-width: 940px;
+            margin: 10px auto;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .step-list li::before {
+            content: "→";
+            color: var(--ufla-green);
+            font-weight: 800;
+            position: absolute;
+            left: 0;
+        }
+
+        table {
+            width: 90%;
+            max-width: 1000px;
+            margin: 10px auto;
+            border-collapse: collapse;
+            font-size: clamp(0.58em, 1.55vw, 0.75em);
+            color: #333;
+        }
+
+        th {
+            background: var(--ufla-blue);
+            color: white;
+            text-align: left;
+            padding: 8px;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #d8e4dc;
+            text-align: left;
+        }
+
+        tr:nth-child(even) { background: #f4faf6; }
+
+        .sequence-flow {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            width: 90%;
+            max-width: 950px;
+            gap: 16px;
+            margin: 16px auto;
+            text-align: center;
+        }
+
+        .sequence-flow > div {
+            padding: 14px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .sequence-flow > div:nth-child(2) {
+            background: var(--soft-blue);
+            border-top-color: var(--ufla-blue);
+        }
+
+        .sequence-flow h3 { margin: 0 0 8px; }
+@media (max-width: 768px) {
+            .reveal section { padding: 18px !important; }
+            .three-column > div, .two-column > div { min-width: 100%; }
+            .sequence-flow { grid-template-columns: 1fr; }
+            table { font-size: clamp(0.46em, 1.6vw, 0.68em); }
+            th, td { padding: 5px; }
+            .code-box { font-size: clamp(0.48em, 1.55vw, 0.68em); }
+        }
+    
+
+/* Extensão para códigos extensos: o slide não muda de escala. */
+.code-box {
+    max-height: 56vh;
+    overflow: auto;
+    scrollbar-width: thin;
+    white-space: pre-wrap;
+}
+pre.code-box { white-space: pre; }
+.code-box::-webkit-scrollbar { width: 8px; height: 8px; }
+.code-box::-webkit-scrollbar-thumb { background: #9bb9a7; border-radius: 4px; }
+@media (max-width: 768px) {
+    .code-box { max-height: 54vh; }
+}
+</style></head><body class="slides-page"><div class="logo-container"><img alt="UFLA" src="../assets/ufla-logo.webp"/></div><div class="reveal"><div class="slides">
+<section class="title-slide">
+<h1>🎓 Aula 14</h1>
+<div class="subtitle">Ordenação de Vetores: Métodos Avançados</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section>
+<section><h2>🎯 Dividir para conquistar</h2><p>QuickSort e MergeSort são métodos de ordenação eficientes baseados em dividir o problema em partes menores.</p><div class="two-column"><div><h4>QuickSort</h4><p>Particiona em torno de um pivô.</p></div><div><h4>MergeSort</h4><p>Divide o vetor e depois intercala trechos ordenados.</p></div></div><div class="success-box"><p>Os dois métodos usam recursão em suas versões tradicionais.</p></div></section>
+<section><h2>✂️ QuickSort: o problema do pivô</h2><p>Escolha um pivô e reorganize o vetor para que os menores fiquem à esquerda e os maiores à direita.</p><pre class="code-box"><code>v = {7, 2, 9, 4, 6}
+pivô = 6
+
+menores ou iguais: {2, 4, 6}
+maiores: {7, 9}</code></pre><div class="info-box"><p>Depois do particionamento, o pivô já está em uma posição correta. Restam duas partes menores para ordenar.</p></div></section>
+<section><h2>🔁 Estrutura do QuickSort</h2><pre class="code-box"><code>void quicksort(int v[], int inicio, int fim) {
+    if (inicio &gt;= fim) return;
+
+    int pivo = particiona(v, inicio, fim);
+    quicksort(v, inicio, pivo - 1);
+    quicksort(v, pivo + 1, fim);
+}</code></pre><div class="two-column"><div><h4>Caso base</h4><p>Trecho com zero ou um elemento.</p></div><div><h4>Passo recursivo</h4><p>Ordenar as partes à esquerda e à direita do pivô.</p></div></div></section>
+<section><h2>🧭 Particionamento de Lomuto</h2><pre class="code-box"><code>int particiona(int v[], int ini, int fim) {
+    int pivo = v[fim];
+    int i = ini;
+    for (int j = ini; j &lt; fim; j++) {
+        if (v[j] &lt;= pivo) {
+            swap(v[i], v[j]);
+            i++;
+        }
+    }
+    swap(v[i], v[fim]);
+    return i;
+}</code></pre><div class="warning-box"><p>A escolha do pivô influencia o desempenho. Vetores já ordenados podem gerar casos ruins dependendo da estratégia.</p></div></section>
+<section><h2>🧩 MergeSort: intercalar ordenados</h2><p>O MergeSort divide o vetor ao meio até sobrar um elemento por parte. Depois, intercala partes já ordenadas.</p><pre class="code-box"><code>{1, 7, 9}  e  {2, 4, 10}
+
+intercalação:
+{1, 2, 4, 7, 9, 10}</code></pre><div class="success-box"><p>Intercalar compara os primeiros elementos disponíveis dos dois trechos e copia o menor.</p></div></section>
+<section><h2>🔀 Estrutura do MergeSort</h2><pre class="code-box"><code>void mergesort(int v[], int inicio, int fim) {
+    if (inicio &gt;= fim) return;
+
+    int meio = (inicio + fim) / 2;
+    mergesort(v, inicio, meio);
+    mergesort(v, meio + 1, fim);
+    intercala(v, inicio, meio, fim);
+}</code></pre><p>Primeiro divide; depois resolve as chamadas menores e intercala na volta.</p></section>
+<section><h2>🧱 A ideia da intercalação</h2><pre class="code-box"><code>enquanto houver elementos nos dois trechos:
+    copie o menor para o vetor auxiliar
+
+copie o restante do trecho que ainda não terminou
+copie o auxiliar de volta para o vetor original</code></pre><div class="info-box"><p>O MergeSort geralmente precisa de memória auxiliar para realizar a intercalação.</p></div></section>
+<section><h2>⚖️ QuickSort x MergeSort</h2><table><tr><th>Aspecto</th><th>QuickSort</th><th>MergeSort</th></tr><tr><td>Estratégia</td><td>Particionamento por pivô.</td><td>Divisão e intercalação.</td></tr><tr><td>Memória auxiliar</td><td>Geralmente menor.</td><td>Normalmente precisa de auxiliar.</td></tr><tr><td>Pior caso</td><td>Pode ser quadrático.</td><td>Permanece em O(n log n).</td></tr><tr><td>Uso típico</td><td>Muito eficiente em memória.</td><td>Útil para intercalação e dados externos.</td></tr></table></section>
+<section><h2>📈 Complexidade: leitura essencial</h2><div class="three-column"><div><h4>QuickSort médio</h4><p>O(n log n)</p></div><div><h4>QuickSort pior caso</h4><p>O(n²)</p></div><div><h4>MergeSort</h4><p>O(n log n)</p></div></div><div class="warning-box"><p>Complexidade é uma forma de comparar como o custo cresce. Não substitui observar entradas reais e requisitos de memória.</p></div></section>
+<section class="practice-slide">
+<h2>🧩 Prática em aula</h2>
+<p>Para o vetor {8, 3, 6, 2, 7}, mostre uma etapa do particionamento do QuickSort e uma intercalação do MergeSort.</p>
+<div class="success-box"><p><strong>Gabarito orientador:</strong> Explique o pivô, o caso base da recursão e como dois trechos ordenados produzem um único trecho ordenado.</p></div>
+
+</section><section class="references-slide">
+<h2>📚 Referências e materiais</h2>
+<p>Use estas fontes para consultas pontuais depois da aula:</p>
+<ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/algorithm/sort" target="_blank">cppreference — sort</a></li><li><a href="https://en.cppreference.com/w/cpp/algorithm" target="_blank">cppreference — algoritmos</a></li><li><a href="https://beecrowd.com/" target="_blank">beecrowd — exercícios de ordenação</a></li></ul>
+<div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
+
+</section><section class="summary-slide">
+<h2>📌 Resumo da aula</h2>
+<ul class="step-list"><li>QuickSort particiona em torno de um pivô.</li><li>MergeSort divide e intercala trechos ordenados.</li><li>Ambos usam divisão do problema e recursão.</li><li>Complexidade e memória ajudam a escolher o método.</li></ul>
+
+</section><section class="next-slide">
+<p class="next-label">PRÓXIMA AULA</p>
+<h1>⏭️ Próxima aula</h1>
+<div class="subtitle">Projeto, revisão e avaliações finais</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script></body></html>

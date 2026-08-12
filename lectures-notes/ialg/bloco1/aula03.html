@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Aula 03: Estruturas Condicionais - IAlg</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" id="theme" rel="stylesheet"/>
+<style>
+        :root {
+            --ufla-green: #008B45;
+            --ufla-blue: #003366;
+            --soft-green: #eef8f1;
+            --soft-blue: #edf4fb;
+            --soft-orange: #fff4ed;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .reveal {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .reveal .slides {
+            width: 100%;
+            height: 100%;
+        }
+
+        .reveal section {
+            width: 100%;
+            height: 100%;
+            padding: 40px !important;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .reveal .slide-background { background: #ffffff; }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--ufla-blue);
+            text-transform: none;
+            font-weight: 800;
+            width: 100%;
+        }
+
+        .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+
+        .reveal h2 {
+            font-size: clamp(1.18em, 4vw, 1.8em);
+            border-bottom: 3px solid var(--ufla-green);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .reveal h3 { font-size: clamp(0.9em, 3vw, 1.25em); }
+
+        .reveal p, .reveal li {
+            color: #333333;
+            font-size: clamp(0.65em, 1.9vw, 0.88em);
+            line-height: 1.45;
+        }
+
+        .reveal ul, .reveal ol {
+            width: 100%;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .reveal li {
+            text-align: left;
+            margin: 7px 0;
+        }
+
+        .highlight { color: var(--ufla-green); font-weight: 800; }
+
+        .logo-container {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            z-index: 10;
+        }
+
+        .logo-container img { height: clamp(35px, 8vw, 58px); }
+
+        .title-slide .subtitle {
+            color: var(--ufla-green);
+            font-size: clamp(0.9em, 3vw, 1.2em);
+            margin-top: 18px;
+        }
+
+        .title-slide .author {
+            margin-top: 48px;
+            font-size: clamp(0.62em, 1.8vw, 0.8em);
+            color: #555;
+        }
+
+        .emoji-large {
+            font-size: clamp(2em, 8vw, 3em);
+            margin: 12px 0;
+        }
+
+        .box, .info-box, .warning-box, .success-box {
+            width: 90%;
+            max-width: 950px;
+            margin: 14px auto;
+            padding: 14px 18px;
+            text-align: left;
+            border-radius: 4px;
+        }
+
+        .box { background: #f5f5f5; border-left: 5px solid var(--ufla-green); }
+        .info-box { background: var(--soft-blue); border-left: 5px solid var(--ufla-blue); }
+        .warning-box { background: var(--soft-orange); border-left: 5px solid #d85c42; }
+        .success-box { background: var(--soft-green); border-left: 5px solid var(--ufla-green); }
+
+        .code-box {
+            width: 90%;
+            max-width: 950px;
+            background: #f1f2f1;
+            border-top: 5px solid var(--ufla-blue);
+            padding: 15px 20px;
+            margin: 14px auto;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(0.57em, 1.75vw, 0.75em);
+            line-height: 1.4;
+            white-space: pre-wrap;
+            color: #172630;
+        }
+
+        .three-column, .two-column {
+            width: 90%;
+            margin: 14px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+        }
+
+        .three-column > div {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .two-column > div {
+            flex: 1;
+            min-width: 260px;
+            padding: 14px;
+            background: var(--soft-blue);
+            border-top: 5px solid var(--ufla-blue);
+        }
+
+        .three-column h4, .two-column h4 {
+            margin: 0 0 8px;
+            color: var(--ufla-blue);
+            font-size: clamp(0.8em, 2vw, 1em);
+        }
+
+        .step-list {
+            width: 90%;
+            max-width: 940px;
+            margin: 10px auto;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .step-list li::before {
+            content: "→";
+            color: var(--ufla-green);
+            font-weight: 800;
+            position: absolute;
+            left: 0;
+        }
+
+        table {
+            width: 90%;
+            max-width: 1000px;
+            margin: 10px auto;
+            border-collapse: collapse;
+            font-size: clamp(0.58em, 1.55vw, 0.75em);
+            color: #333;
+        }
+
+        th {
+            background: var(--ufla-blue);
+            color: white;
+            text-align: left;
+            padding: 8px;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #d8e4dc;
+            text-align: left;
+        }
+
+        tr:nth-child(even) { background: #f4faf6; }
+
+        .sequence-flow {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            width: 90%;
+            max-width: 950px;
+            gap: 16px;
+            margin: 16px auto;
+            text-align: center;
+        }
+
+        .sequence-flow > div {
+            padding: 14px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .sequence-flow > div:nth-child(2) {
+            background: var(--soft-blue);
+            border-top-color: var(--ufla-blue);
+        }
+
+        .sequence-flow h3 { margin: 0 0 8px; }
+@media (max-width: 768px) {
+            .reveal section { padding: 18px !important; }
+            .three-column > div, .two-column > div { min-width: 100%; }
+            .sequence-flow { grid-template-columns: 1fr; }
+            table { font-size: clamp(0.46em, 1.6vw, 0.68em); }
+            th, td { padding: 5px; }
+            .code-box { font-size: clamp(0.48em, 1.55vw, 0.68em); }
+        }
+    </style>
+<link href="../css/style.css" rel="stylesheet"/></head>
+<body class="slides-page">
+<div class="logo-container">
+<img alt="UFLA" onerror="this.style.display='none'" src="../assets/ufla-logo.webp"/>
+</div>
+<div class="reveal">
+<div class="slides">
+<section class="title-slide">
+<h1>🎓 Aula 03</h1>
+<div class="subtitle">Estruturas Condicionais</div>
+<div class="author">
+<p><strong>Prof. Paulo Rettore</strong></p>
+<p>Universidade Federal de Lavras</p>
+<p>GAC124 — Introdução aos Algoritmos</p>
+</div>
+</section>
+<section>
+<h2>🎯 O programa pode escolher</h2>
+<div class="emoji-large">❓ ➜ 💻</div>
+<ul class="step-list">
+<li>Comparar valores com operadores relacionais.</li>
+<li>Combinar condições com operadores lógicos.</li>
+<li>Usar <code>if</code>, <code>if-else</code>, <code>else if</code> e <code>switch-case</code>.</li>
+<li>Resolver problemas com caminhos de decisão.</li>
+</ul>
+<div class="info-box"><p>Uma condicional transforma uma <span class="highlight">pergunta</span> em uma escolha do programa.</p></div>
+</section>
+<section>
+<h2>🔎 Comparações e lógica</h2>
+<table>
+<tr><th>Pergunta</th><th>C++</th><th>Exemplo</th></tr>
+<tr><td>Igual?</td><td><code>==</code></td><td><code>idade == 18</code></td></tr>
+<tr><td>Diferente?</td><td><code>!=</code></td><td><code>nota != 0</code></td></tr>
+<tr><td>Maior / menor?</td><td><code>&gt;</code> / <code>&lt;</code></td><td><code>a &gt; b</code></td></tr>
+<tr><td>Inclui igualdade?</td><td><code>&gt;=</code> / <code>&lt;=</code></td><td><code>nota &gt;= 60</code></td></tr>
+</table>
+<div class="two-column">
+<div><h4>Resultado</h4><p>Toda comparação produz <strong>true</strong> ou <strong>false</strong>.</p></div>
+<div style="border-top-color:#d85c42;background:var(--soft-orange);"><h4>⚠️ Cuidado</h4><p><code>=</code> atribui um valor; <code>==</code> compara dois valores.</p></div>
+</div>
+</section>
+<section>
+<h2>☝️ If: uma ação opcional</h2>
+<div class="code-box">if (nota &gt;= 60) {
+    cout &lt;&lt; "Aprovado" &lt;&lt; '\n';
+}</div>
+<div class="two-column">
+<div><h4>Se for verdadeira</h4><p>Executa o bloco entre chaves.</p></div>
+<div><h4>Se for falsa</h4><p>Ignora o bloco e segue para o próximo comando.</p></div>
+</div>
+<div class="success-box"><p><strong>Boa prática:</strong> use chaves <code>{ }</code> mesmo com uma única instrução. O código fica mais seguro e legível.</p></div>
+</section>
+<section>
+<h2>🔀 If-else: dois caminhos</h2>
+<div class="code-box">if (numero % 2 == 0) {
+    cout &lt;&lt; "Par" &lt;&lt; '\n';
+} else {
+    cout &lt;&lt; "Ímpar" &lt;&lt; '\n';
+}</div>
+<div class="sequence-flow">
+<div><h3>Condição</h3><p><code>numero % 2 == 0</code></p></div>
+<div><h3>Verdadeiro</h3><p>Executa o bloco do <code>if</code>.</p></div>
+<div><h3>Falso</h3><p>Executa o bloco do <code>else</code>.</p></div>
+</div>
+<p>Depois da escolha, o programa continua no próximo comando.</p>
+</section>
+<section>
+<h2>🪜 Else if e aninhamento</h2>
+<div class="code-box">if (nota &gt;= 90) {
+    cout &lt;&lt; "Conceito A";
+} else if (nota &gt;= 60) {
+    cout &lt;&lt; "Aprovado";
+} else {
+    cout &lt;&lt; "Reprovado";
+}</div>
+<ul class="step-list">
+<li>As condições são testadas <strong>de cima para baixo</strong>.</li>
+<li>O <strong>primeiro bloco verdadeiro</strong> é executado.</li>
+<li>Uma condicional aninhada fica dentro de outra e precisa de uma nova pergunta clara.</li>
+</ul>
+<div class="warning-box"><p><strong>Ordem importa:</strong> coloque primeiro as condições mais específicas.</p></div>
+</section>
+<section>
+<h2>🔗 Operadores lógicos na prática</h2>
+<div class="three-column">
+<div><h4><code>and</code></h4><p>Todas as condições devem ser verdadeiras.</p></div>
+<div style="border-top-color:var(--ufla-blue);background:var(--soft-blue);"><h4><code>or</code></h4><p>Basta uma condição ser verdadeira.</p></div>
+<div><h4><code>not</code></h4><p>Inverte o resultado da condição.</p></div>
+</div>
+<div class="code-box">if (nota &gt;= 60 and frequencia &gt;= 75) {
+    cout &lt;&lt; "Aprovado";
+}</div>
+<p>A aprovação exige <span class="highlight">nota suficiente</span> e <span class="highlight">frequência suficiente</span>.</p>
+</section>
+<section>
+<h2>🎛️ Switch-case: escolhas por valor</h2>
+<div class="code-box">switch (opcao) {
+    case 1: cout &lt;&lt; "Cadastrar"; break;
+    case 2: cout &lt;&lt; "Consultar"; break;
+    default: cout &lt;&lt; "Opção inválida";
+}</div>
+<div class="three-column">
+<div><h4>case</h4><p>Define o que fazer para cada valor.</p></div>
+<div style="border-top-color:var(--ufla-blue);background:var(--soft-blue);"><h4>default</h4><p>Trata os valores que não correspondem a nenhum caso.</p></div>
+<div><h4>break</h4><p>Evita executar os <code>case</code> seguintes.</p></div>
+</div>
+<div class="warning-box"><p>Use <code>switch</code> com valores discretos, como <code>int</code> ou <code>char</code>. Para caracteres, use aspas simples: <code>case '+':</code>.</p></div>
+</section>
+<section>
+<h2>⚠️ Três cuidados importantes</h2>
+<div class="three-column" style="max-width:100%;">
+<div><h4>01. Booleanos</h4><p>Zero é falso; qualquer valor diferente de zero é verdadeiro. Prefira <code>valor != 0</code>.</p></div>
+<div style="border-top-color:var(--ufla-blue);background:var(--soft-blue);"><h4>02. Ponto flutuante</h4><p>Evite igualdade exata após cálculos: <code>abs(a - b) &lt;= 0.000001</code>.</p></div>
+<div style="border-top-color:#d85c42;background:var(--soft-orange);"><h4>03. Curto-circuito</h4><p>Com <code>and</code>, um falso pode encerrar a avaliação; com <code>or</code>, um verdadeiro pode encerrá-la.</p></div>
+</div>
+</section>
+<section>
+<h2>🧩 Desafio: classificar uma idade</h2>
+<p>Leia uma idade e informe a faixa correspondente:</p>
+<div class="three-column">
+<div><h4>Criança</h4><p>Menor que 12 anos.</p><p><code>idade &lt; 12</code></p></div>
+<div style="border-top-color:var(--ufla-blue);background:var(--soft-blue);"><h4>Adolescente</h4><p>De 12 até 17 anos.</p><p><code>idade &lt; 18</code></p></div>
+<div style="border-top-color:#d85c42;background:var(--soft-orange);"><h4>Adulto</h4><p>Maior ou igual a 18 anos.</p><p><code>else</code></p></div>
+</div>
+<div class="info-box"><p><strong>Dica:</strong> organize os intervalos antes de escrever as condições.</p></div>
+</section>
+<section>
+<h2>✅ Gabarito possível</h2>
+<div class="code-box">int idade;
+cin &gt;&gt; idade;
+
+if (idade &lt; 12) {
+    cout &lt;&lt; "Criança";
+} else if (idade &lt; 18) {
+    cout &lt;&lt; "Adolescente";
+} else {
+    cout &lt;&lt; "Adulto";
+}</div>
+<div class="success-box"><p><strong>Ideia-chave:</strong> a segunda condição só é testada se a primeira for falsa. Por isso, não foi necessário escrever <code>idade &gt;= 12</code>.</p></div>
+</section>
+<section>
+<h2>🧩 Prática extra: validar uma nota</h2>
+<p>Leia uma nota e informe se ela é válida no intervalo de 0 a 100.</p>
+<div class="code-box">double nota;
+cin &gt;&gt; nota;
+
+if (nota &gt;= 0 and nota &lt;= 100) {
+    cout &lt;&lt; "Nota válida";
+} else {
+    cout &lt;&lt; "Nota inválida";
+}</div>
+<div class="success-box"><p><strong>Gabarito:</strong> a condição precisa combinar limite inferior e superior com <code>and</code>.</p></div>
+<p style="font-size:0.65em;">Prática online opcional: <a href="https://beecrowd.com/" target="_blank">beecrowd</a> ou <a href="https://cpp.sh/" target="_blank">C++ Shell</a>.</p>
+</section>
+<section class="references-slide"><h2>📚 Referências e materiais</h2><p>Use estas fontes para consultas pontuais depois da aula:</p><ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/language/if" rel="noopener noreferrer" target="_blank">cppreference — if</a></li><li><a href="https://en.cppreference.com/w/cpp/language/switch" rel="noopener noreferrer" target="_blank">cppreference — switch</a></li><li><a href="https://beecrowd.com/" rel="noopener noreferrer" target="_blank">beecrowd — exercícios online</a></li><li><a href="https://cpp.sh/" rel="noopener noreferrer" target="_blank">C++ Shell — compilador online</a></li></ul><div class="info-box"><p>Use as referências para conferir a sintaxe; os slides e as atividades da disciplina continuam sendo o caminho principal de estudo.</p></div></section>
+<section>
+<h2>📌 Resumo da aula</h2>
+<ul class="step-list">
+<li>Comparações produzem <code>true</code> ou <code>false</code>.</li>
+<li><code>if</code>, <code>if-else</code> e <code>else if</code> representam decisões.</li>
+<li><code>and</code>, <code>or</code> e <code>not</code> combinam condições.</li>
+<li><code>switch-case</code> organiza escolhas por valores discretos.</li>
+<li>A ordem das condições e o <code>break</code> mudam o resultado.</li>
+</ul>
+
+<p style="font-size:0.56em;color:#666;margin-top:10px;">Fonte resumida: material “IALG-03 — Estruturas condicionais”, produzido coletivamente por docentes do DAC/UFLA e disponibilizado sob licença Creative Commons Atribuição 4.0 Internacional.</p>
+</section><section class="next-slide"><p class="next-label">PRÓXIMA AULA</p><h1>⏭️ Próxima aula</h1><div class="subtitle">Estruturas de Repetição</div><div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div></section>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+<script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script>
+</body>
+</html>

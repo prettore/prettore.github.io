@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Aula 02: Estrutura Sequencial e E/S - IAlg</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" id="theme" rel="stylesheet"/>
+<style>
+        /* Customizações UFLA para os slides com responsividade */
+        :root {
+            --ufla-green: #008B45;
+            --ufla-blue: #003366;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .reveal {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        .reveal .slides {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .reveal section {
+            width: 100%;
+            height: 100%;
+            padding: 40px !important;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .reveal .slide-background {
+            background-color: #ffffff;
+        }
+        
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--ufla-blue);
+            text-transform: none;
+            font-weight: bold;
+            width: 100%;
+        }
+        
+        .reveal h1 {
+            font-size: clamp(1.5em, 5vw, 2.5em);
+        }
+        
+        .reveal h2 {
+            font-size: clamp(1.2em, 4vw, 1.8em);
+            border-bottom: 3px solid var(--ufla-green);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .reveal h3 {
+            font-size: clamp(1em, 3vw, 1.4em);
+        }
+        
+        .reveal p, .reveal li {
+            color: #333333;
+            font-size: clamp(0.7em, 2vw, 0.9em);
+            line-height: 1.6;
+            text-align: center;
+        }
+        
+        .reveal ul, .reveal ol {
+            width: 100%;
+            text-align: left;
+            display: inline-block;
+        }
+        
+        .reveal li {
+            text-align: left;
+            margin: 8px 0;
+        }
+        
+        .reveal .highlight {
+            color: var(--ufla-green);
+            font-weight: bold;
+        }
+        
+        .reveal .box {
+            background-color: #f5f5f5;
+            border-left: 5px solid var(--ufla-green);
+            padding: 15px;
+            margin: 20px auto;
+            text-align: left;
+            border-radius: 5px;
+            max-width: 90%;
+            width: 100%;
+        }
+        
+        .reveal .warning-box {
+            background-color: #fff3cd;
+            border-left: 5px solid #ff9900;
+            padding: 15px;
+            margin: 20px auto;
+            text-align: left;
+            border-radius: 5px;
+            max-width: 90%;
+            width: 100%;
+        }
+        
+        .reveal .success-box {
+            background-color: #d4edda;
+            border-left: 5px solid var(--ufla-green);
+            padding: 15px;
+            margin: 20px auto;
+            text-align: left;
+            border-radius: 5px;
+            max-width: 90%;
+            width: 100%;
+        }
+        
+        .reveal .info-box {
+            background-color: #e7f3ff;
+            border-left: 5px solid var(--ufla-blue);
+            padding: 15px;
+            margin: 20px auto;
+            text-align: left;
+            border-radius: 5px;
+            max-width: 90%;
+            width: 100%;
+        }
+
+        .reveal .code-box {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 15px auto;
+            text-align: left;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(0.6em, 1.8vw, 0.75em);
+            max-width: 90%;
+            width: 100%;
+            white-space: pre-wrap;
+        }
+        
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .logo-container img {
+            height: clamp(40px, 10vw, 60px);
+        }
+        
+        .title-slide .subtitle {
+            color: var(--ufla-green);
+            font-size: clamp(0.9em, 3vw, 1.2em);
+            margin-top: 20px;
+        }
+        
+        .title-slide .author {
+            margin-top: 50px;
+            font-size: clamp(0.6em, 1.5vw, 0.8em);
+            color: #666;
+        }
+        
+        .icon-text {
+            display: flex;
+            align-items: flex-start;
+            margin: 12px auto;
+            font-size: clamp(0.65em, 1.8vw, 0.85em);
+            max-width: 90%;
+            width: 100%;
+        }
+        
+        .icon-text span {
+            font-size: clamp(1.5em, 4vw, 2em);
+            margin-right: 15px;
+            min-width: 40px;
+            flex-shrink: 0;
+        }
+        
+        .icon-text div {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .three-column {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .three-column div {
+            flex: 1;
+            min-width: 150px;
+            background: #f0f8ff;
+            padding: 12px;
+            border-top: 4px solid var(--ufla-blue);
+            border-radius: 5px;
+            font-size: clamp(0.6em, 1.5vw, 0.7em);
+        }
+        
+        .three-column div h4 {
+            margin-top: 0;
+            font-size: clamp(0.8em, 2vw, 0.9em);
+        }
+        
+        .two-column {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .two-column div {
+            flex: 1;
+            min-width: 200px;
+            background: #f0f8ff;
+            padding: 15px;
+            border-top: 4px solid var(--ufla-blue);
+            border-radius: 5px;
+            font-size: clamp(0.65em, 1.8vw, 0.8em);
+        }
+        
+        .step-list {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 90%;
+            width: 100%;
+        }
+        
+        .step-list li {
+            margin: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: clamp(0.7em, 1.8vw, 0.8em);
+        }
+        
+        .step-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--ufla-green);
+            font-weight: bold;
+        }
+        
+        .emoji-large {
+            font-size: clamp(2em, 8vw, 3em);
+            margin: 20px 0;
+        }
+        
+        table {
+            font-size: clamp(0.6em, 1.5vw, 0.75em);
+            margin: 20px auto;
+            max-width: 90%;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th {
+            background-color: var(--ufla-blue);
+            color: white;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        table td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        a {
+            color: var(--ufla-blue);
+            font-weight: bold;
+        }
+        
+        /* Responsividade para telas pequenas */
+        @media (max-width: 768px) {
+            .reveal section {
+                padding: 20px !important;
+            }
+            
+            .three-column div {
+                min-width: 100%;
+            }
+            
+            .two-column div {
+                min-width: 100%;
+            }
+            
+            .icon-text {
+                flex-direction: column;
+            }
+            
+            .icon-text span {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+<link href="../css/style.css" rel="stylesheet"/></head>
+<body class="slides-page">
+<div class="logo-container">
+<img alt="UFLA" onerror="this.style.display='none'" src="../assets/ufla-logo.webp"/>
+</div>
+<div class="reveal">
+<div class="slides">
+<!-- Slide 1: Título -->
+<section class="title-slide">
+<h1>🎓 Aula 02</h1>
+<div class="subtitle">Estrutura Sequencial e E/S</div>
+<div class="author">
+<p><strong>Prof. Paulo Rettore</strong></p>
+<p>Universidade Federal de Lavras</p>
+<p>GAC124 - Introdução aos Algoritmos</p>
+</div>
+</section>
+<!-- Slide 2: Objetivos -->
+<section>
+<h2>🎯 O que vamos aprender hoje?</h2>
+<div class="emoji-large">📥 ⚙️ 📤</div>
+<ul class="step-list">
+<li>Atribuir e atualizar valores em variáveis</li>
+<li>Construir expressões aritméticas simples em C++</li>
+<li>Ler dados do usuário usando <span class="highlight">cin</span></li>
+<li>Apresentar resultados usando <span class="highlight">cout</span></li>
+<li>Organizar um programa completo em estrutura sequencial</li>
+</ul>
+</section>
+<!-- Slide 3: Fluxo de um programa -->
+<section>
+<h2>🌊 Todo programa segue um fluxo</h2>
+<div class="three-column">
+<div style="border-top-color: var(--ufla-green);">
+<h4>📥 Entrada</h4>
+<p>Dados fornecidos ao programa</p>
+<p><em>Ex: informar duas notas</em></p>
+</div>
+<div style="border-top-color: var(--ufla-blue);">
+<h4>⚙️ Processamento</h4>
+<p>Cálculos e atribuições</p>
+<p><em>Ex: calcular a média</em></p>
+</div>
+<div style="border-top-color: var(--ufla-green);">
+<h4>📤 Saída</h4>
+<p>Resultados para o usuário</p>
+<p><em>Ex: mostrar a média</em></p>
+</div>
+</div>
+</section>
+<!-- Slide 4: Atribuição -->
+<section>
+<h2>📦 Atribuição coloca um valor na memória</h2>
+<div class="icon-text">
+<span>=</span>
+<div>Em C++, o operador de atribuição é o sinal de igualdade. Ele significa <strong>"recebe"</strong>, e não "é igual a".</div>
+</div>
+<div class="code-box">int idade;
+idade = 18;
+
+double altura = 1.72;</div>
+<div class="info-box">
+<p>O lado direito é calculado primeiro; o resultado é então armazenado na variável que está à esquerda.</p>
+</div>
+</section>
+<!-- Slide 5: Substituição de valores -->
+<section>
+<h2>🔄 Uma nova atribuição substitui o valor</h2>
+<div class="code-box">int pontos = 10;
+pontos = 25;
+pontos = pontos + 5;</div>
+<div class="two-column">
+<div>
+<h4>Evolução da variável</h4>
+<p>10 → 25 → 30</p>
+</div>
+<div>
+<h4>Como funciona?</h4>
+<p>A expressão <code>pontos = pontos + 5</code> usa o valor atual (25) para produzir e armazenar o novo valor (30).</p>
+</div>
+</div>
+</section>
+<!-- Slide 6: Operadores Aritméticos -->
+<section>
+<h2>🧮 Cinco operadores resolvem os cálculos</h2>
+<table>
+<tr>
+<th>Operação</th>
+<th>Operador</th>
+<th>Exemplo</th>
+<th>Resultado</th>
+</tr>
+<tr>
+<td>Soma</td>
+<td><code>+</code></td>
+<td><code>8 + 2</code></td>
+<td><code>10</code></td>
+</tr>
+<tr>
+<td>Subtração</td>
+<td><code>-</code></td>
+<td><code>8 - 2</code></td>
+<td><code>6</code></td>
+</tr>
+<tr>
+<td>Multiplicação</td>
+<td><code>*</code></td>
+<td><code>8 * 2</code></td>
+<td><code>16</code></td>
+</tr>
+<tr>
+<td>Divisão</td>
+<td><code>/</code></td>
+<td><code>8 / 2</code></td>
+<td><code>4</code></td>
+</tr>
+<tr>
+<td>Resto</td>
+<td><code>%</code></td>
+<td><code>8 % 3</code></td>
+<td><code>2</code></td>
+</tr>
+</table>
+<p style="font-size: 0.8em; margin-top: 10px;">O operador de resto <code>%</code> trabalha exclusivamente com valores inteiros.</p>
+</section>
+<!-- Slide 7: Divisão Inteira -->
+<section>
+<h2>⚠️ Divisão inteira é uma armadilha comum</h2>
+<div class="code-box">double a = 7 / 2;     // a recebe 3.0
+double b = 7.0 / 2;   // b recebe 3.5</div>
+<div class="warning-box">
+<p>A operação é resolvida antes da atribuição. Se os dois operandos forem inteiros, o resultado da divisão também será inteiro.</p>
+</div>
+<p>Para manter a parte decimal, use pelo menos um operando de ponto flutuante (como <code>7.0</code> em vez de <code>7</code>).</p>
+</section>
+<!-- Slide 8: Parênteses -->
+<section>
+<h2>📝 Parênteses deixam a intenção explícita</h2>
+<div class="code-box">double media = nota1 + nota2 / 2.0;      // Incorreto para a média
+double media = (nota1 + nota2) / 2.0;    // Correto</div>
+<div class="two-column">
+<div>
+<h4>Ordem Básica</h4>
+<ol style="padding-left: 20px; font-size: 0.9em;">
+<li>Parênteses</li>
+<li>Multiplicação, divisão e resto</li>
+<li>Soma e subtração</li>
+</ol>
+</div>
+<div>
+<h4>Regra Prática</h4>
+<p>Quando houver dúvida sobre a ordem de execução, <strong>use parênteses</strong>.</p>
+</div>
+</div>
+</section>
+<!-- Slide 9: Atualizações Curtas -->
+<section>
+<h2>⚡ Atualizações de forma curta</h2>
+<div class="two-column">
+<div>
+<h4>Forma Longa</h4>
+<div class="code-box" style="margin: 5px 0;">saldo = saldo + 50;
+contador = contador + 1;</div>
+</div>
+<div>
+<h4>Forma Curta</h4>
+<div class="code-box" style="margin: 5px 0;">saldo += 50;
+contador++;</div>
+</div>
+</div>
+<p style="margin-top: 20px;">Também existem <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>%=</code> e <code>--</code>.</p>
+<p style="font-size: 0.8em; color: #666;">A forma curta deve ser usada somente quando continuar clara para quem lê.</p>
+</section>
+<!-- Slide 10: Biblioteca cmath -->
+<section>
+<h2>📚 A biblioteca cmath oferece cálculos prontos</h2>
+<div class="code-box">#include &lt;cmath&gt;
+
+double raiz = sqrt(25.0);    // 5.0
+double potencia = pow(2, 3); // 8.0
+double modulo = abs(-7.5);   // 7.5</div>
+<ul class="step-list">
+<li><code>sqrt()</code> : Raiz quadrada</li>
+<li><code>pow()</code> : Potenciação</li>
+<li><code>abs()</code> : Valor absoluto (módulo)</li>
+<li><code>ceil()</code> : Arredondamento para cima</li>
+<li><code>floor()</code> : Arredondamento para baixo</li>
+</ul>
+</section>
+<!-- Slide 11: Saída de dados (cout) -->
+<section>
+<h2>📤 cout apresenta mensagens e valores</h2>
+<div class="code-box">int idade = 18;
+cout &lt;&lt; "Idade: " &lt;&lt; idade &lt;&lt; '\n';
+cout &lt;&lt; "Dobro: " &lt;&lt; idade * 2 &lt;&lt; '\n';</div>
+<ul class="step-list">
+<li>Textos fixos ficam entre <strong>aspas duplas</strong></li>
+<li>Variáveis e expressões ficam <strong>fora</strong> das aspas</li>
+<li>O operador <code>&lt;&lt;</code> encadeia as informações</li>
+<li><code>endl</code> ou <code>'\n'</code> geram uma quebra de linha</li>
+</ul>
+</section>
+<!-- Slide 12: Entrada de dados (cin) -->
+<section>
+<h2>📥 cin lê dados para variáveis</h2>
+<div class="code-box">int idade;
+
+cout &lt;&lt; "Digite sua idade: ";
+cin &gt;&gt; idade;</div>
+<div class="info-box">
+<p>O operador <code>&gt;&gt;</code> envia o valor digitado pelo usuário para a variável.</p>
+</div>
+<p>⚠️ Sempre declare a variável antes de realizar a leitura!</p>
+</section>
+<!-- Slide 13: Múltiplas leituras -->
+<section>
+<h2>📥 Uma leitura pode preencher várias variáveis</h2>
+<div class="code-box">double nota1, nota2;
+
+cout &lt;&lt; "Digite duas notas: ";
+cin &gt;&gt; nota1 &gt;&gt; nota2;</div>
+<div class="icon-text">
+<span>⌨️</span>
+<div>Os valores podem ser separados por espaço ou por Enter na hora da digitação.</div>
+</div>
+<div class="icon-text">
+<span>💬</span>
+<div>Uma mensagem com <code>cout</code> antes da leitura ajuda o usuário a entender o que deve informar.</div>
+</div>
+</section>
+<!-- Slide 14: Formatação de saída -->
+<section>
+<h2>✨ Formatação torna a saída mais clara</h2>
+<div class="code-box">#include &lt;iomanip&gt;
+
+double preco = 19.5;
+cout &lt;&lt; fixed &lt;&lt; setprecision(2);
+cout &lt;&lt; "Preço: R$ " &lt;&lt; preco &lt;&lt; '\n';</div>
+<div class="box">
+<p><strong>Saída gerada:</strong> Preço: R$ 19.50</p>
+</div>
+<p style="font-size: 0.85em;">Use <code>&lt;iomanip&gt;</code>, <code>fixed</code> e <code>setprecision</code> quando a quantidade de casas decimais importar.</p>
+</section>
+<!-- Slide 15: Estrutura Sequencial -->
+<section>
+<h2>🛤️ A estrutura sequencial executa na ordem escrita</h2>
+<div class="box" style="text-align: center;">
+<p>1. Ler os dados</p>
+<p>↓</p>
+<p>2. Calcular o resultado</p>
+<p>↓</p>
+<p>3. Exibir o resultado</p>
+</div>
+<p>Não há desvios nem repetições: cada instrução é executada uma vez, de cima para baixo.</p>
+<p style="font-size: 0.8em; color: #d9534f; margin-top: 15px;">Uma sequência incorreta pode gerar um resultado incorreto mesmo quando cada linha está sintaticamente correta.</p>
+</section>
+<!-- Slide 16: Exemplo Completo -->
+<section>
+<h2>💻 Exemplo completo: Média de duas notas</h2>
+<div class="code-box" style="font-size: clamp(0.55em, 1.5vw, 0.7em);">#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+using namespace std;
+
+int main() {
+    double nota1, nota2;
+
+    cout &lt;&lt; "Digite duas notas: ";
+    cin &gt;&gt; nota1 &gt;&gt; nota2;
+
+    double media = (nota1 + nota2) / 2.0;
+
+    cout &lt;&lt; fixed &lt;&lt; setprecision(1);
+    cout &lt;&lt; "Média: " &lt;&lt; media &lt;&lt; '\n';
+    
+    return 0;
+}</div>
+</section>
+<!-- Slide 17: Lendo o código -->
+<section>
+<h2>📖 Leia o código como uma pequena história</h2>
+<p>No exemplo da média:</p>
+<div class="three-column">
+<div style="border-top-color: var(--ufla-green);">
+<h4>1. Entrada</h4>
+<p><code>cin</code> recebe as duas notas informadas pelo usuário.</p>
+</div>
+<div style="border-top-color: var(--ufla-blue);">
+<h4>2. Processamento</h4>
+<p>A expressão calcula a média e armazena na variável.</p>
+</div>
+<div style="border-top-color: var(--ufla-green);">
+<h4>3. Saída</h4>
+<p><code>cout</code> apresenta o resultado formatado na tela.</p>
+</div>
+</div>
+<p style="margin-top: 20px;">Essa decomposição ajuda a planejar a solução antes de programar.</p>
+</section>
+<!-- Slide 18: Troca de valores -->
+<section>
+<h2>🔄 Trocar valores exige preservar a informação</h2>
+<div class="two-column">
+<div style="border-top-color: #d9534f;">
+<h4>Forma Incorreta</h4>
+<div class="code-box" style="margin: 5px 0;">a = b;
+b = a;</div>
+<p style="font-size: 0.85em;">O valor original de <code>a</code> é perdido na primeira atribuição.</p>
+</div>
+<div style="border-top-color: var(--ufla-green);">
+<h4>Forma Correta</h4>
+<div class="code-box" style="margin: 5px 0;">int auxiliar = a;
+a = b;
+b = auxiliar;</div>
+<p style="font-size: 0.85em;">A variável auxiliar salva o valor antes de ser sobrescrito.</p>
+</div>
+</div>
+</section>
+<!-- Slide 19: Código Legível -->
+<section>
+<h2>🧹 Código legível reduz erros</h2>
+<ul class="step-list">
+<li>Use nomes claros: <code>media</code>, <code>nota1</code>, <code>precoFinal</code>.</li>
+<li>Indente blocos de código de maneira consistente.</li>
+<li>Escreva uma instrução por linha.</li>
+<li>Comente a intenção, não o óbvio.</li>
+</ul>
+<div class="code-box">// Calcula a média aritmética das duas avaliações
+double media = (nota1 + nota2) / 2.0;</div>
+</section>
+<!-- Slide 20: Erros Comuns -->
+<section>
+<h2>🚫 Cinco erros comuns para evitar</h2>
+<table>
+<tr>
+<th>Erro</th>
+<th>Correção</th>
+</tr>
+<tr>
+<td>Usar vírgula em decimal: <code>3,14</code></td>
+<td>Usar ponto: <code>3.14</code></td>
+</tr>
+<tr>
+<td>Ler antes de declarar a variável</td>
+<td>Declarar a variável primeiro</td>
+</tr>
+<tr>
+<td>Trocar <code>cin &gt;&gt;</code> por <code>cin &lt;&lt;</code></td>
+<td>Usar <code>&gt;&gt;</code> na entrada</td>
+</tr>
+<tr>
+<td>Colocar variável entre aspas no <code>cout</code></td>
+<td>Deixar a variável fora das aspas</td>
+</tr>
+<tr>
+<td>Esperar <code>3.5</code> da operação <code>7 / 2</code></td>
+<td>Usar <code>7.0 / 2</code></td>
+</tr>
+</table>
+</section>
+<!-- Slide 21: Desafio -->
+<section>
+<h2>🧩 Desafio: Preveja a saída</h2>
+<div class="code-box" style="font-size: clamp(0.7em, 2vw, 0.9em);">int a = 7;
+int b = 2;
+
+double x = a / b;
+double y = a / 2.0;
+
+a += 1;
+
+cout &lt;&lt; a &lt;&lt; " " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; '\n';</div>
+<div class="warning-box">
+<p>Antes de prosseguir, anote o valor final de <strong>a</strong>, <strong>x</strong> e <strong>y</strong>.</p>
+</div>
+</section>
+<!-- Slide 22: Gabarito -->
+<section>
+<h2>✅ Gabarito: Tipos mudam o resultado</h2>
+<div class="box">
+<p><strong>Saída gerada:</strong> 8 3 3.5</p>
+</div>
+<ul class="step-list">
+<li><code>a</code> passa de 7 para 8 por causa de <code>a += 1</code>.</li>
+<li><code>a / b</code> usa dois inteiros e produz 3 (mesmo sendo armazenado em um double).</li>
+<li><code>a / 2.0</code> inclui um valor decimal e produz 3.5.</li>
+</ul>
+</section>
+<!-- Slide 23: Resumo -->
+<section>
+<h2>📌 Quatro ideias para levar da aula</h2>
+<ul class="step-list">
+<li><code>=</code> armazena o resultado da direita na variável da esquerda.</li>
+<li>O tipo dos operandos influencia o resultado de uma expressão.</li>
+<li><code>cin</code> recebe dados e <code>cout</code> apresenta resultados.</li>
+<li>Um programa sequencial segue entrada, processamento e saída.</li>
+</ul>
+</section>
+<!-- Slide 24: Prática extra -->
+<section>
+<h2>🧩 Prática extra: total de compra</h2>
+<p>Leia preço e quantidade e mostre o total com duas casas decimais.</p>
+<div class="code-box" style="font-size: clamp(0.62em, 1.7vw, 0.78em);">double preco;
+int quantidade;
+cin &gt;&gt; preco &gt;&gt; quantidade;
+
+double total = preco * quantidade;
+cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; total;</div>
+<div class="success-box"><p><strong>Gabarito:</strong> inclua <code>&lt;iomanip&gt;</code> para usar <code>fixed</code> e <code>setprecision(2)</code>.</p></div>
+<p style="font-size: 0.7em;">Prática online opcional: <a href="https://beecrowd.com/" target="_blank">beecrowd</a> ou <a href="https://cpp.sh/" target="_blank">C++ Shell</a>.</p>
+</section>
+<!-- Slide 25: Referências -->
+<section class="references-slide"><h2>📚 Referências e materiais</h2><p>Use estas fontes para consultas pontuais depois da aula:</p><ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/language/operator_arithmetic" rel="noopener noreferrer" target="_blank">cppreference — operadores aritméticos</a></li><li><a href="https://en.cppreference.com/w/cpp/io/manip" rel="noopener noreferrer" target="_blank">cppreference — manipuladores de E/S</a></li><li><a href="https://beecrowd.com/" rel="noopener noreferrer" target="_blank">beecrowd — exercícios online</a></li><li><a href="https://cpp.sh/" rel="noopener noreferrer" target="_blank">C++ Shell — compilador online</a></li></ul><div class="info-box"><p>Conteúdo sintetizado a partir do material da disciplina, disponibilizado sob licença Creative Commons Atribuição 4.0 Internacional.</p></div></section>
+<!-- Slide 25: Próxima Aula -->
+<section class="next-slide"><p class="next-label">PRÓXIMA AULA</p><h1>⏭️ Próxima aula</h1><div class="subtitle">Estruturas Condicionais</div><div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div></section>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+<script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script>
+</body>
+</html>

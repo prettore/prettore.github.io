@@ -199,3 +199,215 @@ footer {
     color: #666;
     border-top: 1px solid var(--border-color);
 }
+
+
+/* ==========================================================
+   Apresentações HTML — padrão compartilhado das aulas IAlg
+   ========================================================== */
+.slides-page { background: #ffffff; overflow: hidden; }
+.slides-page .reveal { width: 100% !important; height: 100% !important; }
+.slides-page .reveal .slides { width: 100%; height: 100%; }
+.slides-page .reveal section { width: 100%; height: 100%; padding: 40px !important; display: flex !important; flex-direction: column; justify-content: center; align-items: center; overflow: auto; }
+.slides-page .reveal .slide-background { background: #ffffff; }
+.slides-page .reveal h1,
+.slides-page .reveal h2,
+.slides-page .reveal h3,
+.slides-page .reveal h4 { color: var(--ufla-blue); text-transform: none; font-weight: 800; width: 100%; }
+.slides-page .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+.slides-page .reveal h2 { font-size: clamp(1.15em, 4vw, 1.8em); border-bottom: 3px solid var(--ufla-green); padding-bottom: 10px; margin-bottom: 22px; }
+.slides-page .reveal h3 { font-size: clamp(.9em, 3vw, 1.2em); }
+.slides-page .reveal p,
+.slides-page .reveal li { color: var(--text-color); font-size: clamp(.64em, 1.85vw, .88em); line-height: 1.4; }
+.slides-page .reveal ul,
+.slides-page .reveal ol { width: 100%; text-align: left; display: inline-block; }
+.slides-page .reveal li { margin: 6px 0; text-align: left; }
+.slides-page .logo-container { position: absolute; top: 18px; right: 22px; z-index: 10; }
+.slides-page .logo-container img { height: clamp(35px, 8vw, 58px); width: auto; object-fit: contain; }
+.slides-page .title-slide .subtitle { color: var(--ufla-green); font-size: clamp(.9em, 3vw, 1.2em); margin-top: 16px; }
+.slides-page .title-slide .author { margin-top: 42px; font-size: clamp(.62em, 1.8vw, .8em); color: #555; }
+.slides-page .box,
+.slides-page .info-box,
+.slides-page .warning-box,
+.slides-page .success-box { width: 90%; max-width: 950px; margin: 12px auto; padding: 13px 17px; text-align: left; border-radius: 4px; }
+.slides-page .box { background: #f5f5f5; border-left: 5px solid var(--ufla-green); }
+.slides-page .info-box { background: #edf4fb; border-left: 5px solid var(--ufla-blue); }
+.slides-page .warning-box { background: #fff4ed; border-left: 5px solid #d85c42; }
+.slides-page .success-box { background: var(--ufla-light-green); border-left: 5px solid var(--ufla-green); }
+.slides-page .code-box { width: 90%; max-width: 950px; background: #f1f2f1; border-top: 5px solid var(--ufla-blue); padding: 14px 19px; margin: 12px auto; text-align: left; font-family: 'Courier New', monospace; font-size: clamp(.54em, 1.65vw, .75em); line-height: 1.4; white-space: pre-wrap; color: #172630; }
+.slides-page .two-column,
+.slides-page .three-column { width: 90%; margin: 12px auto; display: flex; flex-wrap: wrap; gap: 13px; justify-content: center; }
+.slides-page .two-column > div { flex: 1; min-width: 260px; padding: 13px; background: #edf4fb; border-top: 5px solid var(--ufla-blue); }
+.slides-page .three-column > div { flex: 1; min-width: 180px; padding: 12px; background: var(--ufla-light-green); border-top: 5px solid var(--ufla-green); }
+.slides-page .three-column > div:nth-child(2) { background: #edf4fb; border-top-color: var(--ufla-blue); }
+.slides-page .two-column h4,
+.slides-page .three-column h4 { margin: 0 0 7px; color: var(--ufla-blue); font-size: clamp(.78em, 2vw, 1em); }
+.slides-page .step-list { width: 90%; max-width: 940px; margin: 8px auto; }
+.slides-page .step-list li { position: relative; padding-left: 26px; }
+.slides-page .step-list li::before { content: '→'; color: var(--ufla-green); font-weight: 800; position: absolute; left: 0; }
+.slides-page table { width: 90%; max-width: 1000px; margin: 8px auto; border-collapse: collapse; font-size: clamp(.55em, 1.5vw, .75em); color: var(--text-color); }
+.slides-page th { background: var(--ufla-blue); color: #fff; text-align: left; padding: 7px; }
+.slides-page td { padding: 7px; border-bottom: 1px solid #d8e4dc; text-align: left; }
+.slides-page tr:nth-child(even) { background: #f4faf6; }
+.slides-page .sequence-flow { display: grid; grid-template-columns: 1fr 1fr 1fr; width: 90%; max-width: 950px; gap: 14px; margin: 12px auto; text-align: center; }
+.slides-page .sequence-flow > div { padding: 12px; background: var(--ufla-light-green); border-top: 5px solid var(--ufla-green); }
+.slides-page .sequence-flow > div:nth-child(2) { background: #edf4fb; border-top-color: var(--ufla-blue); }
+.slides-page .sequence-flow h3 { margin: 0 0 7px; }
+.slides-page .highlight { color: var(--ufla-green); font-weight: 800; }
+.slides-page
+.slides-page .references-slide a { color: var(--ufla-blue); }
+.slides-page .next-slide .next-label { color: var(--ufla-green); font-weight: 800; letter-spacing: .03em; }
+@media (max-width: 768px) {
+    .slides-page .reveal section { padding: 18px !important; }
+    .slides-page .two-column > div,
+    .slides-page .three-column > div { min-width: 100%; }
+    .slides-page .sequence-flow { grid-template-columns: 1fr; }
+    .slides-page table { font-size: clamp(.44em, 1.55vw, .68em); }
+    .slides-page th,
+    .slides-page td { padding: 5px; }
+    .slides-page .code-box { font-size: clamp(.46em, 1.5vw, .66em); }
+}
+
+
+/* ==========================================================
+   Template oficial das aulas — espelhado da Aula 02
+   ========================================================== */
+body.slides-page { width: 100%; height: 100%; overflow: hidden; background: #ffffff; }
+body.slides-page .reveal { width: 100% !important; height: 100% !important; }
+body.slides-page .reveal .slides { width: 100%; height: 100%; }
+body.slides-page .reveal section { width: 100%; height: 100%; padding: 40px !important; display: flex !important; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
+body.slides-page .reveal .slide-background { background-color: #ffffff; }
+body.slides-page .reveal h1,
+body.slides-page .reveal h2,
+body.slides-page .reveal h3,
+body.slides-page .reveal h4 { color: var(--ufla-blue); text-transform: none; font-weight: bold; width: 100%; }
+body.slides-page .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+body.slides-page .reveal h2 { font-size: clamp(1.2em, 4vw, 1.8em); border-bottom: 3px solid var(--ufla-green); padding-bottom: 10px; margin-bottom: 30px; }
+body.slides-page .reveal h3 { font-size: clamp(1em, 3vw, 1.4em); }
+body.slides-page .reveal p,
+body.slides-page .reveal li { color: #333333; font-size: clamp(0.7em, 2vw, 0.9em); line-height: 1.6; }
+body.slides-page .reveal ul,
+body.slides-page .reveal ol { width: 100%; text-align: left; display: inline-block; }
+body.slides-page .reveal li { text-align: left; margin: 8px 0; }
+body.slides-page .reveal .box,
+body.slides-page .reveal .warning-box,
+body.slides-page .reveal .success-box,
+body.slides-page .reveal .info-box { padding: 15px; margin: 20px auto; text-align: left; border-radius: 5px; max-width: 90%; width: 100%; }
+body.slides-page .reveal .box { background-color: #f5f5f5; border-left: 5px solid var(--ufla-green); }
+body.slides-page .reveal .warning-box { background-color: #fff3cd; border-left: 5px solid #ff9900; }
+body.slides-page .reveal .success-box { background-color: #d4edda; border-left: 5px solid var(--ufla-green); }
+body.slides-page .reveal .info-box { background-color: #e7f3ff; border-left: 5px solid var(--ufla-blue); }
+body.slides-page .reveal .code-box { background-color: #f0f0f0; border: 1px solid #ccc; padding: 15px; margin: 15px auto; text-align: left; border-radius: 5px; font-family: 'Courier New', monospace; font-size: clamp(0.6em, 1.8vw, 0.75em); max-width: 90%; width: 100%; white-space: pre-wrap; }
+body.slides-page .logo-container { position: absolute; top: 20px; right: 20px; z-index: 1000; }
+body.slides-page .logo-container img { height: clamp(40px, 10vw, 60px); width: auto; object-fit: contain; }
+body.slides-page .title-slide .subtitle { color: var(--ufla-green); font-size: clamp(0.9em, 3vw, 1.2em); margin-top: 20px; }
+body.slides-page .title-slide .author { margin-top: 50px; font-size: clamp(0.6em, 1.5vw, 0.8em); color: #666; }
+body.slides-page .three-column,
+body.slides-page .two-column { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; flex-wrap: wrap; width: 100%; max-width: 90%; margin-left: auto; margin-right: auto; }
+body.slides-page .three-column > div { flex: 1; min-width: 150px; background: #f0f8ff; padding: 12px; border-top: 4px solid var(--ufla-blue); border-radius: 5px; font-size: clamp(0.6em, 1.5vw, 0.7em); }
+body.slides-page .two-column > div { flex: 1; min-width: 200px; background: #f0f8ff; padding: 15px; border-top: 4px solid var(--ufla-blue); border-radius: 5px; font-size: clamp(0.65em, 1.8vw, 0.8em); }
+body.slides-page .step-list { text-align: left; margin: 20px auto; max-width: 90%; width: 100%; }
+body.slides-page .step-list li { margin: 10px 0; padding-left: 30px; position: relative; font-size: clamp(0.7em, 1.8vw, 0.8em); }
+body.slides-page .step-list li::before { content: '→'; position: absolute; left: 0; color: var(--ufla-green); font-weight: bold; }
+body.slides-page table { font-size: clamp(0.6em, 1.5vw, 0.75em); margin: 20px auto; max-width: 90%; width: 100%; border-collapse: collapse; }
+body.slides-page table th { background-color: var(--ufla-blue); color: white; padding: 8px; text-align: left; }
+body.slides-page table td { padding: 8px; border-bottom: 1px solid #ddd; text-align: left; }
+body.slides-page table tr:nth-child(even) { background-color: #f9f9f9; }
+/* Código extenso rola internamente e não reduz o canvas do slide. */
+body.slides-page .code-box { max-height: 56vh; overflow: auto; scrollbar-width: thin; white-space: pre; }
+body.slides-page .code-box::-webkit-scrollbar { width: 8px; height: 8px; }
+body.slides-page .code-box::-webkit-scrollbar-thumb { background: #9bb9a7; border-radius: 4px; }
+@media (max-width: 768px) {
+  body.slides-page .reveal section { padding: 20px !important; }
+  body.slides-page .three-column > div,
+  body.slides-page .two-column > div { min-width: 100%; }
+  body.slides-page .code-box { max-height: 54vh; }
+}
+/* Override final: mesmo aproveitamento visual da Aula 03 */
+body.slides-page .reveal section {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 40px !important;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+body.slides-page .reveal h1,
+body.slides-page .reveal h2,
+body.slides-page .reveal h3,
+body.slides-page .reveal h4 {
+    color: var(--ufla-blue);
+    text-transform: none;
+    font-weight: 800;
+    width: 100%;
+}
+body.slides-page .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+body.slides-page .reveal h2 {
+    font-size: clamp(1.18em, 4vw, 1.8em);
+    border-bottom: 3px solid var(--ufla-green);
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+}
+body.slides-page .reveal h3 { font-size: clamp(.9em, 3vw, 1.25em); }
+body.slides-page .reveal p,
+body.slides-page .reveal li {
+    color: #333333;
+    font-size: clamp(.65em, 1.9vw, .88em);
+    line-height: 1.45;
+}
+body.slides-page .reveal li { margin: 7px 0; }
+body.slides-page .logo-container { top: 18px; right: 22px; z-index: 10; }
+body.slides-page .logo-container img { height: clamp(35px, 8vw, 58px); width: auto; object-fit: contain; }
+body.slides-page .title-slide .subtitle { margin-top: 18px; font-size: clamp(.9em, 3vw, 1.2em); }
+body.slides-page .title-slide .author { margin-top: 48px; font-size: clamp(.62em, 1.8vw, .8em); color: #555; }
+body.slides-page .box,
+body.slides-page .info-box,
+body.slides-page .warning-box,
+body.slides-page .success-box {
+    width: 90%;
+    max-width: 950px;
+    margin: 14px auto;
+    padding: 14px 18px;
+    text-align: left;
+    border-radius: 4px;
+}
+body.slides-page .code-box {
+    width: 90%;
+    max-width: 950px;
+    background: #f1f2f1;
+    border-top: 5px solid var(--ufla-blue);
+    padding: 15px 20px;
+    margin: 14px auto;
+    text-align: left;
+    font-family: 'Courier New', monospace;
+    font-size: clamp(.57em, 1.75vw, .75em);
+    line-height: 1.4;
+    color: #172630;
+    white-space: pre-wrap;
+    max-height: 56vh;
+    overflow: auto;
+    scrollbar-width: thin;
+}
+body.slides-page .code-box::-webkit-scrollbar { width: 8px; height: 8px; }
+body.slides-page .code-box::-webkit-scrollbar-thumb { background: #9bb9a7; border-radius: 4px; }
+body.slides-page .three-column,
+body.slides-page .two-column { width: 90%; max-width: 950px; margin: 14px auto; gap: 14px; }
+body.slides-page .three-column > div { min-width: 180px; padding: 12px; }
+body.slides-page .two-column > div { min-width: 260px; padding: 14px; }
+body.slides-page .step-list { width: 90%; max-width: 940px; margin: 10px auto; }
+body.slides-page table { width: 90%; max-width: 1000px; margin: 10px auto; font-size: clamp(.58em, 1.55vw, .75em); }
+body.slides-page table th { padding: 8px; }
+body.slides-page table td { padding: 8px; }
+body.slides-page .sequence-flow { width: 90%; max-width: 950px; gap: 16px; margin: 16px auto; }
+body.slides-page .sequence-flow > div { padding: 14px; }
+@media (max-width: 768px) {
+    body.slides-page .reveal section { padding: 18px !important; }
+    body.slides-page .three-column > div,
+    body.slides-page .two-column > div { min-width: 100%; }
+    body.slides-page .sequence-flow { grid-template-columns: 1fr; }
+    body.slides-page table { font-size: clamp(.46em, 1.6vw, .68em); }
+    body.slides-page table th,
+    body.slides-page table td { padding: 5px; }
+    body.slides-page .code-box { font-size: clamp(.48em, 1.55vw, .68em); max-height: 54vh; }
+}

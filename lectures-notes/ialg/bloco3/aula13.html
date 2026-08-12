@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" rel="stylesheet"/><title>Aula 13 — Arquivos Binários e Tipados</title><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css" rel="stylesheet"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css" rel="stylesheet"/><link href="../css/style.css" rel="stylesheet"/><style id="aula03-template">
+        :root {
+            --ufla-green: #008B45;
+            --ufla-blue: #003366;
+            --soft-green: #eef8f1;
+            --soft-blue: #edf4fb;
+            --soft-orange: #fff4ed;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .reveal {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .reveal .slides {
+            width: 100%;
+            height: 100%;
+        }
+
+        .reveal section {
+            width: 100%;
+            height: 100%;
+            padding: 40px !important;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .reveal .slide-background { background: #ffffff; }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--ufla-blue);
+            text-transform: none;
+            font-weight: 800;
+            width: 100%;
+        }
+
+        .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+
+        .reveal h2 {
+            font-size: clamp(1.18em, 4vw, 1.8em);
+            border-bottom: 3px solid var(--ufla-green);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .reveal h3 { font-size: clamp(0.9em, 3vw, 1.25em); }
+
+        .reveal p, .reveal li {
+            color: #333333;
+            font-size: clamp(0.65em, 1.9vw, 0.88em);
+            line-height: 1.45;
+        }
+
+        .reveal ul, .reveal ol {
+            width: 100%;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .reveal li {
+            text-align: left;
+            margin: 7px 0;
+        }
+
+        .highlight { color: var(--ufla-green); font-weight: 800; }
+
+        .logo-container {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            z-index: 10;
+        }
+
+        .logo-container img { height: clamp(35px, 8vw, 58px); }
+
+        .title-slide .subtitle {
+            color: var(--ufla-green);
+            font-size: clamp(0.9em, 3vw, 1.2em);
+            margin-top: 18px;
+        }
+
+        .title-slide .author {
+            margin-top: 48px;
+            font-size: clamp(0.62em, 1.8vw, 0.8em);
+            color: #555;
+        }
+
+        .emoji-large {
+            font-size: clamp(2em, 8vw, 3em);
+            margin: 12px 0;
+        }
+
+        .box, .info-box, .warning-box, .success-box {
+            width: 90%;
+            max-width: 950px;
+            margin: 14px auto;
+            padding: 14px 18px;
+            text-align: left;
+            border-radius: 4px;
+        }
+
+        .box { background: #f5f5f5; border-left: 5px solid var(--ufla-green); }
+        .info-box { background: var(--soft-blue); border-left: 5px solid var(--ufla-blue); }
+        .warning-box { background: var(--soft-orange); border-left: 5px solid #d85c42; }
+        .success-box { background: var(--soft-green); border-left: 5px solid var(--ufla-green); }
+
+        .code-box {
+            width: 90%;
+            max-width: 950px;
+            background: #f1f2f1;
+            border-top: 5px solid var(--ufla-blue);
+            padding: 15px 20px;
+            margin: 14px auto;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(0.57em, 1.75vw, 0.75em);
+            line-height: 1.4;
+            white-space: pre-wrap;
+            color: #172630;
+        }
+
+        .three-column, .two-column {
+            width: 90%;
+            margin: 14px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+        }
+
+        .three-column > div {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .two-column > div {
+            flex: 1;
+            min-width: 260px;
+            padding: 14px;
+            background: var(--soft-blue);
+            border-top: 5px solid var(--ufla-blue);
+        }
+
+        .three-column h4, .two-column h4 {
+            margin: 0 0 8px;
+            color: var(--ufla-blue);
+            font-size: clamp(0.8em, 2vw, 1em);
+        }
+
+        .step-list {
+            width: 90%;
+            max-width: 940px;
+            margin: 10px auto;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .step-list li::before {
+            content: "→";
+            color: var(--ufla-green);
+            font-weight: 800;
+            position: absolute;
+            left: 0;
+        }
+
+        table {
+            width: 90%;
+            max-width: 1000px;
+            margin: 10px auto;
+            border-collapse: collapse;
+            font-size: clamp(0.58em, 1.55vw, 0.75em);
+            color: #333;
+        }
+
+        th {
+            background: var(--ufla-blue);
+            color: white;
+            text-align: left;
+            padding: 8px;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #d8e4dc;
+            text-align: left;
+        }
+
+        tr:nth-child(even) { background: #f4faf6; }
+
+        .sequence-flow {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            width: 90%;
+            max-width: 950px;
+            gap: 16px;
+            margin: 16px auto;
+            text-align: center;
+        }
+
+        .sequence-flow > div {
+            padding: 14px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .sequence-flow > div:nth-child(2) {
+            background: var(--soft-blue);
+            border-top-color: var(--ufla-blue);
+        }
+
+        .sequence-flow h3 { margin: 0 0 8px; }
+@media (max-width: 768px) {
+            .reveal section { padding: 18px !important; }
+            .three-column > div, .two-column > div { min-width: 100%; }
+            .sequence-flow { grid-template-columns: 1fr; }
+            table { font-size: clamp(0.46em, 1.6vw, 0.68em); }
+            th, td { padding: 5px; }
+            .code-box { font-size: clamp(0.48em, 1.55vw, 0.68em); }
+        }
+    
+
+/* Extensão para códigos extensos: o slide não muda de escala. */
+.code-box {
+    max-height: 56vh;
+    overflow: auto;
+    scrollbar-width: thin;
+    white-space: pre-wrap;
+}
+pre.code-box { white-space: pre; }
+.code-box::-webkit-scrollbar { width: 8px; height: 8px; }
+.code-box::-webkit-scrollbar-thumb { background: #9bb9a7; border-radius: 4px; }
+@media (max-width: 768px) {
+    .code-box { max-height: 54vh; }
+}
+</style></head><body class="slides-page"><div class="logo-container"><img alt="UFLA" src="../assets/ufla-logo.webp"/></div><div class="reveal"><div class="slides">
+<section class="title-slide">
+<h1>🎓 Aula 13</h1>
+<div class="subtitle">Arquivos Binários e Arquivos Tipados</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section>
+<section><h2>🎯 Dados além da execução</h2><p>Variáveis existem enquanto o programa está em execução. Arquivos permitem guardar dados de forma persistente.</p><div class="three-column"><div><h4>Entrada</h4><p>Ler dados já existentes.</p></div><div><h4>Saída</h4><p>Gravar dados para uso futuro.</p></div><div><h4>Persistência</h4><p>Os dados permanecem após fechar o programa.</p></div></div></section>
+<section><h2>📄 Texto, binário e tipado</h2><table><tr><th>Tipo</th><th>Característica</th><th>Exemplo</th></tr><tr><td>Texto</td><td>Legível por pessoas.</td><td><code>notas.txt</code></td></tr><tr><td>Binário</td><td>Grava bytes diretamente.</td><td><code>dados.dat</code></td></tr><tr><td>Tipado</td><td>Registros de um tipo conhecido.</td><td><code>Aluno</code> em arquivo binário.</td></tr></table><div class="info-box"><p>Arquivos binários são adequados quando o programa grava e lê estruturas com formato definido.</p></div></section>
+<section><h2>🔌 Abrindo um arquivo binário</h2><pre class="code-box"><code>#include &lt;fstream&gt;
+
+ifstream entrada("alunos.dat", ios::binary);
+
+if (!entrada) {
+    cout &lt;&lt; "Não foi possível abrir";
+}</code></pre><div class="warning-box"><p>Sempre verifique se o arquivo foi aberto antes de tentar ler ou gravar dados.</p></div></section>
+<section><h2>✍️ Gravando um registro</h2><pre class="code-box"><code>struct Aluno {
+    int matricula;
+    double media;
+};
+
+Aluno a = {20260001, 82.5};
+ofstream saida("alunos.dat", ios::binary);
+saida.write(reinterpret_cast&lt;char*&gt;(&amp;a), sizeof(Aluno));</code></pre><div class="warning-box"><p>Para gravação binária direta, use estruturas simples. Campos como <code>string</code> exigem uma estratégia própria de serialização.</p></div></section>
+<section><h2>📥 Lendo um registro</h2><pre class="code-box"><code>Aluno a;
+ifstream entrada("alunos.dat", ios::binary);
+
+entrada.read(reinterpret_cast&lt;char*&gt;(&amp;a), sizeof(Aluno));
+
+if (entrada) {
+    cout &lt;&lt; a.matricula &lt;&lt; " " &lt;&lt; a.media;
+}</code></pre><p><code>read()</code> e <code>write()</code> usam a quantidade de bytes de cada registro.</p></section>
+<section><h2>🔁 Vários registros</h2><pre class="code-box"><code>Aluno a;
+while (entrada.read(reinterpret_cast&lt;char*&gt;(&amp;a),
+                    sizeof(Aluno))) {
+    cout &lt;&lt; a.matricula &lt;&lt; "\n";
+}</code></pre><div class="success-box"><p>O próprio retorno de <code>read()</code> informa se uma leitura completa ocorreu.</p></div></section>
+<section><h2>🧭 Posições no arquivo</h2><p>Arquivos binários permitem acessar posições específicas quando os registros têm tamanho fixo.</p><pre class="code-box"><code>long posicao = 2;
+entrada.seekg(posicao * sizeof(Aluno), ios::beg);
+entrada.read(reinterpret_cast&lt;char*&gt;(&amp;a), sizeof(Aluno));</code></pre><div class="info-box"><p><code>seekg()</code> move a posição de leitura; <code>seekp()</code> move a posição de escrita.</p></div></section>
+<section><h2>🛡️ Cuidados importantes</h2><ul class="step-list"><li>Abra no modo correto: leitura, escrita e/ou <code>ios::binary</code>.</li><li>Verifique erros de abertura e leitura.</li><li>Feche o arquivo ao final — os objetos de stream também fecham ao sair de escopo.</li><li>Não grave diretamente estruturas com ponteiros ou <code>string</code> esperando que sejam reconstruídas automaticamente.</li></ul></section>
+<section class="practice-slide">
+<h2>🧩 Prática em aula</h2>
+<p>Grave cinco registros Produto em um arquivo binário e depois leia o maior preço.</p>
+<div class="success-box"><p><strong>Gabarito orientador:</strong> Use uma struct com tipos simples, write() para gravar e read() em um laço para ler. Verifique abertura e leitura.</p></div>
+
+</section><section class="references-slide">
+<h2>📚 Referências e materiais</h2>
+<p>Use estas fontes para consultas pontuais depois da aula:</p>
+<ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/io/basic_fstream" target="_blank">cppreference — fstream</a></li><li><a href="https://en.cppreference.com/w/cpp/io/basic_istream/read" target="_blank">cppreference — read</a></li><li><a href="https://cpp.sh/" target="_blank">C++ Shell — testes rápidos</a></li></ul>
+<div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
+
+</section><section class="summary-slide">
+<h2>📌 Resumo da aula</h2>
+<ul class="step-list"><li>Arquivos mantêm dados depois que o programa termina.</li><li>read() e write() trabalham com bytes em arquivos binários.</li><li>Registros de tamanho fixo facilitam o acesso por posição.</li><li>É preciso validar abertura, leitura e formato dos dados.</li></ul>
+
+</section><section class="next-slide">
+<p class="next-label">PRÓXIMA AULA</p>
+<h1>⏭️ Próxima aula</h1>
+<div class="subtitle">Ordenação de vetores: métodos avançados</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script></body></html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" rel="stylesheet"/><title>Aula 04 — Estruturas de Repetição</title><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css" rel="stylesheet"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css" rel="stylesheet"/><link href="../css/style.css" rel="stylesheet"/><style id="aula03-template">
+        :root {
+            --ufla-green: #008B45;
+            --ufla-blue: #003366;
+            --soft-green: #eef8f1;
+            --soft-blue: #edf4fb;
+            --soft-orange: #fff4ed;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .reveal {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .reveal .slides {
+            width: 100%;
+            height: 100%;
+        }
+
+        .reveal section {
+            width: 100%;
+            height: 100%;
+            padding: 40px !important;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .reveal .slide-background { background: #ffffff; }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--ufla-blue);
+            text-transform: none;
+            font-weight: 800;
+            width: 100%;
+        }
+
+        .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+
+        .reveal h2 {
+            font-size: clamp(1.18em, 4vw, 1.8em);
+            border-bottom: 3px solid var(--ufla-green);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .reveal h3 { font-size: clamp(0.9em, 3vw, 1.25em); }
+
+        .reveal p, .reveal li {
+            color: #333333;
+            font-size: clamp(0.65em, 1.9vw, 0.88em);
+            line-height: 1.45;
+        }
+
+        .reveal ul, .reveal ol {
+            width: 100%;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .reveal li {
+            text-align: left;
+            margin: 7px 0;
+        }
+
+        .highlight { color: var(--ufla-green); font-weight: 800; }
+
+        .logo-container {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            z-index: 10;
+        }
+
+        .logo-container img { height: clamp(35px, 8vw, 58px); }
+
+        .title-slide .subtitle {
+            color: var(--ufla-green);
+            font-size: clamp(0.9em, 3vw, 1.2em);
+            margin-top: 18px;
+        }
+
+        .title-slide .author {
+            margin-top: 48px;
+            font-size: clamp(0.62em, 1.8vw, 0.8em);
+            color: #555;
+        }
+
+        .emoji-large {
+            font-size: clamp(2em, 8vw, 3em);
+            margin: 12px 0;
+        }
+
+        .box, .info-box, .warning-box, .success-box {
+            width: 90%;
+            max-width: 950px;
+            margin: 14px auto;
+            padding: 14px 18px;
+            text-align: left;
+            border-radius: 4px;
+        }
+
+        .box { background: #f5f5f5; border-left: 5px solid var(--ufla-green); }
+        .info-box { background: var(--soft-blue); border-left: 5px solid var(--ufla-blue); }
+        .warning-box { background: var(--soft-orange); border-left: 5px solid #d85c42; }
+        .success-box { background: var(--soft-green); border-left: 5px solid var(--ufla-green); }
+
+        .code-box {
+            width: 90%;
+            max-width: 950px;
+            background: #f1f2f1;
+            border-top: 5px solid var(--ufla-blue);
+            padding: 15px 20px;
+            margin: 14px auto;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(0.57em, 1.75vw, 0.75em);
+            line-height: 1.4;
+            white-space: pre-wrap;
+            color: #172630;
+        }
+
+        .three-column, .two-column {
+            width: 90%;
+            margin: 14px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+        }
+
+        .three-column > div {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .two-column > div {
+            flex: 1;
+            min-width: 260px;
+            padding: 14px;
+            background: var(--soft-blue);
+            border-top: 5px solid var(--ufla-blue);
+        }
+
+        .three-column h4, .two-column h4 {
+            margin: 0 0 8px;
+            color: var(--ufla-blue);
+            font-size: clamp(0.8em, 2vw, 1em);
+        }
+
+        .step-list {
+            width: 90%;
+            max-width: 940px;
+            margin: 10px auto;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .step-list li::before {
+            content: "→";
+            color: var(--ufla-green);
+            font-weight: 800;
+            position: absolute;
+            left: 0;
+        }
+
+        table {
+            width: 90%;
+            max-width: 1000px;
+            margin: 10px auto;
+            border-collapse: collapse;
+            font-size: clamp(0.58em, 1.55vw, 0.75em);
+            color: #333;
+        }
+
+        th {
+            background: var(--ufla-blue);
+            color: white;
+            text-align: left;
+            padding: 8px;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #d8e4dc;
+            text-align: left;
+        }
+
+        tr:nth-child(even) { background: #f4faf6; }
+
+        .sequence-flow {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            width: 90%;
+            max-width: 950px;
+            gap: 16px;
+            margin: 16px auto;
+            text-align: center;
+        }
+
+        .sequence-flow > div {
+            padding: 14px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .sequence-flow > div:nth-child(2) {
+            background: var(--soft-blue);
+            border-top-color: var(--ufla-blue);
+        }
+
+        .sequence-flow h3 { margin: 0 0 8px; }
+@media (max-width: 768px) {
+            .reveal section { padding: 18px !important; }
+            .three-column > div, .two-column > div { min-width: 100%; }
+            .sequence-flow { grid-template-columns: 1fr; }
+            table { font-size: clamp(0.46em, 1.6vw, 0.68em); }
+            th, td { padding: 5px; }
+            .code-box { font-size: clamp(0.48em, 1.55vw, 0.68em); }
+        }
+    
+
+/* Extensão para códigos extensos: o slide não muda de escala. */
+.code-box {
+    max-height: 56vh;
+    overflow: auto;
+    scrollbar-width: thin;
+    white-space: pre-wrap;
+}
+pre.code-box { white-space: pre; }
+.code-box::-webkit-scrollbar { width: 8px; height: 8px; }
+.code-box::-webkit-scrollbar-thumb { background: #9bb9a7; border-radius: 4px; }
+@media (max-width: 768px) {
+    .code-box { max-height: 54vh; }
+}
+</style></head>
+<body class="slides-page"><div class="logo-container"><img alt="UFLA" src="../assets/ufla-logo.webp"/></div><div class="reveal"><div class="slides">
+<section class="title-slide">
+<h1>🎓 Aula 04</h1>
+<div class="subtitle">Estruturas de Repetição</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section>
+<section><h2>🎯 Repetir sem perder o controle</h2><ul class="step-list"><li>Executar um bloco várias vezes.</li><li>Escolher entre <code>while</code> e <code>do-while</code>.</li><li>Usar contadores, acumuladores e sentinelas.</li><li>Evitar repetições infinitas.</li></ul><div class="success-box"><p>Toda repetição precisa de uma condição que possa mudar.</p></div></section>
+<section><h2>🔁 A ideia de um laço</h2><div class="sequence-flow"><div><h3>1. Teste</h3><p>A condição é avaliada.</p></div><div><h3>2. Corpo</h3><p>Os comandos são executados.</p></div><div><h3>3. Atualização</h3><p>Algo muda antes do próximo teste.</p></div></div><div class="info-box"><p><strong>Pergunta-chave:</strong> o que fará a condição ficar falsa?</p></div></section>
+<section><h2>👀 While: testa antes</h2><pre class="code-box"><code>while (condicao) {
+    // comandos que podem se repetir
+}</code></pre><div class="two-column"><div><h4>Se for true</h4><p>O corpo executa e o teste volta a acontecer.</p></div><div><h4>Se for false</h4><p>O corpo pode não executar nenhuma vez.</p></div></div></section>
+<section><h2>🚪 Do-while: executa primeiro</h2><pre class="code-box"><code>do {
+    // comandos que se repetem
+} while (condicao);</code></pre><div class="warning-box"><p>O bloco acontece pelo menos uma vez. O ponto e vírgula depois da condição é obrigatório.</p></div></section>
+<section><h2>⚖️ While ou do-while?</h2><table><tr><th>Estrutura</th><th>Quando testa?</th><th>Mínimo de execuções</th></tr><tr><td><code>while</code></td><td>Antes do corpo</td><td>Zero</td></tr><tr><td><code>do-while</code></td><td>Depois do corpo</td><td>Uma</td></tr></table><div class="info-box"><p>Escolha a estrutura que representa melhor a leitura do problema.</p></div></section>
+<section><h2>🧮 Contadores e acumuladores</h2><div class="three-column"><div><h4>Contador</h4><p>Conta quantas vezes algo acontece.</p><p><code>contador++</code></p></div><div><h4>Acumulador</h4><p>Guarda um resultado parcial.</p><p><code>soma += valor</code></p></div><div><h4>Inicialização</h4><p>Começa antes do laço.</p><p><code>soma = 0</code></p></div></div><pre class="code-box"><code>int contador = 0;
+int soma = 0;
+while (contador &lt; 5) {
+    soma += contador;
+    contador++;
+}</code></pre></section>
+<section><h2>🛑 Sentinelas encerram a entrada</h2><p>Uma sentinela é um valor especial que sinaliza o fim da leitura.</p><pre class="code-box"><code>int valor, soma = 0;
+cin &gt;&gt; valor;
+while (valor != -1) {
+    soma += valor;
+    cin &gt;&gt; valor;
+}
+cout &lt;&lt; soma;</code></pre><div class="warning-box"><p><code>-1</code> encerra a entrada; ele não entra na soma.</p></div></section>
+<section><h2>🧩 Repetições aninhadas</h2><p>Um laço pode estar dentro de outro. O laço interno completa suas voltas para cada volta do laço externo.</p><pre class="code-box"><code>int linha = 1;
+while (linha &lt;= 3) {
+    int coluna = 1;
+    while (coluna &lt;= 4) {
+        cout &lt;&lt; "* ";
+        coluna++;
+    }
+    cout &lt;&lt; "\n";
+    linha++;
+}</code></pre><div class="info-box"><p>Use indentação e nomes que revelem qual variável controla cada laço.</p></div></section>
+<section><h2>📝 Desafio: soma e média</h2><p>Leia valores até receber a sentinela <code>-1</code>. Ao final, mostre a soma e a média dos valores válidos.</p><ol class="step-list"><li>Crie um acumulador para a soma.</li><li>Crie um contador para a quantidade.</li><li>Evite dividir por zero quando nenhum valor for informado.</li></ol><div class="info-box"><p>Antes de programar, escreva a condição de repetição e a atualização da leitura.</p></div></section>
+<section class="practice-slide">
+<h2>🧩 Prática em aula</h2>
+<p>Leia valores até receber -1 e mostre soma, quantidade e média dos valores válidos.</p>
+<div class="success-box"><p><strong>Gabarito orientador:</strong> Use uma sentinela, um acumulador e um contador. Se nenhum valor for informado, não divida por zero.</p></div>
+
+</section><section class="references-slide">
+<h2>📚 Referências e materiais</h2>
+<p>Use estas fontes para consultas pontuais depois da aula:</p>
+<ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/language/while" target="_blank">cppreference — while</a></li><li><a href="https://en.cppreference.com/w/cpp/language/do" target="_blank">cppreference — do-while</a></li><li><a href="https://beecrowd.com/" target="_blank">beecrowd — exercícios online</a></li></ul>
+<div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
+
+</section><section class="summary-slide">
+<h2>📌 Resumo da aula</h2>
+<ul class="step-list"><li>while testa antes; do-while testa depois.</li><li>Todo laço precisa avançar para evitar repetição infinita.</li><li>Contadores contam e acumuladores guardam resultados.</li><li>Laços aninhados resolvem problemas com mais de uma dimensão.</li></ul>
+
+</section><section class="next-slide">
+<p class="next-label">PRÓXIMA AULA</p>
+<h1>⏭️ Próxima aula</h1>
+<div class="subtitle">Modularização e passagem de parâmetros</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script></body></html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" rel="stylesheet"/><title>Aula 09 — Ponteiros, Busca Binária e Recursão</title><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css" rel="stylesheet"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css" rel="stylesheet"/><link href="../css/style.css" rel="stylesheet"/><style id="aula03-template">
+        :root {
+            --ufla-green: #008B45;
+            --ufla-blue: #003366;
+            --soft-green: #eef8f1;
+            --soft-blue: #edf4fb;
+            --soft-orange: #fff4ed;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .reveal {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .reveal .slides {
+            width: 100%;
+            height: 100%;
+        }
+
+        .reveal section {
+            width: 100%;
+            height: 100%;
+            padding: 40px !important;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .reveal .slide-background { background: #ffffff; }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--ufla-blue);
+            text-transform: none;
+            font-weight: 800;
+            width: 100%;
+        }
+
+        .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+
+        .reveal h2 {
+            font-size: clamp(1.18em, 4vw, 1.8em);
+            border-bottom: 3px solid var(--ufla-green);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .reveal h3 { font-size: clamp(0.9em, 3vw, 1.25em); }
+
+        .reveal p, .reveal li {
+            color: #333333;
+            font-size: clamp(0.65em, 1.9vw, 0.88em);
+            line-height: 1.45;
+        }
+
+        .reveal ul, .reveal ol {
+            width: 100%;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .reveal li {
+            text-align: left;
+            margin: 7px 0;
+        }
+
+        .highlight { color: var(--ufla-green); font-weight: 800; }
+
+        .logo-container {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            z-index: 10;
+        }
+
+        .logo-container img { height: clamp(35px, 8vw, 58px); }
+
+        .title-slide .subtitle {
+            color: var(--ufla-green);
+            font-size: clamp(0.9em, 3vw, 1.2em);
+            margin-top: 18px;
+        }
+
+        .title-slide .author {
+            margin-top: 48px;
+            font-size: clamp(0.62em, 1.8vw, 0.8em);
+            color: #555;
+        }
+
+        .emoji-large {
+            font-size: clamp(2em, 8vw, 3em);
+            margin: 12px 0;
+        }
+
+        .box, .info-box, .warning-box, .success-box {
+            width: 90%;
+            max-width: 950px;
+            margin: 14px auto;
+            padding: 14px 18px;
+            text-align: left;
+            border-radius: 4px;
+        }
+
+        .box { background: #f5f5f5; border-left: 5px solid var(--ufla-green); }
+        .info-box { background: var(--soft-blue); border-left: 5px solid var(--ufla-blue); }
+        .warning-box { background: var(--soft-orange); border-left: 5px solid #d85c42; }
+        .success-box { background: var(--soft-green); border-left: 5px solid var(--ufla-green); }
+
+        .code-box {
+            width: 90%;
+            max-width: 950px;
+            background: #f1f2f1;
+            border-top: 5px solid var(--ufla-blue);
+            padding: 15px 20px;
+            margin: 14px auto;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(0.57em, 1.75vw, 0.75em);
+            line-height: 1.4;
+            white-space: pre-wrap;
+            color: #172630;
+        }
+
+        .three-column, .two-column {
+            width: 90%;
+            margin: 14px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+        }
+
+        .three-column > div {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .two-column > div {
+            flex: 1;
+            min-width: 260px;
+            padding: 14px;
+            background: var(--soft-blue);
+            border-top: 5px solid var(--ufla-blue);
+        }
+
+        .three-column h4, .two-column h4 {
+            margin: 0 0 8px;
+            color: var(--ufla-blue);
+            font-size: clamp(0.8em, 2vw, 1em);
+        }
+
+        .step-list {
+            width: 90%;
+            max-width: 940px;
+            margin: 10px auto;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .step-list li::before {
+            content: "→";
+            color: var(--ufla-green);
+            font-weight: 800;
+            position: absolute;
+            left: 0;
+        }
+
+        table {
+            width: 90%;
+            max-width: 1000px;
+            margin: 10px auto;
+            border-collapse: collapse;
+            font-size: clamp(0.58em, 1.55vw, 0.75em);
+            color: #333;
+        }
+
+        th {
+            background: var(--ufla-blue);
+            color: white;
+            text-align: left;
+            padding: 8px;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #d8e4dc;
+            text-align: left;
+        }
+
+        tr:nth-child(even) { background: #f4faf6; }
+
+        .sequence-flow {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            width: 90%;
+            max-width: 950px;
+            gap: 16px;
+            margin: 16px auto;
+            text-align: center;
+        }
+
+        .sequence-flow > div {
+            padding: 14px;
+            background: var(--soft-green);
+            border-top: 5px solid var(--ufla-green);
+        }
+
+        .sequence-flow > div:nth-child(2) {
+            background: var(--soft-blue);
+            border-top-color: var(--ufla-blue);
+        }
+
+        .sequence-flow h3 { margin: 0 0 8px; }
+@media (max-width: 768px) {
+            .reveal section { padding: 18px !important; }
+            .three-column > div, .two-column > div { min-width: 100%; }
+            .sequence-flow { grid-template-columns: 1fr; }
+            table { font-size: clamp(0.46em, 1.6vw, 0.68em); }
+            th, td { padding: 5px; }
+            .code-box { font-size: clamp(0.48em, 1.55vw, 0.68em); }
+        }
+    
+
+/* Extensão para códigos extensos: o slide não muda de escala. */
+.code-box {
+    max-height: 56vh;
+    overflow: auto;
+    scrollbar-width: thin;
+    white-space: pre-wrap;
+}
+pre.code-box { white-space: pre; }
+.code-box::-webkit-scrollbar { width: 8px; height: 8px; }
+.code-box::-webkit-scrollbar-thumb { background: #9bb9a7; border-radius: 4px; }
+@media (max-width: 768px) {
+    .code-box { max-height: 54vh; }
+}
+</style></head>
+<body class="slides-page"><div class="logo-container"><img alt="UFLA" src="../assets/ufla-logo.webp"/></div><div class="reveal"><div class="slides">
+<section class="title-slide">
+<h1>🎓 Aula 09</h1>
+<div class="subtitle">Ponteiros, Alocação Dinâmica, Busca Binária e Recursão</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section>
+<section><h2>🎯 Memória e algoritmos de busca</h2><ul class="step-list"><li>Entender endereços e ponteiros.</li><li>Alocar e desalocar memória com segurança.</li><li>Comparar busca linear e busca binária.</li><li>Reconhecer caso base e chamada recursiva.</li></ul><div class="success-box"><p>A aula integra memória e algoritmos: primeiro entendemos onde os dados estão; depois, como procurá-los.</p></div></section>
+<section><h2>📍 Variável, endereço e ponteiro</h2><pre class="code-box"><code>int numero = 25;
+int* ponteiro = &amp;numero;
+
+cout &lt;&lt; numero;    // valor
+cout &lt;&lt; &amp;numero;   // endereço
+cout &lt;&lt; *ponteiro; // valor apontado</code></pre><div class="three-column"><div><h4><code>&amp;</code></h4><p>Obtém o endereço.</p></div><div><h4><code>*</code></h4><p>Acessa o valor apontado.</p></div><div><h4><code>int*</code></h4><p>Ponteiro para um inteiro.</p></div></div></section>
+<section><h2>🛡️ Ponteiros seguros</h2><pre class="code-box"><code>int* p = nullptr;
+
+if (p != nullptr) {
+    cout &lt;&lt; *p;
+}</code></pre><div class="warning-box"><p>Não desreferencie um ponteiro nulo ou não inicializado. Primeiro verifique se ele aponta para uma região válida.</p></div></section>
+<section><h2>🧠 Alocação dinâmica</h2><pre class="code-box"><code>int n;
+cin &gt;&gt; n;
+
+int* v = new int[n];
+// use v[0] até v[n - 1]
+
+delete[] v;
+v = nullptr;</code></pre><div class="two-column"><div><h4><code>new</code></h4><p>Reserva memória durante a execução.</p></div><div><h4><code>delete[]</code></h4><p>Libera um vetor dinâmico.</p></div></div></section>
+<section><h2>⚠️ Cuidados com memória</h2><ul class="step-list"><li>Inicialize ponteiros com <code>nullptr</code> quando ainda não apontarem para dados.</li><li>Não acesse posições fora do limite alocado.</li><li>Use <code>delete</code> para um elemento e <code>delete[]</code> para um vetor.</li><li>Depois de liberar, não use o ponteiro como se ainda fosse válido.</li></ul><div class="warning-box"><p>A memória reservada com <code>new</code> precisa ser liberada pelo programa.</p></div></section>
+<section><h2>🔎 Busca linear</h2><pre class="code-box"><code>int buscaLinear(const int v[], int n, int chave) {
+    for (int i = 0; i &lt; n; i++) {
+        if (v[i] == chave)
+            return i;
+    }
+    return -1;
+}</code></pre><p>Funciona em qualquer vetor. No pior caso, pode verificar todas as posições.</p></section>
+<section><h2>⚡ Busca binária: metade por vez</h2><p>A busca binária exige um vetor ordenado.</p><ol class="step-list"><li>Compare a chave com o elemento do meio.</li><li>Se forem iguais, termine.</li><li>Se a chave for menor, descarte a metade direita.</li><li>Se for maior, descarte a metade esquerda.</li></ol><div class="success-box"><p>A cada passo, a região de busca fica aproximadamente pela metade.</p></div></section>
+<section><h2>🧭 Exemplo de busca binária</h2><pre class="code-box"><code>v = {1, 4, 5, 10, 16, 19, 20, 27, 30};
+chave = 26;
+
+meio = 16  -&gt; 26 é maior
+restam: 19, 20, 27, 30
+meio = 20  -&gt; 26 é maior
+restam: 27, 30
+meio = 27  -&gt; 26 é menor
+resultado: não encontrado</code></pre><div class="info-box"><p>Sem ordenação, não é possível descartar metades com segurança.</p></div></section>
+<section><h2>🔁 Recursão: um problema menor</h2><pre class="code-box"><code>int fatorial(int n) {
+    if (n == 0)          // caso base
+        return 1;
+    return n * fatorial(n - 1);
+}</code></pre><div class="two-column"><div><h4>Caso base</h4><p>Interrompe a recursão.</p></div><div><h4>Passo recursivo</h4><p>Chama a função com uma entrada menor.</p></div></div></section>
+<section><h2>🧩 Busca binária recursiva</h2><pre class="code-box"><code>int busca(int v[], int inicio, int fim, int chave) {
+    if (inicio &gt; fim) return -1;
+    int meio = (inicio + fim) / 2;
+    if (v[meio] == chave) return meio;
+    if (chave &lt; v[meio])
+        return busca(v, inicio, meio - 1, chave);
+    return busca(v, meio + 1, fim, chave);
+}</code></pre><div class="success-box"><p>A função reduz o intervalo a cada chamada e termina quando encontra a chave ou quando o intervalo fica vazio.</p></div></section>
+<section class="practice-slide">
+<h2>🧩 Prática em aula</h2>
+<p>Em um vetor ordenado, implemente a busca binária e retorne o índice da chave ou -1.</p>
+<div class="success-box"><p><strong>Gabarito orientador:</strong> Atualize início, fim e meio até encontrar a chave ou esvaziar o intervalo. Explique o caso base se usar recursão.</p></div>
+
+</section><section class="references-slide">
+<h2>📚 Referências e materiais</h2>
+<p>Use estas fontes para consultas pontuais depois da aula:</p>
+<ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/language/pointer" target="_blank">cppreference — ponteiros</a></li><li><a href="https://en.cppreference.com/w/cpp/language/recursion" target="_blank">cppreference — recursão</a></li><li><a href="https://beecrowd.com/" target="_blank">beecrowd — busca e vetores</a></li></ul>
+<div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
+
+</section><section class="summary-slide">
+<h2>📌 Resumo da aula</h2>
+<ul class="step-list"><li>Ponteiro armazena endereço; * acessa o valor apontado.</li><li>new reserva e delete/delete[] liberam memória.</li><li>Busca binária exige vetor ordenado.</li><li>Recursão precisa de caso base e redução do problema.</li></ul>
+
+</section><section class="next-slide">
+<p class="next-label">PRÓXIMA AULA</p>
+<h1>⏭️ Próxima aula</h1>
+<div class="subtitle">Registros e vetores de registros</div>
+<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
+
+</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script></body></html>
