@@ -308,7 +308,12 @@ tamanho++;</code></pre><p>O teste ocorre antes de inserir. Assim, sempre existe 
 <ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/language/new" target="_blank">cppreference — new-expression</a></li><li><a href="https://en.cppreference.com/w/cpp/language/delete" target="_blank">cppreference — delete-expression</a></li><li><a href="https://cpp.sh/" target="_blank">C++ Shell — testes rápidos</a></li></ul>
 <div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
 
-</section><section class="summary-slide">
+</section><section class="scrollable"><h2>📈 Redimensionamento em cinco passos</h2><p>Quando o vetor fica cheio, é preciso criar outro bloco, copiar os elementos e atualizar o ponteiro.</p><div class="ialg-visualizer" data-algo="resize" data-title="Realocação do vetor" data-values="4,7,2,9" data-capacity="4"></div><pre class="code-box"><code>int* novo = new int[novaCapacidade];
+for (int i = 0; i &lt; tamanho; i++) novo[i] = v[i];
+delete[] v;
+v = novo;</code></pre></section>
+<section><h2>🔗 Complementos online</h2><div class="ialg-reference-panel"><ul><li><a href="https://www.geeksforgeeks.org/cpp/new-and-delete-operators-in-cpp-for-dynamic-memory/" target="_blank" rel="noopener">GeeksforGeeks — new e delete</a></li><li><a href="https://en.cppreference.com/w/cpp/container/vector/reserve" target="_blank" rel="noopener">cppreference — reserve</a></li></ul></div></section>
+<section class="summary-slide">
 <h2>📌 Resumo da aula</h2>
 <ul class="step-list"><li>Vetores dinâmicos não mudam de tamanho no mesmo endereço.</li><li>Redimensionar significa alocar, copiar, liberar e atualizar.</li><li>tamanho e capacidade representam informações diferentes.</li><li>Vetor criado com new[] deve ser liberado com delete[].</li></ul>
 
@@ -318,4 +323,5 @@ tamanho++;</code></pre><p>O teste ocorre antes de inserir. Assim, sempre existe 
 <div class="subtitle">Ordenação de vetores: métodos básicos</div>
 <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
 
-</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script></body></html>
+</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script><script src="../assets/ialg-visualizer.js"></script>
+</body></html>

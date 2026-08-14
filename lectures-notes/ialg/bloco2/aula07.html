@@ -307,7 +307,9 @@ void imprime(const int m[][C]) {
 <ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/language/array" target="_blank">cppreference — arrays</a></li><li><a href="https://cpp.sh/" target="_blank">C++ Shell — compilador online</a></li><li><a href="https://beecrowd.com/" target="_blank">beecrowd — problemas de matrizes</a></li></ul>
 <div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
 
-</section><section class="summary-slide">
+</section><section class="scrollable"><h2>🧮 Matriz em ação: percurso passo a passo</h2><p>Observe como o <strong>for interno</strong> percorre todas as colunas antes de a linha mudar. Use os controles para avançar.</p><div class="ialg-visualizer" data-algo="matrix" data-title="Percurso linha por linha" data-values="1,2,3,4,5,6,7,8,9,10,11,12" data-rows="3" data-cols="4"></div><p class="info-box">A diagonal principal aparece quando <code>i == j</code>. Em uma matriz não quadrada, a regra continua válida apenas enquanto a posição existir.</p></section>
+<section><h2>🔗 Complementos online</h2><div class="ialg-reference-panel"><p>Para consultar exemplos e exercícios sobre matrizes e vetores:</p><ul><li><a href="https://www.geeksforgeeks.org/cpp/cpp-multidimensional-array/" target="_blank" rel="noopener">GeeksforGeeks — arrays multidimensionais em C++</a></li><li><a href="https://en.cppreference.com/w/cpp/container/array" target="_blank" rel="noopener">cppreference — std::array</a></li></ul></div></section>
+<section class="summary-slide">
 <h2>📌 Resumo da aula</h2>
 <ul class="step-list"><li>Matriz organiza dados em linhas e colunas.</li><li>O acesso usa dois índices: m[i][j].</li><li>Dois for aninhados percorrem todos os elementos.</li><li>Os índices começam em zero.</li></ul>
 
@@ -317,4 +319,5 @@ void imprime(const int m[][C]) {
 <div class="subtitle">Strings e uso do getline()</div>
 <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
 
-</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script></body></html>
+</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script><script src="../assets/ialg-visualizer.js"></script>
+</body></html>

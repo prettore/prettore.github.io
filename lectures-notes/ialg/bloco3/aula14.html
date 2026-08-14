@@ -319,7 +319,15 @@ copie o auxiliar de volta para o vetor original</code></pre><div class="info-box
 <ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/algorithm/sort" target="_blank">cppreference — sort</a></li><li><a href="https://en.cppreference.com/w/cpp/algorithm" target="_blank">cppreference — algoritmos</a></li><li><a href="https://beecrowd.com/" target="_blank">beecrowd — exercícios de ordenação</a></li></ul>
 <div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
 
-</section><section class="summary-slide">
+</section><section class="scrollable"><h2>✂️ QuickSort: acompanhar o pivô</h2><p>O último elemento é o pivô. Avance para acompanhar as comparações e trocas do particionamento de Lomuto.</p><div class="ialg-visualizer" data-algo="quick-sort" data-title="QuickSort — particionamento" data-values="7,2,9,4,6"></div><pre class="code-box"><code>int p = particiona(v, inicio, fim);
+quicksort(v, inicio, p - 1);
+quicksort(v, p + 1, fim);</code></pre></section>
+<section class="scrollable"><h2>🔀 MergeSort: dividir e intercalar</h2><p>Primeiro dividimos; depois, intercalamos os trechos ordenados em uma nova sequência.</p><div class="ialg-visualizer" data-algo="merge-sort" data-title="MergeSort — intercalação" data-values="8,3,7,2,6,4"></div><pre class="code-box"><code>mergesort(v, inicio, meio);
+mergesort(v, meio + 1, fim);
+merge(v, inicio, meio, fim);</code></pre></section>
+<section><h2>🎬 Compare animações</h2><div class="ialg-reference-panel"><p>Use a animação para observar trocas, pivôs, divisões e intercalações com diferentes entradas:</p><p><a href="https://visualgo.net/en/sorting" target="_blank" rel="noopener">Abrir VisuAlgo — Sorting</a></p><p><a href="https://www.geeksforgeeks.org/dsa/sorting-algorithms/" target="_blank" rel="noopener">Consultar GeeksforGeeks — Sorting Algorithms</a></p></div></section>
+<section><h2>🔗 Complementos online</h2><div class="ialg-reference-panel"><ul><li><a href="https://www.geeksforgeeks.org/dsa/quick-sort-algorithm/" target="_blank" rel="noopener">GeeksforGeeks — QuickSort</a></li><li><a href="https://www.geeksforgeeks.org/dsa/merge-sort/" target="_blank" rel="noopener">GeeksforGeeks — MergeSort</a></li><li><a href="https://en.cppreference.com/w/cpp/algorithm" target="_blank" rel="noopener">cppreference — biblioteca de algoritmos</a></li></ul></div></section>
+<section class="summary-slide">
 <h2>📌 Resumo da aula</h2>
 <ul class="step-list"><li>QuickSort particiona em torno de um pivô.</li><li>MergeSort divide e intercala trechos ordenados.</li><li>Ambos usam divisão do problema e recursão.</li><li>Complexidade e memória ajudam a escolher o método.</li></ul>
 
@@ -329,4 +337,5 @@ copie o auxiliar de volta para o vetor original</code></pre><div class="info-box
 <div class="subtitle">Projeto, revisão e avaliações finais</div>
 <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
 
-</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script></body></html>
+</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script><script src="../assets/ialg-visualizer.js"></script>
+</body></html>

@@ -411,3 +411,38 @@ body.slides-page .sequence-flow > div { padding: 14px; }
     body.slides-page table td { padding: 5px; }
     body.slides-page .code-box { font-size: clamp(.48em, 1.55vw, .68em); max-height: 54vh; }
 }
+
+/* Visualizações didáticas interativas IAlg */
+.ialg-visualizer { width:90%; margin:16px auto 0; padding:14px 18px 12px; background:#f7fbff; border:2px solid var(--ufla-blue); border-radius:12px; box-sizing:border-box; color:#123; font-size:.72em; }
+.ialg-anim-header { display:flex; justify-content:space-between; align-items:center; gap:12px; color:var(--ufla-blue); margin-bottom:10px; }
+.ialg-anim-counter { color:var(--ufla-green); font-size:.82em; white-space:nowrap; }
+.ialg-anim-main { display:flex; align-items:center; gap:18px; min-height:104px; }
+.ialg-anim-track { flex:1; display:grid; grid-template-columns:repeat(auto-fit,minmax(52px,1fr)); gap:8px; align-items:stretch; }
+.ialg-anim-cell { position:relative; min-height:58px; display:flex; flex-direction:column; justify-content:center; align-items:center; border:2px solid #b8cbe0; border-radius:8px; background:#fff; color:var(--ufla-blue); box-sizing:border-box; }
+.ialg-anim-cell strong { font-size:1.2em; }
+.ialg-anim-index { position:absolute; left:5px; top:3px; font-size:.68em; color:#5d6b7a; }
+.ialg-anim-cell.active { background:#fff2b8; border-color:#d99000; transform:translateY(-3px); }
+.ialg-anim-cell.sorted { background:#dff4e7; border-color:var(--ufla-green); }
+.ialg-anim-cell.checked { background:#e9eef4; color:#657386; }
+.ialg-anim-cell.discarded { opacity:.35; }
+.ialg-anim-cell.pivot { background:#e7ddff; border-color:#6b35a8; }
+.ialg-anim-cell.diagonal { background:#ccebd9; border-color:var(--ufla-green); }
+.ialg-anim-cell.empty { background:repeating-linear-gradient(135deg,#f7f9fb,#f7f9fb 6px,#e7edf3 6px,#e7edf3 12px); color:#8a98a6; }
+.ialg-anim-caption { min-height:1.4em; margin:10px 0 8px; text-align:center; color:#303c48; }
+.ialg-anim-controls { display:flex; flex-wrap:wrap; justify-content:center; gap:7px; }
+.ialg-anim-controls button { border:1px solid var(--ufla-blue); border-radius:6px; padding:5px 9px; background:#fff; color:var(--ufla-blue); cursor:pointer; font:inherit; }
+.ialg-anim-controls button:hover { background:#eaf3fb; }
+.ialg-anim-side { min-width:130px; }
+.ialg-stack { display:flex; flex-direction:column; gap:4px; }
+.ialg-stack-frame { padding:5px 8px; border-left:4px solid var(--ufla-green); background:#e8f5ed; color:var(--ufla-blue); text-align:center; }
+.ialg-visualizer a { color:var(--ufla-blue); }
+@media (max-width:768px) { .ialg-visualizer { width:96%; font-size:.68em; } .ialg-anim-main { flex-direction:column; } .ialg-anim-track { width:100%; } .ialg-anim-side { width:100%; min-width:0; } }
+
+.ialg-record-grid { width:90%; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:12px auto; }
+.ialg-record-card { background:#edf4fb; border-top:5px solid var(--ufla-blue); padding:12px; border-radius:8px; text-align:left; }
+.ialg-record-card:nth-child(2) { background:#e8f5ed; border-top-color:var(--ufla-green); }
+.ialg-record-card h4 { color:var(--ufla-blue); margin:0 0 6px; }
+.ialg-record-card p { margin:3px 0; font-size:.72em; }
+.ialg-reference-panel { width:90%; padding:12px 16px; background:#f7fbff; border-left:5px solid var(--ufla-green); text-align:left; }
+.ialg-reference-panel a { color:var(--ufla-blue); }
+@media (max-width:768px) { .ialg-record-grid { grid-template-columns:1fr; } }

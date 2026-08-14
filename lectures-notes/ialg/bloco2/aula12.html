@@ -306,7 +306,23 @@ insira 5: {2, 5, 6, 9}</code></pre><div class="success-box"><p>Ele funciona bem 
 <ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/algorithm" target="_blank">cppreference — algoritmos</a></li><li><a href="https://beecrowd.com/" target="_blank">beecrowd — exercícios de ordenação</a></li><li><a href="https://cpp.sh/" target="_blank">C++ Shell — testes rápidos</a></li></ul>
 <div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
 
-</section><section class="summary-slide">
+</section><section class="scrollable"><h2>🎯 Selection Sort: fixar o menor</h2><p>Em cada rodada, localizar o menor elemento do trecho restante e colocá-lo na próxima posição.</p><div class="ialg-visualizer" data-algo="selection-sort" data-title="Selection Sort" data-values="7,3,5,1,4"></div><pre class="code-box"><code>for (int i = 0; i &lt; n - 1; i++) {
+    int p = i;
+    for (int j = i + 1; j &lt; n; j++)
+        if (v[j] &lt; v[p]) p = j;
+    swap(v[i], v[p]);
+}</code></pre></section>
+<section class="scrollable"><h2>🃏 Insertion Sort: deslocar e inserir</h2><p>A parte à esquerda já está ordenada. A chave é deslocada até encontrar sua posição.</p><div class="ialg-visualizer" data-algo="insertion-sort" data-title="Insertion Sort" data-values="7,3,5,1,4"></div><pre class="code-box"><code>for (int i = 1; i &lt; n; i++) {
+    int chave = v[i], j = i - 1;
+    while (j &gt;= 0 &amp;&amp; v[j] &gt; chave) {
+        v[j + 1] = v[j];
+        j--;
+    }
+    v[j + 1] = chave;
+}</code></pre></section>
+<section class="scrollable"><h2>🐚 Shell Sort: trabalhar com gaps</h2><p>O vetor é refinado com intervalos maiores antes da última passagem com gap 1.</p><div class="ialg-visualizer" data-algo="shell-sort" data-title="Shell Sort" data-values="8,3,7,2,6,4"></div></section>
+<section><h2>🔗 Complementos online</h2><div class="ialg-reference-panel"><ul><li><a href="https://www.geeksforgeeks.org/dsa/sorting-algorithms/" target="_blank" rel="noopener">GeeksforGeeks — algoritmos de ordenação</a></li><li><a href="https://visualgo.net/en/sorting" target="_blank" rel="noopener">VisuAlgo — animações de ordenação</a></li><li><a href="https://en.cppreference.com/w/cpp/algorithm/sort" target="_blank" rel="noopener">cppreference — std::sort</a></li></ul></div></section>
+<section class="summary-slide">
 <h2>📌 Resumo da aula</h2>
 <ul class="step-list"><li>Selection Sort escolhe o menor elemento do trecho.</li><li>Insertion Sort insere cada elemento no trecho ordenado.</li><li>Shell Sort usa gaps para mover elementos distantes.</li><li>Índices e limites dos laços determinam a correção.</li></ul>
 
@@ -316,4 +332,5 @@ insira 5: {2, 5, 6, 9}</code></pre><div class="success-box"><p>Ele funciona bem 
 <div class="subtitle">Arquivos binários e arquivos tipados</div>
 <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
 
-</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script></body></html>
+</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script><script src="../assets/ialg-visualizer.js"></script>
+</body></html>
