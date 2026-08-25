@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <!DOCTYPE html>
 
-<!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
@@ -356,8 +354,6 @@
 <li>Ler dados do usuário usando <span class="highlight">cin</span></li>
 <li>Apresentar resultados usando <span class="highlight">cout</span></li>
 <li>Organizar um programa completo em estrutura sequencial</li>
-<li>Usar casting e controlar a precisão numérica</li>
-<li>Ler e escrever arquivos de texto com streams</li>
 </ul>
 </section>
 <!-- Slide 3: Fluxo de um programa -->
@@ -466,20 +462,7 @@ double b = 7.0 / 2;   // b recebe 3.5</div>
 </div>
 <p>Para manter a parte decimal, use pelo menos um operando de ponto flutuante (como <code>7.0</code> em vez de <code>7</code>).</p>
 </section>
-<!-- Slide 8: Casting -->
-<section>
-<h2>🎯 Divisão inteira: use casting quando precisar</h2>
-<div class="code-box">int total = 7;
-int partes = 2;
-
-double media = static_cast&lt;double&gt;(total) / partes;</div>
-<div class="success-box">
-<p><strong>Sem casting:</strong> <code>7 / 2</code> produz <code>3</code>.</p>
-<p><strong>Com casting:</strong> <code>static_cast&lt;double&gt;(7) / 2</code> produz <code>3.5</code>.</p>
-</div>
-<p><code>static_cast&lt;double&gt;(total)</code> converte o operando antes da divisão.</p>
-</section>
-<!-- Slide 9: Parênteses -->
+<!-- Slide 8: Parênteses -->
 <section>
 <h2>📝 Parênteses deixam a intenção explícita</h2>
 <div class="code-box">double media = nota1 + nota2 / 2.0;      // Incorreto para a média
@@ -498,6 +481,58 @@ double media = (nota1 + nota2) / 2.0;    // Correto</div>
 <p>Quando houver dúvida sobre a ordem de execução, <strong>use parênteses</strong>.</p>
 </div>
 </div>
+</section>
+<!-- Slides adicionais: precedência e incrementos -->
+<section>
+<h2>🧭 Precedência: resolva na ordem certa</h2>
+<div class="code-box">X = A + B - C / D
+A = 18, B = 7, C = 6, D = 2</div>
+<div class="two-column">
+<div>
+<h4>Passo a passo</h4>
+<p>1. Substitua: <code>X = 18 + 7 - 6 / 2</code></p>
+<p>2. Divisão primeiro: <code>X = 18 + 7 - 3</code></p>
+<p>3. Da esquerda para a direita: <code>X = 25 - 3 = 22</code></p>
+</div>
+<div>
+<h4>Resposta</h4>
+<div class="success-box" style="margin: 8px 0; text-align: center;"><p><strong>X = 22</strong></p></div>
+<p>Multiplicação, divisão e resto vêm antes de soma e subtração.</p>
+</div>
+</div>
+</section>
+<section>
+<h2>⚡ Operador composto: <code>+=</code></h2>
+<div class="code-box">int x = 7;
+x += 3;</div>
+<div class="info-box">
+<p><code>x += 3</code> é uma forma curta de escrever <code>x = x + 3</code>.</p>
+</div>
+<div class="two-column">
+<div><h4>Antes</h4><p><code>x = 7</code></p></div>
+<div><h4>Depois</h4><p><code>x = 7 + 3 = 10</code></p></div>
+</div>
+<p><strong>Resultado final: x = 10</strong></p>
+</section>
+<section>
+<h2>🔢 Pós-incremento e pré-incremento</h2>
+<div class="two-column">
+<div>
+<h4>Pós-incremento: usa, depois aumenta</h4>
+<div class="code-box" style="margin: 5px 0;">int x = 4, y = 1;
+int z = x++ + y++;</div>
+<p>Primeiro: <code>z = 4 + 1 = 5</code></p>
+<p>Depois: <code>x = 5</code> e <code>y = 2</code></p>
+</div>
+<div>
+<h4>Pré-incremento: aumenta, depois usa</h4>
+<div class="code-box" style="margin: 5px 0;">int x = 4, y = 1;
+int z = ++x + ++y;</div>
+<p>Primeiro: <code>x = 5</code> e <code>y = 2</code></p>
+<p>Depois: <code>z = 5 + 2 = 7</code></p>
+</div>
+</div>
+<div class="warning-box"><p>Leia com atenção: <code>x++</code> e <code>++x</code> não produzem o mesmo valor dentro da expressão.</p></div>
 </section>
 <!-- Slide 9: Atualizações Curtas -->
 <section>
@@ -533,23 +568,7 @@ double modulo = abs(-7.5);   // 7.5</div>
 <li><code>floor()</code> : Arredondamento para baixo</li>
 </ul>
 </section>
-<!-- Slide 11: Trigonometria -->
-<section>
-<h2>📐 <code>&lt;cmath&gt;</code> também trabalha com ângulos</h2>
-<div class="code-box">#include &lt;cmath&gt;
-
-const double pi = 3.141592653589793;
-double angulo = 45.0 * pi / 180.0;
-
-cout &lt;&lt; sin(angulo) &lt;&lt; '\n';
-cout &lt;&lt; cos(angulo) &lt;&lt; '\n';
-cout &lt;&lt; tan(angulo) &lt;&lt; '\n';</div>
-<div class="info-box">
-<p><code>sin()</code>, <code>cos()</code> e <code>tan()</code> recebem o ângulo em <strong>radianos</strong>.</p>
-</div>
-<p>Para converter graus em radianos: <code>graus * pi / 180.0</code>.</p>
-</section>
-<!-- Slide 12: Saída de dados (cout) -->
+<!-- Slide 11: Saída de dados (cout) -->
 <section>
 <h2>📤 cout apresenta mensagens e valores</h2>
 <div class="code-box">int idade = 18;
@@ -574,7 +593,7 @@ cin &gt;&gt; idade;</div>
 </div>
 <p>⚠️ Sempre declare a variável antes de realizar a leitura!</p>
 </section>
-<!-- Slide 14: Múltiplas leituras -->
+<!-- Slide 13: Múltiplas leituras -->
 <section>
 <h2>📥 Uma leitura pode preencher várias variáveis</h2>
 <div class="code-box">double nota1, nota2;
@@ -590,63 +609,7 @@ cin &gt;&gt; nota1 &gt;&gt; nota2;</div>
 <div>Uma mensagem com <code>cout</code> antes da leitura ajuda o usuário a entender o que deve informar.</div>
 </div>
 </section>
-<!-- Slide 15: cin/cout e arquivos -->
-<section>
-<h2>🔁 cin/cout e arquivos usam streams</h2>
-<table>
-<tr><th>Stream</th><th>Origem/Destino comum</th><th>Operador</th></tr>
-<tr><td><code>cin</code></td><td>Teclado → programa</td><td><code>&gt;&gt;</code></td></tr>
-<tr><td><code>cout</code></td><td>Programa → monitor</td><td><code>&lt;&lt;</code></td></tr>
-<tr><td><code>ifstream</code></td><td>Arquivo → programa</td><td><code>&gt;&gt;</code> / <code>getline()</code></td></tr>
-<tr><td><code>ofstream</code></td><td>Programa → arquivo</td><td><code>&lt;&lt;</code></td></tr>
-</table>
-<div class="info-box"><p>A ideia é parecida: o programa lê de um fluxo ou escreve em um fluxo.</p></div>
-</section>
-<!-- Slide 16: Escrita em arquivo -->
-<section>
-<h2>✍️ Escrevendo em um arquivo de texto</h2>
-<div class="code-box">#include &lt;fstream&gt;
-using namespace std;
-
-ofstream arquivo("notas.txt");
-if (arquivo.is_open()) {
-    arquivo &lt;&lt; "Ana 8.5\n";
-    arquivo &lt;&lt; "Bruno 7.0\n";
-    arquivo.close();
-}</div>
-<ul class="step-list">
-<li><code>ofstream</code> abre o fluxo de saída.</li>
-<li>Se o arquivo não existir, ele é criado.</li>
-<li>Fechar o arquivo garante que o buffer seja descarregado.</li>
-</ul>
-</section>
-<!-- Slide 17: Leitura em arquivo -->
-<section>
-<h2>📖 Lendo um arquivo de texto</h2>
-<div class="code-box">#include &lt;fstream&gt;
-#include &lt;string&gt;
-using namespace std;
-
-ifstream arquivo("notas.txt");
-string linha;
-while (getline(arquivo, linha)) {
-    cout &lt;&lt; linha &lt;&lt; '\n';
-}
-arquivo.close();</div>
-<div class="info-box"><p><code>getline()</code> lê uma linha completa, incluindo espaços.</p></div>
-</section>
-<!-- Slide 18: Cuidados com streams -->
-<section>
-<h2>🔌 Cuidados ao trabalhar com arquivos</h2>
-<ul class="step-list">
-<li>Inclua <code>&lt;fstream&gt;</code> e confira se a abertura funcionou.</li>
-<li>Use <code>ifstream</code> para ler, <code>ofstream</code> para escrever e <code>fstream</code> para os dois.</li>
-<li>Por padrão, <code>ofstream</code> substitui o conteúdo anterior; use <code>ios::app</code> para acrescentar.</li>
-<li>Feche os arquivos ao terminar, mesmo que o fechamento automático exista.</li>
-</ul>
-<div class="warning-box"><p>Variáveis desaparecem quando o programa termina; arquivos permitem guardar dados para depois.</p></div>
-</section>
-<!-- Slide 19: Formatação de saída -->
+<!-- Slide 14: Formatação de saída -->
 <section>
 <h2>✨ Formatação torna a saída mais clara</h2>
 <div class="code-box">#include &lt;iomanip&gt;
@@ -657,21 +620,9 @@ cout &lt;&lt; "Preço: R$ " &lt;&lt; preco &lt;&lt; '\n';</div>
 <div class="box">
 <p><strong>Saída gerada:</strong> Preço: R$ 19.50</p>
 </div>
-<p style="font-size: 0.85em;">Use <code>&lt;iomanip&gt;</code>, <code>fixed</code> e <code>setprecision(2)</code> quando a quantidade de casas decimais importar.
+<p style="font-size: 0.85em;">Use <code>&lt;iomanip&gt;</code>, <code>fixed</code> e <code>setprecision</code> quando a quantidade de casas decimais importar.</p>
 </section>
-<!-- Slide 24: Precisão numérica -->
-<section>
-<h2>🎯 Precisão não é o mesmo que exatidão</h2>
-<div class="code-box">#include &lt;iomanip&gt;
-
-double x = 1.0 / 3.0;
-cout &lt;&lt; fixed &lt;&lt; setprecision(10) &lt;&lt; x;</div>
-<div class="warning-box">
-<p><code>float</code> e <code>double</code> armazenam aproximações. Mais casas exibidas não criam informação exata.</p>
-</div>
-<p>Para cálculos importantes, prefira <code>double</code> e compare valores reais com uma tolerância, não com igualdade absoluta.</p>
-</section>
-<!-- Slide 25: Estrutura Sequencial -->
+<!-- Slide 15: Estrutura Sequencial -->
 <section>
 <h2>🛤️ A estrutura sequencial executa na ordem escrita</h2>
 <div class="box" style="text-align: center;">
@@ -838,12 +789,26 @@ cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; total;</div>
 <p style="font-size: 0.7em;">Prática online opcional: <a href="https://beecrowd.com/" target="_blank">beecrowd</a> ou <a href="https://cpp.sh/" target="_blank">C++ Shell</a>.</p>
 </section>
 <!-- Slide 25: Referências -->
-<section class="references-slide"><h2>📚 Referências e materiais</h2><p>Use estas fontes para consultas pontuais depois da aula:</p><ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/language/operator_arithmetic" rel="noopener noreferrer" target="_blank">cppreference — operadores aritméticos</a></li><li><a href="https://en.cppreference.com/w/cpp/io/manip" rel="noopener noreferrer" target="_blank">cppreference — manipuladores de E/S</a></li><li><a href="https://beecrowd.com/" rel="noopener noreferrer" target="_blank">beecrowd — exercícios online</a></li><li><a href="https://cpp.sh/" rel="noopener noreferrer" target="_blank">C++ Shell — compilador online</a></li></ul><div class="info-box"><p>Conteúdo sintetizado a partir do material da disciplina, disponibilizado sob licença Creative Commons Atribuição 4.0 Internacional.</p></div></section>
+<section>
+<h2>📚 Referência e Licença</h2>
+<div class="info-box" style="font-size: 0.8em;">
+<p>Conteúdo sintetizado a partir do material "IALG - 02 - Estrutura Sequencial e E/S", produzido coletivamente por docentes do DAC/UFLA, com destaque para Janderson Rodrigo de Oliveira, Joaquim Quinteiro Uchôa, Juliana Galvani Greghi e Renato Ramos da Silva.</p>
+</div>
+<p style="font-size: 0.7em; margin-top: 20px;">Material-fonte disponibilizado sob licença Creative Commons Atribuição 4.0 Internacional.</p>
+<p style="font-size: 0.68em; margin-top: 12px;">Consulta pontual: <a href="https://en.cppreference.com/w/cpp/language/operator_arithmetic" target="_blank">cppreference — operadores aritméticos</a> e <a href="https://en.cppreference.com/w/cpp/io/manip" target="_blank">manipuladores de E/S</a>.</p>
+</section>
 <!-- Slide 25: Próxima Aula -->
-<section class="next-slide"><p class="next-label">PRÓXIMA AULA</p><h1>⏭️ Próxima aula</h1><div class="subtitle">Estruturas Condicionais</div><div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div></section>
+<section>
+<h2>⏭️ Próxima Aula</h2>
+<div class="emoji-large">🔀</div>
+<div class="box">
+<p><strong>Estruturas Condicionais</strong></p>
+<p style="margin-top: 10px; font-size: 0.9em;">Como fazer o programa escolher caminhos diferentes com <code>if-else</code> e <code>switch-case</code>.</p>
+</div>
+</section>
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
-<script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:1.0});</script>
+<script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script>
 </body>
 </html>
