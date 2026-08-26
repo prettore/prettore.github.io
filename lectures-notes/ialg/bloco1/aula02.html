@@ -622,6 +622,81 @@ cout &lt;&lt; "Preço: R$ " &lt;&lt; preco &lt;&lt; '\n';</div>
 </div>
 <p style="font-size: 0.85em;">Use <code>&lt;iomanip&gt;</code>, <code>fixed</code> e <code>setprecision</code> quando a quantidade de casas decimais importar.</p>
 </section>
+<!-- Slides adicionais: arquivos e streams -->
+<section>
+<h2>📁 Arquivos e streams: dados que permanecem</h2>
+<p>Um arquivo permite guardar dados para que possam ser usados novamente depois que o programa termina.</p>
+<div class="two-column">
+<div>
+<h4>Fluxo de texto</h4>
+<p>Os dados são tratados como caracteres, linhas e palavras. É fácil abrir e conferir o conteúdo.</p>
+</div>
+<div>
+<h4>Fluxo binário</h4>
+<p>Os bytes são gravados diretamente, sem tradução para texto. É útil para dados estruturados e arquivos maiores.</p>
+</div>
+</div>
+<div class="info-box"><p>Em C++, a biblioteca <code>&lt;fstream&gt;</code> oferece os fluxos usados para trabalhar com arquivos.</p></div>
+</section>
+<section>
+<h2>🔁 Console e arquivos usam streams parecidos</h2>
+<table>
+<tr><th>Console</th><th>Arquivo</th><th>Função</th></tr>
+<tr><td><code>cin</code></td><td><code>ifstream</code></td><td>Entrada / leitura</td></tr>
+<tr><td><code>cout</code></td><td><code>ofstream</code></td><td>Saída / escrita</td></tr>
+<tr><td>—</td><td><code>fstream</code></td><td>Entrada e saída</td></tr>
+</table>
+<div class="info-box"><p>A ideia é familiar: assim como <code>cin &gt;&gt; valor</code> lê do teclado, <code>arquivo &gt;&gt; valor</code> lê do arquivo.</p></div>
+</section>
+<section>
+<h2>✍️ Escrevendo em arquivo com <code>ofstream</code></h2>
+<div class="code-box">#include &lt;fstream&gt;
+using namespace std;
+
+int main() {
+    ofstream arquivo("notas.txt");
+    if (!arquivo) return 1;
+
+    arquivo &lt;&lt; "Ana 8.5\\n";
+    arquivo &lt;&lt; "Bruno 7.0\\n";
+    arquivo.close();
+}</div>
+<div class="two-column">
+<div><h4>Se não existir</h4><p>O arquivo é criado.</p></div>
+<div><h4>Se já existir</h4><p>O conteúdo é substituído, salvo se outro modo for usado.</p></div>
+</div>
+</section>
+<section>
+<h2>📖 Lendo arquivo com <code>ifstream</code></h2>
+<div class="code-box">#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+ifstream arquivo("notas.txt");
+string nome;
+double nota;
+
+while (arquivo &gt;&gt; nome &gt;&gt; nota) {
+    cout &lt;&lt; nome &lt;&lt; ": " &lt;&lt; nota &lt;&lt; '\\n';
+}</div>
+<div class="warning-box"><p>Se o arquivo não existir, a abertura falha. Sempre confira o estado do stream antes de confiar nos dados.</p></div>
+</section>
+<section>
+<h2>🔄 <code>fstream</code>: ler e escrever</h2>
+<div class="code-box">#include &lt;fstream&gt;
+using namespace std;
+
+fstream arquivo("dados.txt", ios::in | ios::out);
+
+if (arquivo) {
+    // arquivo &lt;&lt; dado;  // escreve
+    // arquivo &gt;&gt; dado;  // lê
+}</div>
+<div class="two-column">
+<div><h4>Modos comuns</h4><p><code>ios::in</code> lê; <code>ios::out</code> escreve; <code>ios::app</code> acrescenta ao final.</p></div>
+<div><h4>Regra prática</h4><p>Abra o arquivo com o fluxo que descreve a operação principal do programa.</p></div>
+</div>
+</section>
 <!-- Slide 15: Estrutura Sequencial -->
 <section>
 <h2>🛤️ A estrutura sequencial executa na ordem escrita</h2>
@@ -789,13 +864,11 @@ cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; total;</div>
 <p style="font-size: 0.7em;">Prática online opcional: <a href="https://beecrowd.com/" target="_blank">beecrowd</a> ou <a href="https://cpp.sh/" target="_blank">C++ Shell</a>.</p>
 </section>
 <!-- Slide 25: Referências -->
-<section>
-<h2>📚 Referência e Licença</h2>
-<div class="info-box" style="font-size: 0.8em;">
-<p>Conteúdo sintetizado a partir do material "IALG - 02 - Estrutura Sequencial e E/S", produzido coletivamente por docentes do DAC/UFLA, com destaque para Janderson Rodrigo de Oliveira, Joaquim Quinteiro Uchôa, Juliana Galvani Greghi e Renato Ramos da Silva.</p>
-</div>
-<p style="font-size: 0.7em; margin-top: 20px;">Material-fonte disponibilizado sob licença Creative Commons Atribuição 4.0 Internacional.</p>
-<p style="font-size: 0.68em; margin-top: 12px;">Consulta pontual: <a href="https://en.cppreference.com/w/cpp/language/operator_arithmetic" target="_blank">cppreference — operadores aritméticos</a> e <a href="https://en.cppreference.com/w/cpp/io/manip" target="_blank">manipuladores de E/S</a>.</p>
+<section class="references-slide">
+<h2>📚 Referências e materiais</h2>
+<p>Use estas fontes para consultas pontuais depois da aula:</p>
+<ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/io/basic_ifstream" target="_blank">cppreference — ifstream</a></li><li><a href="https://en.cppreference.com/w/cpp/io/basic_ofstream" target="_blank">cppreference — ofstream</a></li><li><a href="https://en.cppreference.com/w/cpp/io/basic_fstream" target="_blank">cppreference — fstream</a></li><li><a href="https://beecrowd.com/" target="_blank">beecrowd — exercícios online</a></li></ul>
+<div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
 </section>
 <!-- Slide 25: Próxima Aula -->
 <section>
@@ -809,6 +882,6 @@ cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; total;</div>
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
-<script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script>
+<script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:1.0});</script>
 </body>
 </html>
