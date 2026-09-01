@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Projeto Prático - IAlg</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" id="theme" rel="stylesheet"/>
+<style>
+        /* Customizações UFLA para os slides com responsividade */
+        :root {
+            --ufla-green: #008B45;
+            --ufla-blue: #003366;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .reveal {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        .reveal .slides {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .reveal section {
+            width: 100%;
+            height: 100%;
+            padding: 40px !important;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .reveal .slide-background {
+            background-color: #ffffff;
+        }
+        
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--ufla-blue);
+            text-transform: none;
+            font-weight: bold;
+            width: 100%;
+        }
+        
+        .reveal h1 {
+            font-size: clamp(1.5em, 5vw, 2.5em);
+        }
+        
+        .reveal h2 {
+            font-size: clamp(1.2em, 4vw, 1.8em);
+            border-bottom: 3px solid var(--ufla-green);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .reveal h3 {
+            font-size: clamp(1em, 3vw, 1.4em);
+        }
+        
+        .reveal p, .reveal li {
+            color: #333333;
+            font-size: clamp(0.7em, 2vw, 0.9em);
+            line-height: 1.6;
+            text-align: center;
+        }
+        
+        .reveal ul, .reveal ol {
+            width: 100%;
+            text-align: left;
+            display: inline-block;
+        }
+        
+        .reveal li {
+            text-align: left;
+            margin: 8px 0;
+        }
+        
+        .reveal .highlight {
+            color: var(--ufla-green);
+            font-weight: bold;
+        }
+        
+        .reveal .box {
+            background-color: #f5f5f5;
+            border-left: 5px solid var(--ufla-green);
+            padding: 15px;
+            margin: 20px auto;
+            text-align: left;
+            border-radius: 5px;
+            max-width: 90%;
+            width: 100%;
+        }
+        
+        .reveal .warning-box {
+            background-color: #fff3cd;
+            border-left: 5px solid #ff9900;
+            padding: 15px;
+            margin: 20px auto;
+            text-align: left;
+            border-radius: 5px;
+            max-width: 90%;
+            width: 100%;
+        }
+        
+        .reveal .success-box {
+            background-color: #d4edda;
+            border-left: 5px solid var(--ufla-green);
+            padding: 15px;
+            margin: 20px auto;
+            text-align: left;
+            border-radius: 5px;
+            max-width: 90%;
+            width: 100%;
+        }
+        
+        .reveal .info-box {
+            background-color: #e7f3ff;
+            border-left: 5px solid var(--ufla-blue);
+            padding: 15px;
+            margin: 20px auto;
+            text-align: left;
+            border-radius: 5px;
+            max-width: 90%;
+            width: 100%;
+        }
+
+        .reveal .code-box {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 15px auto;
+            text-align: left;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(0.6em, 1.8vw, 0.75em);
+            max-width: 90%;
+            width: 100%;
+            white-space: pre-wrap;
+        }
+        
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .logo-container img {
+            height: clamp(40px, 10vw, 60px);
+        }
+        
+        .title-slide .subtitle {
+            color: var(--ufla-green);
+            font-size: clamp(0.9em, 3vw, 1.2em);
+            margin-top: 20px;
+        }
+        
+        .title-slide .author {
+            margin-top: 50px;
+            font-size: clamp(0.6em, 1.5vw, 0.8em);
+            color: #666;
+        }
+        
+        .icon-text {
+            display: flex;
+            align-items: flex-start;
+            margin: 12px auto;
+            font-size: clamp(0.65em, 1.8vw, 0.85em);
+            max-width: 90%;
+            width: 100%;
+        }
+        
+        .icon-text span {
+            font-size: clamp(1.5em, 4vw, 2em);
+            margin-right: 15px;
+            min-width: 40px;
+            flex-shrink: 0;
+        }
+        
+        .icon-text div {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .three-column {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .three-column div {
+            flex: 1;
+            min-width: 150px;
+            background: #f0f8ff;
+            padding: 12px;
+            border-top: 4px solid var(--ufla-blue);
+            border-radius: 5px;
+            font-size: clamp(0.6em, 1.5vw, 0.7em);
+        }
+        
+        .three-column div h4 {
+            margin-top: 0;
+            font-size: clamp(0.8em, 2vw, 0.9em);
+        }
+        
+        .two-column {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .two-column div {
+            flex: 1;
+            min-width: 200px;
+            background: #f0f8ff;
+            padding: 15px;
+            border-top: 4px solid var(--ufla-blue);
+            border-radius: 5px;
+            font-size: clamp(0.65em, 1.8vw, 0.8em);
+        }
+        
+        .step-list {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 90%;
+            width: 100%;
+        }
+        
+        .step-list li {
+            margin: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: clamp(0.7em, 1.8vw, 0.8em);
+        }
+        
+        .step-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--ufla-green);
+            font-weight: bold;
+        }
+        
+        .emoji-large {
+            font-size: clamp(2em, 8vw, 3em);
+            margin: 20px 0;
+        }
+        
+        table {
+            font-size: clamp(0.6em, 1.5vw, 0.75em);
+            margin: 20px auto;
+            max-width: 90%;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th {
+            background-color: var(--ufla-blue);
+            color: white;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        table td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        a {
+            color: var(--ufla-blue);
+            font-weight: bold;
+        }
+        
+        /* Responsividade para telas pequenas */
+        @media (max-width: 768px) {
+            .reveal section {
+                padding: 20px !important;
+            }
+            
+            .three-column div {
+                min-width: 100%;
+            }
+            
+            .two-column div {
+                min-width: 100%;
+            }
+            
+            .icon-text {
+                flex-direction: column;
+            }
+            
+            .icon-text span {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+<link href="css/style.css" rel="stylesheet"/>
+</head>
+<body class="slides-page">
+<div class="logo-container"><img alt="UFLA" onerror="this.style.display='none'" src="assets/ufla-logo.webp"/></div>
+<div class="reveal"><div class="slides">
+<!-- Capa -->
+<section class="title-slide">
+  <h1>🛠️ Projeto Prático</h1>
+  <div class="subtitle">Aprender programação fazendo</div>
+  <div class="author">
+    <p><strong>Prof. Paulo Rettore</strong></p>
+    <p>Universidade Federal de Lavras</p>
+    <p>GAC124 - Introdução aos Algoritmos</p>
+  </div>
+</section>
+
+<section>
+  <h2>🎯 O que é o Projeto Prático?</h2>
+  <p>Uma aplicação real em <span class="highlight">C++</span>, desenvolvida em equipe, para transformar um problema em uma solução que funciona.</p>
+  <div class="two-column">
+    <div style="border-top-color:var(--ufla-green);"><h4>🧩 Problema com propósito</h4><p>O grupo escolhe um tema que interesse e que possa ajudar alguém.</p></div>
+    <div style="border-top-color:var(--ufla-blue);"><h4>💻 Aprender fazendo</h4><p>Os conceitos da disciplina aparecem no código, nos testes e nas decisões.</p></div>
+  </div>
+  <div class="info-box"><p>Use somente bibliotecas padrão do C++ e desenvolva o projeto ao longo do semestre.</p></div>
+</section>
+
+<section>
+  <h2>👥 Como o projeto funciona</h2>
+  <div class="three-column">
+    <div style="border-top-color:var(--ufla-green);"><h4>Equipe</h4><p>2 ou 3 alunos, com responsabilidade compartilhada.</p></div>
+    <div style="border-top-color:var(--ufla-blue);"><h4>Mentoria</h4><p>O professor acompanha o progresso e ajuda nas dúvidas.</p></div>
+    <div style="border-top-color:var(--ufla-green);"><h4>Incrementos</h4><p>Implemente, teste e melhore uma funcionalidade por vez.</p></div>
+  </div>
+  <p style="margin-top:24px;"><strong>Equipe → Mentoria → Versão melhor</strong></p>
+</section>
+
+<section>
+  <h2>🚀 Primeiros passos</h2>
+  <ol class="step-list">
+    <li><strong>Forme a equipe:</strong> combinem comunicação e divisão de tarefas.</li>
+    <li><strong>Escolha um problema:</strong> prefira um tema que o grupo conheça ou gostaria de usar.</li>
+    <li><strong>Defina o objetivo:</strong> descreva em uma frase o que o programa fará.</li>
+    <li><strong>Comece simples:</strong> escolha poucas funcionalidades para a primeira versão.</li>
+  </ol>
+  <div class="warning-box"><p><strong>Regra de ouro:</strong> uma versão pequena que funciona é melhor que uma ideia grande que não sai do papel.</p></div>
+</section>
+
+<section>
+  <h2>📤 Como submeter</h2>
+  <div class="three-column">
+    <div style="border-top-color:var(--ufla-green);"><h4>1. Acesse</h4><p>Campus Virtual → GAC124 → atividade <strong>PROJETO PRÁTICO</strong>.</p></div>
+    <div style="border-top-color:var(--ufla-blue);"><h4>2. Prepare o ZIP</h4><p>Arquivos <code>.cpp</code>, <code>.h</code>, dados quando houver e <code>README.txt</code>.</p></div>
+    <div style="border-top-color:var(--ufla-green);"><h4>3. Envie</h4><p>O líder realiza <strong>uma única submissão</strong> por grupo.</p></div>
+  </div>
+  <div class="info-box"><p>O README.txt deve listar os integrantes e explicar como compilar e usar o programa.</p></div>
+</section>
+
+<section>
+  <h2>🗓️ Cronograma em visão rápida</h2>
+  <table>
+    <tr><th>Etapa</th><th>Momento</th><th>Foco</th></tr>
+    <tr><td>Mentorias iniciais</td><td>Semanas 5–10</td><td>Equipe, tema, menu, funções, vetores e strings.</td></tr>
+    <tr><td>Entrega parcial</td><td>Semana 11</td><td>Versão funcional e relatório parcial.</td></tr>
+    <tr><td>Evolução final</td><td>Semanas 12–15</td><td>Redimensionamento, ordenação e melhorias.</td></tr>
+    <tr><td>Entrega e entrevista</td><td>Semanas 16–17</td><td>Versão final, demonstração e avaliação individual.</td></tr>
+  </table>
+  <div class="warning-box"><p>Consulte o Campus Virtual para as <strong>datas oficiais</strong>, os requisitos e o formato de cada entrega.</p></div>
+</section>
+
+<section>
+  <h2>📦 Entrega parcial: uma versão que já funciona</h2>
+  <div class="two-column">
+    <div style="border-top-color:var(--ufla-green);"><h4>💻 Programa funcional</h4><ul><li>Compila e executa.</li><li>Menu com pelo menos 3 opções.</li><li>Entrada, saída, condicionais, repetição e vetor.</li><li>Pelo menos 2 subprogramas além da <code>main()</code>.</li></ul></div>
+    <div style="border-top-color:var(--ufla-blue);"><h4>📁 Dados e documentação</h4><ul><li>Structs, busca e <code>getline()</code>.</li><li>Leitura e escrita em arquivo texto ou CSV.</li><li>Noções de alocação dinâmica quando aplicável.</li><li>Relatório parcial em PDF.</li></ul></div>
+  </div>
+  <p style="font-size:.75em;margin-top:16px;">Envie um ZIP por grupo, com código-fonte, dados quando houver e README.txt.</p>
+</section>
+
+<section>
+  <h2>🏁 Entrega final: programa completo e bem explicado</h2>
+  <div class="two-column">
+    <div style="border-top-color:var(--ufla-green);"><h4>💻 O programa demonstra</h4><ul><li>Structs com múltiplos campos e persistência.</li><li>Vetor dinâmico, ordenação e busca binária.</li><li>Recursão quando aplicável.</li><li>Menu completo e tratamento de erros.</li></ul></div>
+    <div style="border-top-color:var(--ufla-blue);"><h4>📄 A entrega inclui</h4><ul><li>ZIP com código, dados e README atualizado.</li><li>Relatório final em PDF.</li><li>Demonstração do programa.</li><li>Entrevista individual.</li></ul></div>
+  </div>
+  <div class="success-box"><p>Antes de entregar: <strong>compile, teste, documente</strong> e confira se todos do grupo entendem a solução.</p></div>
+</section>
+
+<section>
+  <h2>🗣️ Entrevista e avaliação</h2>
+  <div class="two-column">
+    <div style="border-top-color:var(--ufla-green);text-align:center;"><h4 style="font-size:1.5em;">20%</h4><p><strong>Código da equipe</strong></p><p>Qualidade, completude e funcionamento da solução.</p></div>
+    <div style="border-top-color:var(--ufla-blue);text-align:center;"><h4 style="font-size:1.5em;">80%</h4><p><strong>Conhecimento individual</strong></p><p>Na entrevista, cada integrante explica o código e as decisões da equipe.</p></div>
+  </div>
+  <div class="warning-box"><p>Todos devem compreender a própria parte e o funcionamento geral do programa.</p></div>
+</section>
+
+<section>
+  <h2>✅ Caminho para ter sucesso</h2>
+  <div class="three-column">
+    <div style="border-top-color:var(--ufla-green);"><h4>🌱 Comece simples</h4><p>Entregue uma primeira versão pequena e funcional.</p></div>
+    <div style="border-top-color:var(--ufla-blue);"><h4>✅ Teste sempre</h4><p>Compile e execute a cada mudança importante.</p></div>
+    <div style="border-top-color:var(--ufla-green);"><h4>💬 Comunique</h4><p>Dividam tarefas e conversem antes de integrar o código.</p></div>
+  </div>
+  <ul class="step-list"><li>Documente o código e mantenha o README atualizado.</li><li>Use mentoria, monitoria e os canais da disciplina quando precisar.</li><li>Prepare-se para explicar o programa, e não apenas para executá-lo.</li></ul>
+</section>
+
+<section>
+  <h2>📚 Consulte o enunciado completo</h2>
+  <div class="emoji-large">🔎</div>
+  <p>Esta apresentação é um <strong>guia rápido</strong>. O Campus Virtual é a fonte oficial do Projeto Prático.</p>
+  <div class="three-column">
+    <div style="border-top-color:var(--ufla-green);"><h4>📅 Datas</h4><p>Mentorias, entregas, entrevistas e prazos.</p></div>
+    <div style="border-top-color:var(--ufla-blue);"><h4>✅ Requisitos</h4><p>Critérios técnicos, documentação e conteúdos obrigatórios.</p></div>
+    <div style="border-top-color:var(--ufla-green);"><h4>📦 Formato</h4><p>Organização do ZIP, dados e README.txt.</p></div>
+  </div>
+  <div class="success-box"><p><strong>Próximo passo:</strong> forme a equipe e defina um problema simples para resolver.</p></div>
+</section>
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+<script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:1.0});</script>
+</body>
+</html>
