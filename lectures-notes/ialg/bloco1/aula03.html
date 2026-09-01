@@ -238,6 +238,34 @@
         }
 
         .sequence-flow h3 { margin: 0 0 8px; }
+.test-table {
+            width: 94%;
+            max-width: 1000px;
+            font-size: clamp(0.48em, 1.35vw, 0.68em);
+        }
+
+        .test-table th, .test-table td {
+            padding: 6px 7px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .test-table th:first-child, .test-table td:first-child {
+            text-align: left;
+        }
+
+        .test-table td code {
+            white-space: nowrap;
+        }
+
+        .trace-note {
+            width: 90%;
+            max-width: 940px;
+            text-align: left;
+            margin: 8px auto;
+            color: #444;
+        }
+
 @media (max-width: 768px) {
             .reveal section { padding: 18px !important; }
             .three-column > div, .two-column > div { min-width: 100%; }
@@ -400,6 +428,80 @@ if (nota &gt;= 0 and nota &lt;= 100) {
 }</div>
 <div class="success-box"><p><strong>Gabarito:</strong> a condição precisa combinar limite inferior e superior com <code>and</code>.</p></div>
 <p style="font-size:0.65em;">Prática online opcional: <a href="https://beecrowd.com/" target="_blank">beecrowd</a> ou <a href="https://cpp.sh/" target="_blank">C++ Shell</a>.</p>
+</section>
+<section>
+<h2>Questão-exemplo: temperatura</h2>
+<p>Leia uma temperatura em Celsius e informe a classificação correspondente.</p>
+<table class="test-table">
+<tr><th>Faixa de temperatura</th><th>Classificação</th></tr>
+<tr><td>Abaixo de 10 °C</td><td>muito frio</td></tr>
+<tr><td>De 10 °C até 20 °C</td><td>frio</td></tr>
+<tr><td>Acima de 20 °C e abaixo de 30 °C</td><td>agradável</td></tr>
+<tr><td>De 30 °C até 40 °C</td><td>quente</td></tr>
+<tr><td>Acima de 40 °C</td><td>muito quente</td></tr>
+</table>
+<div class="info-box"><p><strong>Entrada:</strong> um número real em Celsius. <strong>Saída:</strong> a classificação da temperatura.</p></div>
+</section>
+<section>
+<h2>Solução da questão-exemplo</h2>
+<div class="code-box">double temperatura;
+cin &gt;&gt; temperatura;
+
+if (temperatura &lt; 10) {
+    cout &lt;&lt; "muito frio";
+} else if (temperatura &lt;= 20) {
+    cout &lt;&lt; "frio";
+} else if (temperatura &lt; 30) {
+    cout &lt;&lt; "agradavel";
+} else if (temperatura &lt;= 40) {
+    cout &lt;&lt; "quente";
+} else {
+    cout &lt;&lt; "muito quente";
+}</div>
+<div class="success-box"><p>As condições são analisadas de cima para baixo. O primeiro teste verdadeiro determina a saída.</p></div>
+</section>
+<section>
+<h2>Duas formas de teste de mesa</h2>
+<div class="two-column">
+<div><h4>1. Execução passo a passo</h4><p>Acompanha uma única entrada na ordem em que o programa executa as instruções. Mostra o caminho percorrido, inclusive as condições falsas.</p></div>
+<div><h4>2. Vários testes em linhas</h4><p>Coloca cada entrada em uma linha e usa colunas para as etapas da decisão. Facilita verificar vários intervalos e casos-limite.</p></div>
+</div>
+<div class="warning-box"><p>Nas duas formas, <strong>—</strong> significa que a condição não foi analisada porque uma condição anterior já era verdadeira.</p></div>
+</section>
+<section>
+<h2>Forma 1: passo a passo</h2>
+<p class="trace-note"><strong>Entrada analisada:</strong> <code>temperatura = 25</code></p>
+<table class="test-table">
+<tr><th>Etapa</th><th>Instrução ou condição</th><th>Valor</th><th>Resultado</th><th>Próxima ação</th></tr>
+<tr><td>1</td><td><code>cin &gt;&gt; temperatura</code></td><td>25</td><td>—</td><td>Guardar 25.</td></tr>
+<tr><td>2</td><td><code>temperatura &lt; 10</code></td><td>25</td><td>Falso</td><td>Testar o próximo <code>else if</code>.</td></tr>
+<tr><td>3</td><td><code>temperatura &lt;= 20</code></td><td>25</td><td>Falso</td><td>Testar o próximo <code>else if</code>.</td></tr>
+<tr><td>4</td><td><code>temperatura &lt; 30</code></td><td>25</td><td>Verdadeiro</td><td>Imprimir <code>agradavel</code>.</td></tr>
+<tr><td>5</td><td>Fim da cadeia</td><td>25</td><td>—</td><td>Não analisar as condições seguintes.</td></tr>
+</table>
+<div class="success-box"><p><strong>Saída:</strong> <code>agradavel</code>. Esta forma explica o caminho real de uma execução.</p></div>
+</section>
+<section>
+<h2>Forma 2: testes nas linhas</h2>
+<p class="trace-note">Cada linha representa uma execução independente; as colunas representam as condições do código.</p>
+<table class="test-table">
+<tr><th>Teste</th><th><code>t</code></th><th><code>t &lt; 10</code></th><th><code>t &lt;= 20</code></th><th><code>t &lt; 30</code></th><th><code>t &lt;= 40</code></th><th>Saída</th></tr>
+<tr><td>1</td><td>-5</td><td>V</td><td>—</td><td>—</td><td>—</td><td>muito frio</td></tr>
+<tr><td>2</td><td>15</td><td>F</td><td>V</td><td>—</td><td>—</td><td>frio</td></tr>
+<tr><td>3</td><td>10</td><td>F</td><td>V</td><td>—</td><td>—</td><td>frio</td></tr>
+<tr><td>4</td><td>25</td><td>F</td><td>F</td><td>V</td><td>—</td><td>agradavel</td></tr>
+<tr><td>5</td><td>35</td><td>F</td><td>F</td><td>F</td><td>V</td><td>quente</td></tr>
+<tr><td>6</td><td>41</td><td>F</td><td>F</td><td>F</td><td>F</td><td>muito quente</td></tr>
+<tr><td>7</td><td>20</td><td>F</td><td>V</td><td>—</td><td>—</td><td>frio</td></tr>
+</table>
+</section>
+<section>
+<h2>Quando usar cada forma?</h2>
+<div class="two-column">
+<div><h4>Passo a passo</h4><ul><li>Uma entrada específica.</li><li>Rastreamento da ordem das instruções.</li><li>Localização de erros no raciocínio.</li></ul></div>
+<div><h4>Testes nas linhas</h4><ul><li>Várias entradas comparadas.</li><li>Verificação de intervalos.</li><li>Conferência de casos-limite.</li></ul></div>
+</div>
+<div class="success-box"><p>A primeira forma mostra <strong>como</strong> o programa caminha; a segunda mostra <strong>quais situações</strong> foram testadas.</p></div>
 </section>
 <section class="references-slide"><h2>📚 Referências e materiais</h2><p>Use estas fontes para consultas pontuais depois da aula:</p><ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/language/if" rel="noopener noreferrer" target="_blank">cppreference — if</a></li><li><a href="https://en.cppreference.com/w/cpp/language/switch" rel="noopener noreferrer" target="_blank">cppreference — switch</a></li><li><a href="https://beecrowd.com/" rel="noopener noreferrer" target="_blank">beecrowd — exercícios online</a></li><li><a href="https://cpp.sh/" rel="noopener noreferrer" target="_blank">C++ Shell — compilador online</a></li></ul><div class="info-box"><p>Use as referências para conferir a sintaxe; os slides e as atividades da disciplina continuam sendo o caminho principal de estudo.</p></div></section>
 <section>
