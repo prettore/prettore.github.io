@@ -274,6 +274,25 @@ pre.code-box { white-space: pre; }
 <section><h2>🚪 Do-while: executa primeiro</h2><pre class="code-box"><code>do {
     // comandos que se repetem
 } while (condicao);</code></pre><div class="warning-box"><p>O bloco acontece pelo menos uma vez. O ponto e vírgula depois da condição é obrigatório.</p></div></section>
+<section><h2>🧪 Exemplo prático: while valida antes</h2><p>Use <code>while</code> quando o corpo pode não precisar ser executado.</p><pre class="code-box"><code>int nota;
+cin &gt;&gt; nota;
+
+while (nota &lt; 0 || nota &gt; 10) {
+    cout &lt;&lt; "Nota inválida. Digite novamente: ";
+    cin &gt;&gt; nota;
+}
+
+cout &lt;&lt; "Nota aceita: " &lt;&lt; nota;</code></pre><div class="two-column"><div><h4>Se a primeira nota for válida</h4><p>O laço não executa nenhuma vez. A entrada já está correta.</p></div><div><h4>Se a primeira nota for inválida</h4><p>O programa repete a leitura até obter um valor entre 0 e 10.</p></div></div></section>
+<section><h2>🧾 Exemplo prático: do-while mostra um menu</h2><p>Use <code>do-while</code> quando a ação precisa acontecer pelo menos uma vez.</p><pre class="code-box"><code>int opcao;
+
+do {
+    cout &lt;&lt; "1 - Cadastrar\\n";
+    cout &lt;&lt; "2 - Listar\\n";
+    cout &lt;&lt; "0 - Sair\\n";
+    cin &gt;&gt; opcao;
+} while (opcao != 0);
+
+cout &lt;&lt; "Programa encerrado.";</code></pre><div class="info-box"><p>O menu aparece antes do primeiro teste. Depois de cada escolha, a condição decide se ele será mostrado novamente.</p></div></section>
 <section><h2>⚖️ While ou do-while?</h2><table><tr><th>Estrutura</th><th>Quando testa?</th><th>Mínimo de execuções</th></tr><tr><td><code>while</code></td><td>Antes do corpo</td><td>Zero</td></tr><tr><td><code>do-while</code></td><td>Depois do corpo</td><td>Uma</td></tr></table><div class="info-box"><p>Escolha a estrutura que representa melhor a leitura do problema.</p></div></section>
 <section><h2>🧮 Contadores e acumuladores</h2><div class="three-column"><div><h4>Contador</h4><p>Conta quantas vezes algo acontece.</p><p><code>contador++</code></p></div><div><h4>Acumulador</h4><p>Guarda um resultado parcial.</p><p><code>soma += valor</code></p></div><div><h4>Inicialização</h4><p>Começa antes do laço.</p><p><code>soma = 0</code></p></div></div><pre class="code-box"><code>int contador = 0;
 int soma = 0;
@@ -320,4 +339,4 @@ while (linha &lt;= 3) {
 <div class="subtitle">Modularização e passagem de parâmetros</div>
 <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
 
-</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:1.0});</script></body></html>
+</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:2.0});</script></body></html>
