@@ -268,7 +268,7 @@ pre.code-box { white-space: pre; }
 </section>
 <section><h2>🎯 Dividir para resolver melhor</h2><ul class="step-list"><li>Separar um problema em subproblemas.</li><li>Criar funções com responsabilidades claras.</li><li>Entender fluxo, escopo e parâmetros.</li><li>Reaproveitar código sem copiar e colar.</li></ul><div class="success-box"><p>Uma função bem definida faz uma tarefa e pode ser testada isoladamente.</p></div></section>
 <section><h2>🧱 O que é modularização?</h2><p>Modularizar é transformar uma solução grande em partes menores, chamadas funções ou subprogramas.</p><div class="sequence-flow"><div><h3>Entrada</h3><p>Parâmetros recebidos.</p></div><div><h3>Processamento</h3><p>Comandos da função.</p></div><div><h3>Saída</h3><p>Valor retornado.</p></div></div></section>
-<section><h2>⚙️ Declaração, definição e chamada</h2><pre class="code-box"><code>int dobro(int valor); // declaração
+<section><h2>⚙️ Declaração, definição e chamada</h2><pre class="code-box"><code>int dobro(int valor); // Protótipo (declaração)
 
 int dobro(int valor) { // definição
     return 2 * valor;
@@ -284,8 +284,8 @@ int main() {
 int main() {
     int resultado = dobro(5);
     cout &lt;&lt; resultado;
-}</code></pre><ol class="step-list"><li><code>main()</code> chama <code>dobro(5)</code>.</li><li>A execução entra na função.</li><li><code>return</code> devolve o resultado.</li></ol></section>
-<section><h2>🔒 Escopo: onde a variável existe?</h2><div class="three-column"><div><h4>Variável local</h4><p>Declarada dentro da função. Só existe ali.</p></div><div><h4>Parâmetro</h4><p>Recebe um valor na chamada e funciona como variável local.</p></div><div><h4>Global</h4><p>Evite quando não for necessária: aumenta dependências.</p></div></div><div class="warning-box"><p>Prefira passar informações por parâmetros e retornar resultados.</p></div></section>
+}</code></pre><ol class="step-list"><li><code>main()</code> chama <code>dobro(5)</code>.</li><li>A execução entra na função.</li><li><code>return</code> devolve o resultado para <code>resultado</code>.</li><li><code>cout</code> imprime o valor armazenado: <code>10</code>.</li></ol></section>
+<section><h2>🔒 Escopo: onde a variável existe?</h2><div class="three-column"><div><h4>Dentro da função</h4><p><code>int resultado</code> declarado em <code>main()</code> existe somente dentro de <code>main()</code>.</p></div><div><h4>Dentro de um bloco</h4><p><code>int tentativa</code> declarado em um <code>if</code> ou <code>for</code> só existe naquele bloco.</p></div><div><h4>Fora das funções</h4><p>Uma constante como <code>PI</code> pode ser usada por várias funções, mas deve ser global apenas quando fizer sentido.</p></div></div><div class="warning-box"><p>Parâmetros, como <code>valor</code> em <code>dobro(int valor)</code>, também são variáveis locais da função. Prefira parâmetros e retornos a globais.</p></div></section>
 <section><h2>📦 Passagem por valor</h2><pre class="code-box"><code>void dobra(int x) {
     x = 2 * x;
 }
@@ -300,11 +300,9 @@ cout &lt;&lt; n; // continua 5</code></pre><div class="info-box"><p>A função r
 }
 
 int x = 2, y = 7;
-troca(x, y);</code></pre><div class="info-box"><p>Referências são úteis quando a função precisa produzir mais de uma alteração.</p></div></section>
-<section><h2>📚 Vetores como parâmetros</h2><pre class="code-box"><code>void imprime(const int v[], int n) {
-    for (int i = 0; i &lt; n; i++)
-        cout &lt;&lt; v[i] &lt;&lt; " ";
-}</code></pre><p>Informe o tamanho separadamente: o vetor não carrega automaticamente a quantidade de posições.</p></section>
+troca(x, y);
+cout &lt;&lt; x &lt;&lt; " " &lt;&lt; y; // 7 2</code></pre><div class="two-column"><div><h4>Passagem por valor</h4><p>Sem <code>&amp;</code>, <code>a</code> e <code>b</code> seriam cópias. A troca aconteceria apenas dentro da função e <code>x</code> e <code>y</code> continuariam <code>2</code> e <code>7</code>.</p></div><div><h4>Passagem por referência</h4><p>Com <code>&amp;</code>, <code>a</code> e <code>b</code> são apelidos para <code>x</code> e <code>y</code>. A função altera as variáveis originais, que terminam como <code>7</code> e <code>2</code>.</p></div></div></section>
+
 <section><h2>🧩 Desafio de modularização</h2><p>Crie funções para:</p><ol class="step-list"><li>ler três notas;</li><li>calcular a média;</li><li>informar se o estudante foi aprovado.</li></ol><div class="success-box"><p>Cada função deve ter uma responsabilidade clara e nomes que expliquem sua finalidade.</p></div></section>
 <section class="practice-slide">
 <h2>🧩 Prática em aula</h2>
