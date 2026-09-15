@@ -697,6 +697,95 @@ if (arquivo) {
 <div><h4>Regra prática</h4><p>Abra o arquivo com o fluxo que descreve a operação principal do programa.</p></div>
 </div>
 </section>
+<section>
+<h2>⚠️ Cuidados antes de usar um arquivo</h2>
+<div class="three-column">
+<div><h4>1. Confirme a abertura</h4><p>Use <code>if (!arquivo)</code> ou <code>is_open()</code> antes de ler ou escrever.</p></div>
+<div><h4>2. Escolha o modo</h4><p><code>ios::app</code> acrescenta; abrir somente com saída pode substituir o conteúdo.</p></div>
+<div><h4>3. Verifique a operação</h4><p>Teste o estado do stream e confirme se a gravação terminou corretamente.</p></div>
+</div>
+<div class="warning-box"><p>Não use <code>while (!arquivo.eof())</code> para controlar a leitura. Prefira testar a própria operação, por exemplo: <code>while (arquivo &gt;&gt; valor)</code>.</p></div>
+</section>
+<section>
+<h2>🧭 Arquivos dentro de <code>switch-case</code></h2>
+<p>Os casos de um <code>switch</code> não criam automaticamente um novo escopo. Use chaves em cada caso quando declarar um arquivo.</p>
+<div class="code-box">int opcao;
+cin &gt;&gt; opcao;
+
+switch (opcao) {
+case 1: {
+    ofstream saida("dados.txt", ios::app);
+    if (!saida) { cout &lt;&lt; "Erro ao abrir"; break; }
+    saida &lt;&lt; "Ana;8.5\n";
+    break;
+}
+case 2: {
+    ifstream entrada("dados.txt");
+    if (!entrada) { cout &lt;&lt; "Erro ao abrir"; break; }
+    string linha;
+    while (getline(entrada, linha)) cout &lt;&lt; linha &lt;&lt; '\\n';
+    break;
+}
+default:
+    cout &lt;&lt; "Opcao invalida";
+}</div>
+<div class="info-box"><p>As chaves delimitam o escopo de cada declaração. O <code>break</code> evita cair no próximo caso, e a abertura deve ser verificada em cada operação.</p></div>
+</section>
+<section>
+<h2>🧾 Arquivos com separadores: formato CSV</h2>
+<div class="two-column">
+<div>
+<h4>Escrita</h4>
+<div class="code-box" style="margin: 5px 0;">ofstream arquivo("alunos.csv");
+arquivo &lt;&lt; "nome;nota\n";
+arquivo &lt;&lt; "Ana;8.5\n";
+arquivo &lt;&lt; "Bruno;7.0\n";</div>
+<p>O ponto e vírgula separa os campos de cada registro.</p>
+</div>
+<div>
+<h4>Leitura</h4>
+<div class="code-box" style="margin: 5px 0;">ifstream arquivo("alunos.csv");
+string linha;
+getline(arquivo, linha); // cabeçalho
+while (getline(arquivo, linha)) {
+    cout &lt;&lt; linha &lt;&lt; '\\n';
+}</div>
+<p>Primeiro leia a linha inteira; depois separe os campos.</p>
+</div>
+</div>
+<div class="info-box"><p>CSV é um formato de texto. O separador pode ser vírgula, ponto e vírgula ou outro caractere combinado pelo programa.</p></div>
+</section>
+<section>
+<h2>✂️ <code>getline()</code> e separadores</h2>
+<p>Além de ler uma linha completa, <code>getline()</code> pode parar em um delimitador específico.</p>
+<div class="code-box">#include &lt;sstream&gt;
+
+string linha = "Ana;8.5";
+stringstream partes(linha);
+string nome, notaTexto;
+
+getline(partes, nome, ';');
+getline(partes, notaTexto, ';');</div>
+<div class="two-column">
+<div><h4>Quando usar</h4><p>Use <code>getline()</code> quando o texto tiver espaços ou quando precisar controlar o separador.</p></div>
+<div><h4>Atenção</h4><p>Depois de <code>cin &gt;&gt;</code>, descarte o Enter pendente antes de chamar <code>getline(cin, texto)</code>.</p></div>
+</div>
+</section>
+<section>
+<h2>🔁 Ler e escrever em estruturas de repetição</h2>
+<div class="code-box">ifstream entrada("valores.txt");
+ofstream saida("pares.txt");
+
+int valor;
+while (entrada &gt;&gt; valor) {
+    if (valor % 2 == 0)
+        saida &lt;&lt; valor &lt;&lt; '\\n';
+}
+
+if (!entrada.eof())
+    cout &lt;&lt; "A leitura terminou por erro.";</div>
+<div class="warning-box"><p>A repetição deve testar a leitura. Assim, cada valor válido é processado uma vez e o programa consegue distinguir fim de arquivo de uma falha de leitura.</p></div>
+</section>
 <!-- Slide 15: Estrutura Sequencial -->
 <section>
 <h2>🛤️ A estrutura sequencial executa na ordem escrita</h2>
