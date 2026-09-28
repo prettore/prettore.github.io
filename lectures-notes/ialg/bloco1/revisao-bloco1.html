@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Revisão do Bloco 1 — Preparação para a Prova 1</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+/* A regra oficial posiciona os slides no mesmo canvas. O Reveal deve exibir
+   somente a seção ativa; esta regra é deliberadamente local a esta página. */
+body.slides-page .reveal .slides > section {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+body.slides-page .reveal .slides > section.present {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+</style>
+</head>
+<body class="slides-page">
+<div class="reveal">
+<div class="slides">
+<section id="revisão-do-bloco-1" class="slide level2 title-slide center">
+<h2>🎓 Revisão do Bloco 1</h2>
+<div class="logo-container">
+<img alt="UFLA" src="../assets/ufla-logo.webp">
+</div>
+<div class="subtitle">
+Preparação para a Prova 1
+</div>
+<div class="author">
+<p>
+<strong>Prof.&nbsp;Paulo Rettore</strong>
+</p>
+<p>
+Universidade Federal de Lavras
+</p>
+<p>
+GAC124 — Introdução aos Algoritmos
+</p>
+</div>
+</section>
+<section id="como-usar-esta-revisão" class="slide level2">
+<h2>🧭 Como usar esta revisão</h2>
+<div class="logo-container">
+<img alt="UFLA" src="../assets/ufla-logo.webp">
+</div>
+<div class="three-column">
+<div class="column">
+<h4 id="relembre">1. Relembre</h4>
+<p>Leia a ideia central de cada temática e identifique quais conceitos ainda precisam de prática.</p>
+</div><div class="column">
+<h4 id="tente-antes">2. Tente antes</h4>
+<p>Resolva o exercício de cada slide no papel ou no compilador antes de conferir a explicação.</p>
+</div><div class="column">
+<h4 id="conecte">3. Conecte</h4>
+<p>No desafio integrador, combine entrada, decisões, repetições, funções e arquivos.</p>
+</div></div>
+<div class="info-box">
+<p><strong>Escopo:</strong> aulas 01 a 06 — fundamentos, estrutura sequencial, condicionais, repetições, modularização e arquivos de texto.</p>
+</div>
+</section>
+<section id="algoritmos-variáveis-e-tipos" class="slide level2">
+<h2>1. Algoritmos, variáveis e tipos</h2>
+<div class="logo-container">
+<img alt="UFLA" src="../assets/ufla-logo.webp">
+</div>
+<div class="two-column">
+<div class="column">
+<h4 id="ideias-essenciais">Ideias essenciais</h4>
+<ul>
+<li>Um algoritmo organiza passos para transformar entradas em resultados.</li>
+<li>O fluxo básico é <strong>entrada → processamento → saída</strong>.</li>
+<li>Uma variável tem nome, tipo e valor armazenado na memória.</li>
+<li>Tipos frequentes: <code>int</code>, <code>double</code>, <code>char</code>, <code>string</code> e <code>bool</code>.</li>
+</ul>
+</div><div class="column">
+<pre class="code-box"><code>int idade;
+double altura;
+string nome;
+
+int ano = 2026;
+idade = 18;
+idade = 19; // substitui o valor anterior</code></pre>
+<div class="success-box">
+<p><strong>Exercício:</strong> declare variáveis para nome, idade e média. Qual tipo representa melhor cada informação?</p>
+</div>
+</div></div>
+</section>
+<section id="estrutura-sequencial-operadores-e-es" class="slide level2">
+<h2>2. Estrutura sequencial, operadores e E/S</h2>
+<div class="logo-container">
+<img alt="UFLA" src="../assets/ufla-logo.webp">
+</div>
+<div class="two-column">
+<div class="column">
+<h4 id="o-que-revisar">O que revisar</h4>
+<ul>
+<li><code>=</code> atribui; <code>==</code> compara.</li>
+<li>Parênteses vêm antes de multiplicação, divisão e resto; depois vêm soma e subtração.</li>
+<li><code>cin</code> lê; <code>cout</code> exibe.</li>
+<li>Use <code>fixed</code> e <code>setprecision</code> para formatar decimais.</li>
+</ul>
+<div class="warning-box">
+<p><strong>Atenção:</strong> <code>7 / 2</code> produz <code>3</code> quando os dois operandos são inteiros. Use <code>7.0 / 2</code> para obter <code>3.5</code>.</p>
+</div>
+</div><div class="column">
+<pre class="code-box"><code>int x = 2;
+int y = 5;
+int z = x + y * 2 % 3;
+
+x += 4;  // x = x + 4
+x++;     // pós-incremento
+
+cout &lt;&lt; "Resultado: " &lt;&lt; z;</code></pre>
+<div class="success-box">
+<p><strong>Exercício:</strong> calcule <code>z</code> passo a passo. Resposta: <code>y * 2 = 10</code>, <code>10 % 3 = 1</code>, então <code>z = 3</code>.</p>
+</div>
+</div></div>
+</section>
+<section id="condicionais" class="slide level2">
+<h2>3. Condicionais</h2>
+<div class="logo-container">
+<img alt="UFLA" src="../assets/ufla-logo.webp">
+</div>
+<div class="two-column">
+<div class="column">
+<h4 id="escolher-um-caminho">Escolher um caminho</h4>
+<ul>
+<li><code>if</code> executa uma ação quando a condição é verdadeira.</li>
+<li><code>if-else</code> oferece dois caminhos.</li>
+<li><code>else if</code> testa alternativas em sequência.</li>
+<li><code>switch-case</code> organiza escolhas por valores discretos.</li>
+</ul>
+<div class="info-box">
+<p><code>and</code> exige todas as condições; <code>or</code> exige pelo menos uma; <code>not</code> inverte o resultado.</p>
+</div>
+</div><div class="column">
+<pre class="code-box"><code>if (idade &lt; 12) {
+    cout &lt;&lt; "Criança";
+} else if (idade &lt; 18) {
+    cout &lt;&lt; "Adolescente";
+} else {
+    cout &lt;&lt; "Adulto";
+}
+
+switch (opcao) {
+case 1: cout &lt;&lt; "Salvar"; break;
+case 2: cout &lt;&lt; "Abrir";  break;
+default: cout &lt;&lt; "Inválida";
+}</code></pre>
+<div class="success-box">
+<p><strong>Exercício:</strong> valide uma nota entre 0 e 100 usando <code>nota &gt;= 0 and nota &lt;= 100</code>. Não use comparações encadeadas como em Matemática.</p>
+</div>
+</div></div>
+</section>
+<section id="repetições" class="slide level2">
+<h2>4. Repetições</h2>
+<div class="logo-container">
+<img alt="UFLA" src="../assets/ufla-logo.webp">
+</div>
+<div class="two-column">
+<div class="column">
+<h4 id="escolher-o-laço">Escolher o laço</h4>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Estrutura</th>
+<th>Teste</th>
+<th>Mínimo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>while</code></td>
+<td>Antes do corpo</td>
+<td>Zero vezes</td>
+</tr>
+<tr class="even">
+<td><code>do-while</code></td>
+<td>Depois do corpo</td>
+<td>Uma vez</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Contador:</strong> registra quantas vezes algo ocorre.</li>
+<li><strong>Acumulador:</strong> guarda um resultado parcial.</li>
+<li><strong>Sentinela:</strong> valor que encerra uma leitura.</li>
+</ul>
+</div><div class="column">
+<pre class="code-box"><code>int valor, soma = 0;
+cin &gt;&gt; valor;
+
+while (valor != -1) {
+    soma += valor;
+    cin &gt;&gt; valor;
+}
+
+// Menu: ação ao menos uma vez
+do {
+    cin &gt;&gt; opcao;
+} while (opcao != 0);</code></pre>
+<div class="success-box">
+<p><strong>Exercício:</strong> leia valores até <code>-1</code> e mostre soma e quantidade. O que precisa mudar a cada volta para não criar um laço infinito?</p>
+</div>
+</div></div>
+</section>
+<section id="modularização-e-parâmetros" class="slide level2">
+<h2>5. Modularização e parâmetros</h2>
+<div class="logo-container">
+<img alt="UFLA" src="../assets/ufla-logo.webp">
+</div>
+<div class="two-column">
+<div class="column">
+<h4 id="funções-organizam-o-programa">Funções organizam o programa</h4>
+<ul>
+<li><strong>Protótipo:</strong> informa assinatura e retorno.</li>
+<li><strong>Definição:</strong> contém os comandos executados.</li>
+<li><strong>Chamada:</strong> inicia a execução da função.</li>
+<li>Variáveis locais existem apenas no próprio escopo.</li>
+</ul>
+<div class="info-box">
+<p><strong>Por valor:</strong> a função recebe uma cópia. <strong>Por referência:</strong> o parâmetro é um apelido para a variável original.</p>
+</div>
+</div><div class="column">
+<pre class="code-box"><code>double media(double a, double b);
+
+double media(double a, double b) {
+    return (a + b) / 2.0;
+}
+
+void troca(int&amp; a, int&amp; b) {
+    int aux = a;
+    a = b;
+    b = aux;
+}</code></pre>
+<div class="success-box">
+<p><strong>Exercício:</strong> por que <code>void dobra(int x)</code> não altera a variável original? Reescreva usando <code>int&amp; x</code> e explique a diferença.</p>
+</div>
+</div></div>
+</section>
+<section id="arquivos-de-texto" class="slide level2 scrollable">
+<h2>6. Arquivos de texto</h2>
+<div class="logo-container">
+<img alt="UFLA" src="../assets/ufla-logo.webp">
+</div>
+<div class="two-column">
+<div class="column">
+<h4 id="fluxos-e-cuidados">Fluxos e cuidados</h4>
+<ul>
+<li><code>ifstream</code>: entrada e leitura.</li>
+<li><code>ofstream</code>: saída e escrita.</li>
+<li><code>fstream</code>: leitura e escrita no mesmo fluxo.</li>
+<li>Confirme a abertura com <code>if (!arquivo)</code>.</li>
+<li>Prefira <code>while (arquivo &gt;&gt; valor)</code> a <code>while (!arquivo.eof())</code>.</li>
+<li>Use <code>ios::app</code> para acrescentar sem apagar o conteúdo existente.</li>
+</ul>
+</div><div class="column">
+<pre class="code-box"><code>ifstream entrada("alunos.txt");
+ofstream saida("aprovados.txt");
+
+if (!entrada || !saida) return 1;
+
+string nome;
+double nota;
+while (entrada &gt;&gt; nome &gt;&gt; nota) {
+    if (nota &gt;= 60)
+        saida &lt;&lt; nome &lt;&lt; ";" &lt;&lt; nota &lt;&lt; '\n';
+}</code></pre>
+<div class="info-box">
+<p><strong>CSV e getline:</strong> para campos com espaços ou separadores, leia a linha com <code>getline</code> e depois separe os campos pelo delimitador.</p>
+</div>
+<div class="success-box">
+<p><strong>Exercício:</strong> abra um arquivo CSV em modo leitura, conte quantos registros foram lidos e grave o total em outro arquivo.</p>
+</div>
+</div></div>
+</section>
+<section id="desafio-integrador" class="slide level2 scrollable">
+<h2>🧩 Desafio integrador</h2>
+<div class="logo-container">
+<img alt="UFLA" src="../assets/ufla-logo.webp">
+</div>
+<p>Crie um programa que leia temperaturas de um arquivo e gere um relatório.</p>
+<ol type="1">
+<li>Crie uma função <code>bool perigosa(double t)</code> para identificar valores menores que 0 ou maiores que 40.</li>
+<li>Leia o arquivo com <code>ifstream</code> usando um <code>while</code> controlado pela própria leitura.</li>
+<li>Use um contador, um acumulador e uma variável para maior valor.</li>
+<li>Use <code>if-else</code> para separar temperaturas perigosas e normais.</li>
+<li>Grave quantidade, média e maior temperatura em um relatório com <code>ofstream</code>.</li>
+</ol>
+<pre class="code-box"><code>double valor, soma = 0;
+int quantidade = 0;
+while (entrada &gt;&gt; valor) {
+    soma += valor;
+    quantidade++;
+    if (perigosa(valor)) cout &lt;&lt; "Atenção\n";
+}
+if (quantidade &gt; 0)
+    relatorio &lt;&lt; soma / quantidade;</code></pre>
+</section>
+<section id="checklist-antes-da-prova-1" class="slide level2 scrollable">
+<h2>✅ Checklist antes da Prova 1</h2>
+<div class="logo-container">
+<img alt="UFLA" src="../assets/ufla-logo.webp">
+</div>
+<div class="two-column">
+<div class="column">
+<h4 id="raciocínio-e-controle">Raciocínio e controle</h4>
+<ul>
+<li>Sei diferenciar <code>=</code> de <code>==</code>?</li>
+<li>Sei resolver uma expressão pela precedência correta?</li>
+<li>Sei explicar quando usar <code>while</code> e <code>do-while</code>?</li>
+<li>Meu laço sempre atualiza sua condição?</li>
+<li>Sei combinar condições com <code>and</code>, <code>or</code> e <code>not</code>?</li>
+</ul>
+</div><div class="column">
+<h4 id="código-e-arquivos">Código e arquivos</h4>
+<ul>
+<li>Declaro e inicializo as variáveis antes de usá-las?</li>
+<li>Separo responsabilidades em funções?</li>
+<li>Entendo valor, referência e escopo?</li>
+<li>Confiro a abertura dos arquivos?</li>
+<li>Uso a leitura no teste do <code>while</code>?</li>
+<li>Consigo testar entradas válidas, inválidas e vazias?</li>
+</ul>
+</div></div>
+<div class="warning-box">
+<p><strong>Erros frequentes:</strong> esquecer <code>break</code>, esquecer atualização do laço, usar variável sem inicializar, confundir <code>cin</code> com <code>cout</code> e usar <code>eof()</code> como condição principal.</p>
+</div>
+</section>
+<section id="referências-e-prática" class="slide level2">
+<h2>📚 Referências e prática</h2>
+<div class="logo-container">
+<img alt="UFLA" src="../assets/ufla-logo.webp">
+</div>
+<p>Use estas fontes para consultas pontuais e exercícios adicionais:</p>
+<ul>
+<li><a href="https://en.cppreference.com/w/cpp/language">cppreference — linguagem C++</a></li>
+<li><a href="https://en.cppreference.com/w/cpp/io">cppreference — entrada, saída e arquivos</a></li>
+<li><a href="https://beecrowd.com/">beecrowd — problemas de programação</a></li>
+<li><a href="https://cpp.sh/">C++ Shell — compilador online</a></li>
+</ul>
+<div class="info-box">
+<p>As aulas 01 a 06, as atividades do Campus Virtual e as orientações do DREDD continuam sendo as referências principais para a Prova 1.</p>
+</div>
+</section>
+<section id="agora-é-praticar" class="slide level2 next-slide">
+<h2>🚀 Agora é praticar!</h2>
+<div class="logo-container">
+<img alt="UFLA" src="../assets/ufla-logo.webp">
+</div>
+<p class="next-label">
+REVISÃO CONCLUÍDA
+</p>
+<div class="subtitle">
+Leia o problema, planeje as variáveis, escreva o algoritmo e teste o código.
+</div>
+<div class="author">
+<p>
+<strong>Prof.&nbsp;Paulo Rettore</strong>
+</p>
+<p>
+Utilize o fórum do Campus Virtual para enviar dúvidas.
+</p>
+</div>
+
+</section>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: true,
+  controls: true,
+  progress: true,
+  transition: 'slide',
+  width: 1024,
+  height: 768,
+  margin: 0.1,
+  minScale: 0.2,
+  maxScale: 1.0,
+  center: false,
+  navigationMode: 'linear'
+});
+</script>
+</body>
+</html>
