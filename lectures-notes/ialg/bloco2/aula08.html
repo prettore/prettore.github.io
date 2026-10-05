@@ -240,60 +240,159 @@ cout &lt;&lt; nome &lt;&lt; " mora em " &lt;&lt; cidade;</code></pre>
 </section>
 
 <section>
-<h2>📦 O que são <code>&lt;sstream&gt;</code> e <code>stringstream</code>?</h2>
-<div class="two-column"><div><h4><code>#include &lt;sstream&gt;</code></h4><p>Inclui as classes que tratam uma <strong>string como um fluxo de entrada e saída</strong>, usando a memória do programa.</p></div><div><h4><code>stringstream</code></h4><p>É um objeto que recebe uma string e permite ler seus dados aos poucos, usando <code>&gt;&gt;</code> ou <code>getline()</code>.</p></div></div>
+<h2>📄 O arquivo CSV: formato real</h2>
+<p>Antes do código, observe o arquivo <code>badassComputerPeople.csv</code> usado nesta aula.</p>
+<pre class="code-box"><code>#nome,sexo,pais,ano de nascimento,ano de falecimento,descrição
+10,,,,,
+Ada Lovelace,F,Inglaterra,1815,1852,É considerada a primeira programadora de computador, a liguagem Ada foi nomeada em sua homenagem
+Charles Babbage,M,Inglaterra,1791,1871,Projetou a máquina analítica, um modelo de computador
+Alan Turing,M,Inglaterra,1912,1954,Um dos maiores teóricos da computação, criou a máquina de Turing, modelo teórico de um computador. Também é autor do Teste de Turing, para avaliar se uma IA pode se passar por um ser humano
+John von Neuman,M,Hungria,1903,1957,Proponente da arquitetura de von Neuman, que é a base dos computadores modernos
+Blaise Pascal,M,França,1623,1662,Inventor da calculadora mecânica, a linguagem Pascal foi nomeada em sua homenagem
+Hedy Lamar,F,Áustria,1914,2000,Atriz, inventou, com o compositor George Antheil, um sistema de comunicações para as Forças Armadas dos Estados Unidos que serviu de base para a atual telefonia celular
+George Antheil,M,EUA,1900,1959,Compositor, inventou, com a atriz Hedy Lamar, um sistema de comunicações para as Forças Armadas dos Estados Unidos que serviu de base para a atual telefonia celular
+Noam Chomsky,M,EUA,1928,0,Fez diversas contribuições para a computação com seu trabalho em Linguística
+Margaret Hamilton,F,EUA,1936,0,Criadora do termo 'Engenharia de Software', desenvolveu o conceito de software assíncrono
+Bjarne Stroustrup,M,Dinamarca,1950,0,Criador do C++, odiado por vários alunos da UFLA</code></pre>
+<div class="three-column"><div><h4>1. Cabeçalho</h4><p>Nomeia os seis campos da tabela.</p></div><div><h4>2. Quantidade</h4><p><code>10</code> informa quantos registros serão lidos.</p></div><div><h4>3. Registros</h4><p>Depois vêm as dez pessoas, uma por linha.</p></div></div>
+<div class="info-box"><p>O arquivo tem 12 linhas: cabeçalho, quantidade de registros e 10 registros de pessoas. A descrição é o último campo e pode conter vírgulas.</p></div>
+</section>
+
+<section>
+<h2>🔄 Leitura direta: preparação</h2>
+<p>O programa lê diretamente do <code>ifstream</code>. Primeiro, descarta o cabeçalho e lê a quantidade de registros.</p>
+<pre class="code-box"><code>#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+int main() {
+    string linha;
+    int numRegistros;
+    ifstream arquivo_csv("badassComputerPeople.csv");
+
+    if (not(arquivo_csv)) {
+        cout &lt;&lt; "Erro: não foi possível abrir o arquivo!" &lt;&lt; endl;
+    } else {
+        getline(arquivo_csv, linha); // cabeçalho
+        arquivo_csv &gt;&gt; numRegistros;
+        getline(arquivo_csv, linha); // resto da linha
+        // agora o fluxo está pronto para os registros
+    }
+    return 0;
+}</code></pre>
+<div class="success-box"><p>Depois de <code>&gt;&gt; numRegistros</code>, o segundo <code>getline()</code> consome a quebra de linha que ficou pendente.</p></div>
+</section>
+
+<section>
+<h2>🔄 Leitura direta: campos e saída</h2>
+<p>Dentro do laço, cada operador lê exatamente o próximo campo do registro.</p>
+<pre class="code-box"><code>for (int i = 0; i &lt; numRegistros; i++) {
+    string nome, pais, descricao;
+    char sexo, lixo;
+    short anoNascimento, anoFalecimento;
+
+    getline(arquivo_csv, nome, ',');
+    arquivo_csv &gt;&gt; sexo;
+    arquivo_csv &gt;&gt; lixo; // descarta a vírgula
+    getline(arquivo_csv, pais, ',');
+    arquivo_csv &gt;&gt; anoNascimento &gt;&gt; lixo;
+    arquivo_csv &gt;&gt; anoFalecimento &gt;&gt; lixo;
+
+    if (arquivo_csv.peek() == '"') {
+        arquivo_csv.get(lixo); // abre-aspas
+        getline(arquivo_csv, descricao, '"');
+        getline(arquivo_csv, linha); // fim da linha
+    } else {
+        getline(arquivo_csv, descricao);
+    }
+
+    cout &lt;&lt; "BCP #" &lt;&lt; i + 1 &lt;&lt; ":" &lt;&lt; endl
+         &lt;&lt; nome &lt;&lt; endl &lt;&lt; sexo &lt;&lt; endl
+         &lt;&lt; pais &lt;&lt; endl
+         &lt;&lt; anoNascimento &lt;&lt; "-" &lt;&lt; anoFalecimento &lt;&lt; endl
+         &lt;&lt; descricao &lt;&lt; endl &lt;&lt; endl;
+}</code></pre>
+<div class="info-box"><p><code>peek()</code> observa o próximo caractere sem removê-lo. Assim o código decide se a descrição começa entre aspas ou não.</p></div>
+</section>
+
+<section>
+<h2>🧭 Leitura direta: o que acontece?</h2>
+<div class="three-column"><div><h4>Texto</h4><p><code>getline(arquivo, nome, ',')</code> lê até a próxima vírgula e preserva espaços.</p></div><div><h4>Número</h4><p><code>arquivo &gt;&gt; anoNascimento</code> converte a sequência para o tipo numérico.</p></div><div><h4>Separador</h4><p><code>arquivo &gt;&gt; lixo</code> remove a vírgula que ficou no fluxo.</p></div></div>
+<pre class="code-box"><code>Ada Lovelace,F,Inglaterra,1815,1852,É considerada a primeira programadora, ...
+
+nome      = "Ada Lovelace"
+sexo      = 'F'
+pais      = "Inglaterra"
+anoNasc.  = 1815
+anoFalec. = 1852
+descricao = "É considerada a primeira programadora, ..."</code></pre>
+<div class="success-box"><p>A descrição é lida por último até o fim da linha. Por isso, as vírgulas dentro dela não deslocam os campos anteriores.</p></div>
+</section>
+
+<section>
+<h2>⚠️ Limites da leitura direta</h2>
+<ul class="step-list"><li>O programa depende da ordem exata dos campos.</li><li>Um campo ausente ou uma vírgula inesperada nos campos iniciais pode deslocar as leituras seguintes.</li><li>O código trata a descrição como o restante da linha; ele não é um analisador completo de todas as regras de CSV.</li><li>A variável <code>lixo</code> descarta caracteres específicos; ela não valida se o separador realmente era uma vírgula.</li></ul>
+<div class="warning-box"><p><strong>Escolha da técnica:</strong> use a leitura direta para arquivos simples e conhecidos. Depois veremos <code>stringstream</code> para separar uma linha já carregada e converter campos com mais flexibilidade.</p></div>
+</section>
+
+<section>
+<h2>📦 Agora: o que são <code>&lt;sstream&gt;</code> e <code>stringstream</code>?</h2>
+<div class="two-column"><div><h4><code>#include &lt;sstream&gt;</code></h4><p>Inclui as classes que tratam uma <strong>string como um fluxo de entrada e saída</strong>, usando a memória do programa.</p></div><div><h4><code>stringstream</code></h4><p>É um objeto que recebe uma linha já lida e permite extrair seus campos aos poucos, usando <code>&gt;&gt;</code> ou <code>getline()</code>.</p></div></div>
 <pre class="code-box"><code>#include &lt;sstream&gt;
 
-std::string linha = "Ana Silva;20;8.5";
+std::string linha = "Ada Lovelace,F,Inglaterra,1815,1852,Descrição";
 std::stringstream campos(linha);</code></pre>
-<div class="info-box"><p><code>stringstream</code> não abre arquivo e não lê diretamente do teclado: ele organiza uma string que já está na memória para que possamos extrair e converter seus campos.</p></div>
+<div class="info-box"><p><code>stringstream</code> não abre arquivo e não lê diretamente do teclado: ele organiza uma string que já está na memória.</p></div>
 </section>
 
 <section>
-<h2>📄 Como enxergar um registro CSV</h2>
-<table><thead><tr><th>Campo</th><th>Texto no arquivo</th><th>Delimitador</th></tr></thead><tbody><tr><td>Nome</td><td><code>Ana Silva</code></td><td><code>;</code></td></tr><tr><td>Idade</td><td><code>20</code></td><td><code>;</code></td></tr><tr><td>Nota</td><td><code>8.5</code></td><td>fim da linha</td></tr></tbody></table>
-<pre class="code-box"><code>aluno.csv
-Ana Silva;20;8.5</code></pre>
-<div class="sequence-flow"><div><h3>1. Campo</h3><p><code>getline(..., ';')</code></p></div><div><h3>2. Campo</h3><p><code>getline(..., ';')</code></p></div><div><h3>3. Campo</h3><p><code>getline(...)</code></p></div></div>
-</section>
-
-<section>
-<h2>🧪 Separando uma linha CSV</h2>
-<pre class="code-box"><code>#include &lt;sstream&gt;
-
-string linha = "Ana Silva;20;8.5";
+<h2>🧪 <code>stringstream</code>: separar uma linha</h2>
+<p>Podemos carregar uma linha inteira e depois extrair os campos. No arquivo desta aula, o último campo é lido sem delimitador para preservar suas vírgulas.</p>
+<pre class="code-box"><code>string linha = "Ada Lovelace,F,Inglaterra,1815,1852,Descrição";
 stringstream campos(linha);
-string nome, idadeTexto, notaTexto;
+string nome, pais, descricao;
+char sexo;
+short anoNascimento, anoFalecimento;
 
-getline(campos, nome, ';');
-getline(campos, idadeTexto, ';');
-getline(campos, notaTexto);
-
-int idade = stoi(idadeTexto);
-double nota = stod(notaTexto);</code></pre>
-<div class="success-box"><p>Primeiro os campos são lidos como texto. Depois, <code>stoi()</code> e <code>stod()</code> convertem os números para os tipos necessários.</p></div>
-<div class="info-box"><p>Cada <code>getline(campos, ...)</code> consome o próximo campo e avança o cursor do fluxo. Por isso, a segunda leitura começa depois do primeiro <code>;</code>.</p></div>
+getline(campos, nome, ',');
+campos &gt;&gt; sexo &gt;&gt; lixo;
+getline(campos, pais, ',');
+campos &gt;&gt; anoNascimento &gt;&gt; lixo;
+campos &gt;&gt; anoFalecimento &gt;&gt; lixo;
+getline(campos, descricao); // restante da linha</code></pre>
+<div class="success-box"><p>Cada leitura avança o cursor de <code>campos</code>. O último <code>getline()</code> captura o restante, inclusive vírgulas da descrição.</p></div>
 </section>
 
 <section>
-<h2>📚 Lendo um arquivo CSV</h2>
+<h2>📚 Ler o arquivo com <code>stringstream</code></h2>
 <pre class="code-box"><code>#include &lt;fstream&gt;
 #include &lt;sstream&gt;
 
-ifstream arquivo("alunos.csv");
-if (!arquivo) return 1;
-
+ifstream arquivo("badassComputerPeople.csv");
 string linha;
-getline(arquivo, linha); // descarta o cabeçalho
-while (getline(arquivo, linha)) {
+int numRegistros;
+
+getline(arquivo, linha); // cabeçalho
+arquivo &gt;&gt; numRegistros;
+getline(arquivo, linha); // resto da linha
+
+for (int i = 0; i &lt; numRegistros; i++) {
+    getline(arquivo, linha);
     stringstream campos(linha);
-    string nome, idadeTexto, notaTexto;
-    getline(campos, nome, ';');
-    getline(campos, idadeTexto, ';');
-    getline(campos, notaTexto);
-    cout &lt;&lt; nome &lt;&lt; " — " &lt;&lt; notaTexto &lt;&lt; '\n';
+    string nome, pais, descricao;
+    char sexo, lixo;
+    short nascimento, falecimento;
+
+    getline(campos, nome, ',');
+    campos &gt;&gt; sexo &gt;&gt; lixo;
+    getline(campos, pais, ',');
+    campos &gt;&gt; nascimento &gt;&gt; lixo;
+    campos &gt;&gt; falecimento &gt;&gt; lixo;
+    getline(campos, descricao);
 }</code></pre>
-<div class="warning-box"><p>Use a própria leitura no <code>while</code>. Assim o laço termina no fim do arquivo ou quando ocorre uma falha de leitura.</p></div>
+<div class="warning-box"><p>Comparação: a leitura direta trabalha no arquivo enquanto avança; com <code>stringstream</code>, primeiro lemos a linha e depois processamos uma cópia dela em memória.</p></div>
 </section>
 
 <section>
