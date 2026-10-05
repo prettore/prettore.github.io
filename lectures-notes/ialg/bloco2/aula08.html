@@ -1,294 +1,310 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
-
-<!DOCTYPE html>
-
-<!DOCTYPE html>
-
-<!DOCTYPE html>
-
 <html lang="pt-BR">
-<head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" rel="stylesheet"/><title>Aula 08 — Strings</title><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css" rel="stylesheet"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css" rel="stylesheet"/><link href="../css/style.css" rel="stylesheet"/><style id="aula03-template">
-        :root {
-            --ufla-green: #008B45;
-            --ufla-blue: #003366;
-            --soft-green: #eef8f1;
-            --soft-blue: #edf4fb;
-            --soft-orange: #fff4ed;
-        }
-
-        * { box-sizing: border-box; }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .reveal {
-            width: 100% !important;
-            height: 100% !important;
-        }
-
-        .reveal .slides {
-            width: 100%;
-            height: 100%;
-        }
-
-        .reveal section {
-            width: 100%;
-            height: 100%;
-            padding: 40px !important;
-            display: flex !important;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .reveal .slide-background { background: #ffffff; }
-
-        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
-            color: var(--ufla-blue);
-            text-transform: none;
-            font-weight: 800;
-            width: 100%;
-        }
-
-        .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
-
-        .reveal h2 {
-            font-size: clamp(1.18em, 4vw, 1.8em);
-            border-bottom: 3px solid var(--ufla-green);
-            padding-bottom: 10px;
-            margin-bottom: 25px;
-        }
-
-        .reveal h3 { font-size: clamp(0.9em, 3vw, 1.25em); }
-
-        .reveal p, .reveal li {
-            color: #333333;
-            font-size: clamp(0.65em, 1.9vw, 0.88em);
-            line-height: 1.45;
-        }
-
-        .reveal ul, .reveal ol {
-            width: 100%;
-            text-align: left;
-            display: inline-block;
-        }
-
-        .reveal li {
-            text-align: left;
-            margin: 7px 0;
-        }
-
-        .highlight { color: var(--ufla-green); font-weight: 800; }
-
-        .logo-container {
-            position: absolute;
-            top: 18px;
-            right: 22px;
-            z-index: 10;
-        }
-
-        .logo-container img { height: clamp(35px, 8vw, 58px); }
-
-        .title-slide .subtitle {
-            color: var(--ufla-green);
-            font-size: clamp(0.9em, 3vw, 1.2em);
-            margin-top: 18px;
-        }
-
-        .title-slide .author {
-            margin-top: 48px;
-            font-size: clamp(0.62em, 1.8vw, 0.8em);
-            color: #555;
-        }
-
-        .emoji-large {
-            font-size: clamp(2em, 8vw, 3em);
-            margin: 12px 0;
-        }
-
-        .box, .info-box, .warning-box, .success-box {
-            width: 90%;
-            max-width: 950px;
-            margin: 14px auto;
-            padding: 14px 18px;
-            text-align: left;
-            border-radius: 4px;
-        }
-
-        .box { background: #f5f5f5; border-left: 5px solid var(--ufla-green); }
-        .info-box { background: var(--soft-blue); border-left: 5px solid var(--ufla-blue); }
-        .warning-box { background: var(--soft-orange); border-left: 5px solid #d85c42; }
-        .success-box { background: var(--soft-green); border-left: 5px solid var(--ufla-green); }
-
-        .code-box {
-            width: 90%;
-            max-width: 950px;
-            background: #f1f2f1;
-            border-top: 5px solid var(--ufla-blue);
-            padding: 15px 20px;
-            margin: 14px auto;
-            text-align: left;
-            font-family: 'Courier New', monospace;
-            font-size: clamp(0.57em, 1.75vw, 0.75em);
-            line-height: 1.4;
-            white-space: pre-wrap;
-            color: #172630;
-        }
-
-        .three-column, .two-column {
-            width: 90%;
-            margin: 14px auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            justify-content: center;
-        }
-
-        .three-column > div {
-            flex: 1;
-            min-width: 180px;
-            padding: 12px;
-            background: var(--soft-green);
-            border-top: 5px solid var(--ufla-green);
-        }
-
-        .two-column > div {
-            flex: 1;
-            min-width: 260px;
-            padding: 14px;
-            background: var(--soft-blue);
-            border-top: 5px solid var(--ufla-blue);
-        }
-
-        .three-column h4, .two-column h4 {
-            margin: 0 0 8px;
-            color: var(--ufla-blue);
-            font-size: clamp(0.8em, 2vw, 1em);
-        }
-
-        .step-list {
-            width: 90%;
-            max-width: 940px;
-            margin: 10px auto;
-        }
-
-        .step-list li {
-            position: relative;
-            padding-left: 28px;
-        }
-
-        .step-list li::before {
-            content: "→";
-            color: var(--ufla-green);
-            font-weight: 800;
-            position: absolute;
-            left: 0;
-        }
-
-        table {
-            width: 90%;
-            max-width: 1000px;
-            margin: 10px auto;
-            border-collapse: collapse;
-            font-size: clamp(0.58em, 1.55vw, 0.75em);
-            color: #333;
-        }
-
-        th {
-            background: var(--ufla-blue);
-            color: white;
-            text-align: left;
-            padding: 8px;
-        }
-
-        td {
-            padding: 8px;
-            border-bottom: 1px solid #d8e4dc;
-            text-align: left;
-        }
-
-        tr:nth-child(even) { background: #f4faf6; }
-
-        .sequence-flow {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            width: 90%;
-            max-width: 950px;
-            gap: 16px;
-            margin: 16px auto;
-            text-align: center;
-        }
-
-        .sequence-flow > div {
-            padding: 14px;
-            background: var(--soft-green);
-            border-top: 5px solid var(--ufla-green);
-        }
-
-        .sequence-flow > div:nth-child(2) {
-            background: var(--soft-blue);
-            border-top-color: var(--ufla-blue);
-        }
-
-        .sequence-flow h3 { margin: 0 0 8px; }
-@media (max-width: 768px) {
-            .reveal section { padding: 18px !important; }
-            .three-column > div, .two-column > div { min-width: 100%; }
-            .sequence-flow { grid-template-columns: 1fr; }
-            table { font-size: clamp(0.46em, 1.6vw, 0.68em); }
-            th, td { padding: 5px; }
-            .code-box { font-size: clamp(0.48em, 1.55vw, 0.68em); }
-        }
-    
-
-/* Extensão para códigos extensos: o slide não muda de escala. */
-.code-box {
-    max-height: 56vh;
-    overflow: auto;
-    scrollbar-width: thin;
-    white-space: pre-wrap;
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Aula 08 — Strings e uso do getline()</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css">
+<link rel="stylesheet" href="../css/style.css">
+<style id="aula08-layout">
+:root {
+    --ufla-green: #008B45;
+    --ufla-blue: #003366;
+    --soft-green: #eef8f1;
+    --soft-blue: #edf4fb;
+    --soft-orange: #fff4ed;
 }
+
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+.reveal { width: 100% !important; height: 100% !important; }
+.reveal .slides { width: 100%; height: 100%; }
+.reveal section {
+    width: 100%;
+    height: 100%;
+    padding: 40px !important;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.reveal .slide-background { background: #ffffff; }
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+    color: var(--ufla-blue);
+    text-transform: none;
+    font-weight: 800;
+    width: 100%;
+}
+.reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+.reveal h2 {
+    font-size: clamp(1.18em, 4vw, 1.8em);
+    border-bottom: 3px solid var(--ufla-green);
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+}
+.reveal h3 { font-size: clamp(0.9em, 3vw, 1.25em); }
+.reveal p, .reveal li {
+    color: #333333;
+    font-size: clamp(0.65em, 1.9vw, 0.88em);
+    line-height: 1.45;
+}
+.reveal ul, .reveal ol { width: 100%; text-align: left; display: inline-block; }
+.reveal li { text-align: left; margin: 7px 0; }
+.highlight { color: var(--ufla-green); font-weight: 800; }
+.logo-container { position: absolute; top: 18px; right: 22px; z-index: 10; }
+.logo-container img { height: clamp(35px, 8vw, 58px); }
+.title-slide .subtitle { color: var(--ufla-green); font-size: clamp(0.9em, 3vw, 1.2em); margin-top: 18px; }
+.title-slide .author { margin-top: 48px; font-size: clamp(0.62em, 1.8vw, 0.8em); color: #555; }
+.box, .info-box, .warning-box, .success-box {
+    width: 90%; max-width: 950px; margin: 14px auto; padding: 14px 18px;
+    text-align: left; border-radius: 4px;
+}
+.box { background: #f5f5f5; border-left: 5px solid var(--ufla-green); }
+.info-box { background: var(--soft-blue); border-left: 5px solid var(--ufla-blue); }
+.warning-box { background: var(--soft-orange); border-left: 5px solid #d85c42; }
+.success-box { background: var(--soft-green); border-left: 5px solid var(--ufla-green); }
+.code-box {
+    width: 90%; max-width: 950px; background: #f1f2f1; border-top: 5px solid var(--ufla-blue);
+    padding: 15px 20px; margin: 14px auto; text-align: left; font-family: 'Courier New', monospace;
+    font-size: clamp(0.57em, 1.75vw, 0.75em); line-height: 1.4; white-space: pre-wrap; color: #172630;
+}
+.three-column, .two-column {
+    width: 90%; margin: 14px auto; display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
+}
+.three-column > div { flex: 1; min-width: 180px; padding: 12px; background: var(--soft-green); border-top: 5px solid var(--ufla-green); }
+.two-column > div { flex: 1; min-width: 260px; padding: 14px; background: var(--soft-blue); border-top: 5px solid var(--ufla-blue); }
+.three-column h4, .two-column h4 { margin: 0 0 8px; color: var(--ufla-blue); font-size: clamp(0.8em, 2vw, 1em); }
+.step-list { width: 90%; max-width: 940px; margin: 10px auto; }
+.step-list li { position: relative; padding-left: 28px; }
+.step-list li::before { content: "→"; color: var(--ufla-green); font-weight: 800; position: absolute; left: 0; }
+table { width: 90%; max-width: 1000px; margin: 10px auto; border-collapse: collapse; font-size: clamp(0.58em, 1.55vw, 0.75em); color: #333; }
+th { background: var(--ufla-blue); color: white; text-align: left; padding: 8px; }
+td { padding: 8px; border-bottom: 1px solid #d8e4dc; text-align: left; }
+tr:nth-child(even) { background: #f4faf6; }
+.sequence-flow {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; width: 90%; max-width: 950px;
+    gap: 16px; margin: 16px auto; text-align: center;
+}
+.sequence-flow > div { padding: 14px; background: var(--soft-green); border-top: 5px solid var(--ufla-green); }
+.sequence-flow > div:nth-child(2) { background: var(--soft-blue); border-top-color: var(--ufla-blue); }
+.sequence-flow h3 { margin: 0 0 8px; }
+.reveal .slides > section.past, .reveal .slides > section.future { visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
+.reveal .slides > section.present { visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+.code-box { max-height: 56vh; overflow: auto; scrollbar-width: thin; white-space: pre-wrap; }
 pre.code-box { white-space: pre; }
 .code-box::-webkit-scrollbar { width: 8px; height: 8px; }
 .code-box::-webkit-scrollbar-thumb { background: #9bb9a7; border-radius: 4px; }
 @media (max-width: 768px) {
-    .code-box { max-height: 54vh; }
+    .reveal section { padding: 18px !important; }
+    .three-column > div, .two-column > div { min-width: 100%; }
+    .sequence-flow { grid-template-columns: 1fr; }
+    table { font-size: clamp(0.46em, 1.6vw, 0.68em); }
+    th, td { padding: 5px; }
+    .code-box { font-size: clamp(0.48em, 1.55vw, 0.68em); max-height: 54vh; }
 }
-</style></head>
-<body class="slides-page"><div class="logo-container"><img alt="UFLA" src="../assets/ufla-logo.webp"/></div><div class="reveal"><div class="slides">
+</style>
+</head>
+<body class="slides-page">
+<div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+<div class="reveal"><div class="slides">
+
 <section class="title-slide">
 <h1>🎓 Aula 08</h1>
 <div class="subtitle">Strings e uso do getline()</div>
 <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>GAC124 — Introdução aos Algoritmos</p></div>
-
 </section>
-<section><h2>🎯 Texto em C++</h2><p>Uma <code>string</code> representa uma sequência de caracteres. Ela é prática para nomes, frases e mensagens.</p><div class="three-column"><div><h4>Palavra</h4><p><code>string nome = "Ana";</code></p></div><div><h4>Frase</h4><p>Também pode conter espaços.</p></div><div><h4>Caracteres</h4><p>Cada posição tem um índice.</p></div></div><div class="info-box"><p>Inclua <code>&lt;string&gt;</code> e use <code>std::string</code> ou <code>using namespace std</code>.</p></div></section>
-<section><h2>🧱 Declaração e operações básicas</h2><pre class="code-box"><code>string nome = "Ana";
+
+<section>
+<h2>🎯 Texto em C++</h2>
+<p>Uma <code>string</code> representa uma sequência de caracteres. Ela é prática para nomes, frases e mensagens.</p>
+<div class="three-column"><div><h4>Palavra</h4><p><code>string nome = "Ana";</code></p></div><div><h4>Frase</h4><p>Também pode conter espaços.</p></div><div><h4>Caracteres</h4><p>Cada posição tem um índice.</p></div></div>
+<div class="info-box"><p>Inclua <code>&lt;string&gt;</code> e use <code>std::string</code> ou <code>using namespace std</code>.</p></div>
+</section>
+
+<section>
+<h2>🔤 Strings × vetores de caracteres</h2>
+<div class="two-column"><div><h4><code>string</code></h4><p>Tipo da biblioteca C++ para textos. Conhece seu tamanho e oferece funções como <code>find()</code> e <code>replace()</code>.</p></div><div><h4><code>char[]</code></h4><p>Vetor de caracteres. Para representar uma C-string, precisa terminar com o caractere nulo <code>\0</code>.</p></div></div>
+<pre class="code-box"><code>char letras1[4] = {'i', 'a', 'l', 'g'};       // vetor de char
+char letras2[5] = {'i', 'a', 'l', 'g', '\0'};  // C-string</code></pre>
+<div class="warning-box"><p>Sem <code>\0</code>, o vetor não informa onde o texto termina. Para as atividades da disciplina, prefira <code>string</code> quando não houver motivo para usar <code>char[]</code>.</p></div>
+</section>
+
+<section>
+<h2>📏 Tamanho da sequência de caracteres</h2>
+<div class="sequence-flow"><div><h3><code>length()</code></h3><p>Quantidade de caracteres da <code>string</code>.</p></div><div><h3><code>size()</code></h3><p>Faz a mesma contagem em uma <code>string</code>.</p></div><div><h3><code>strlen()</code></h3><p>Conta uma C-string até encontrar <code>\0</code>.</p></div></div>
+<pre class="code-box"><code>#include &lt;cstring&gt;
+
+string nome = "IAlg";
+char palavra[] = "UFLA";
+
+cout &lt;&lt; nome.length();   // 4
+cout &lt;&lt; nome.size();     // 4
+cout &lt;&lt; strlen(palavra); // 4</code></pre>
+<div class="info-box"><p><code>length()</code> e <code>size()</code> são métodos de <code>string</code>; <code>strlen()</code> é uma função para vetores de caracteres terminados em <code>\0</code>.</p></div>
+</section>
+
+<section>
+<h2>🧱 Declaração e operações básicas</h2>
+<pre class="code-box"><code>string nome = "Ana";
 string sobrenome = "Silva";
 
 string completo = nome + " " + sobrenome;
-cout &lt;&lt; completo;</code></pre><div class="three-column"><div><h4>Tamanho</h4><p><code>completo.size()</code></p></div><div><h4>Índice</h4><p><code>completo[0]</code></p></div><div><h4>Concatenação</h4><p><code>texto1 + texto2</code></p></div></div></section>
-<section><h2>⌨️ Cin lê até o espaço</h2><pre class="code-box"><code>string nome;
-cin &gt;&gt; nome;</code></pre><p>Se a entrada for <code>Paulo Rettore</code>, o <code>cin</code> lê apenas <code>Paulo</code>.</p><div class="warning-box"><p>Para ler uma linha inteira, use <code>getline()</code>.</p></div></section>
-<section><h2>📖 Getline lê a linha inteira</h2><pre class="code-box"><code>string frase;
+cout &lt;&lt; completo;
+
+completo[0] = 'a'; // altera uma posição</code></pre>
+<div class="three-column"><div><h4>Tamanho</h4><p><code>completo.size()</code></p></div><div><h4>Índice</h4><p><code>completo[0]</code></p></div><div><h4>Concatenação</h4><p><code>texto1 + texto2</code></p></div></div>
+</section>
+
+<section>
+<h2>🧰 Biblioteca <code>&lt;string&gt;</code></h2>
+<p>Além de guardar texto, <code>string</code> oferece operações para localizar, remover e substituir partes da sequência.</p>
+<pre class="code-box"><code>#include &lt;string&gt;
+
+std::string frase = "IAlg em C++";
+size_t pos = frase.find("C++");
+if (pos != std::string::npos)
+    cout << "Encontrado na posição " << pos;
+
+frase.replace(0, 4, "Aula"); // substitui "IAlg" por "Aula"
+frase.erase(4, 3);            // remove " em"
+</code></pre>
+<div class="info-box"><p><strong>Como interpretar:</strong> <code>replace(posição, quantidade, novo texto)</code>. Como <code>"IAlg"</code> tem 4 caracteres, <code>replace(0, 4, "Aula")</code> produz <code>"Aula em C++"</code>. Usar <code>0, 3</code> deixaria o <code>g</code> no texto.</p></div>
+<div class="three-column"><div><h4><code>find()</code></h4><p>Busca um trecho e retorna sua posição.</p></div><div><h4><code>erase()</code></h4><p>Remove caracteres a partir de uma posição.</p></div><div><h4><code>replace()</code></h4><p>Troca um trecho por outro.</p></div></div>
+</section>
+
+<section>
+<h2>🔎 Quando a busca não encontra?</h2>
+<p>Funções como <code>find()</code> retornam uma posição quando encontram o trecho. Quando não encontram, retornam o marcador especial <code>std::string::npos</code>.</p>
+<pre class="code-box"><code>std::string frase = "IAlg em C++";
+size_t pos = frase.find("Python");
+
+if (pos == std::string::npos)
+    cout &lt;&lt; "Trecho não encontrado";</code></pre>
+<div class="two-column"><div><h4>Encontrou</h4><p><code>pos</code> recebe um índice válido: <code>0</code>, <code>1</code>, <code>2</code>...</p></div><div><h4>Não encontrou</h4><p><code>pos</code> recebe <code>std::string::npos</code>, uma constante que significa “posição inexistente”.</p></div></div>
+<div class="warning-box"><p>Use <code>pos != std::string::npos</code> para testar sucesso. Não dependa do número interno da constante e não compare diretamente com <code>-1</code>.</p></div>
+</section>
+
+<section>
+<h2>⌨️ <code>cin</code> lê até o espaço</h2>
+<pre class="code-box"><code>string nome;
+cin &gt;&gt; nome;</code></pre>
+<p>Se a entrada for <code>Paulo Rettore</code>, o <code>cin</code> lê apenas <code>Paulo</code>.</p>
+<div class="warning-box"><p>O operador <code>&gt;&gt;</code> pula espaços no início e para no próximo espaço. Para ler uma linha inteira, use <code>getline()</code>.</p></div>
+</section>
+
+<section>
+<h2>📖 <code>getline()</code> lê a linha inteira</h2>
+<pre class="code-box"><code>string frase;
 getline(cin, frase);
-cout &lt;&lt; frase;</code></pre><div class="success-box"><p><code>getline()</code> lê até a quebra de linha e preserva os espaços internos.</p></div></section>
-<section><h2>⚠️ O problema do \n no buffer</h2><pre class="code-box"><code>int idade;
+cout &lt;&lt; frase;</code></pre>
+<div class="success-box"><p><code>getline()</code> lê até a quebra de linha e preserva os espaços internos.</p></div>
+<div class="sequence-flow"><div><h3>Entrada</h3><p><code>Paulo Rettore</code></p></div><div><h3>Leitura</h3><p><code>getline()</code></p></div><div><h3>Resultado</h3><p>nome completo</p></div></div>
+</section>
+
+<section>
+<h2>⚠️ O problema do <code>\n</code> no buffer</h2>
+<pre class="code-box"><code>int idade;
 string nome;
 
 cin &gt;&gt; idade;
-getline(cin, nome); // pode ler vazio</code></pre><div class="warning-box"><p>Depois de <code>cin &gt;&gt;</code>, a quebra de linha pode permanecer no buffer. O <code>getline()</code> encontra essa quebra imediatamente.</p></div></section>
-<section><h2>🛠️ A correção com cin.ignore()</h2><pre class="code-box"><code>int idade;
+getline(cin, nome); // pode ler vazio</code></pre>
+<div class="warning-box"><p>Depois de <code>cin &gt;&gt;</code>, a quebra de linha pode permanecer no buffer. O <code>getline()</code> encontra essa quebra imediatamente.</p></div>
+</section>
+
+<section>
+<h2>🛠️ A correção com <code>cin.ignore()</code></h2>
+<pre class="code-box"><code>#include &lt;limits&gt;
+
+int idade;
 string nome;
 
 cin &gt;&gt; idade;
-cin.ignore();
-getline(cin, nome);</code></pre><div class="success-box"><p>A quebra de linha pendente é descartada antes da leitura do nome completo.</p></div></section>
-<section><h2>🔎 Percorrer uma string</h2><pre class="code-box"><code>string palavra = "algoritmo";
+cin.ignore(numeric_limits&lt;streamsize&gt;::max(), '\n');
+getline(cin, nome);</code></pre>
+<div class="success-box"><p>Descartamos tudo até o fim da linha antes de ler o nome completo. Para uma entrada simples, <code>cin.ignore()</code> também pode ser suficiente.</p></div>
+</section>
+
+<section>
+<h2>🧩 Leitura com separadores</h2>
+<p>O terceiro argumento de <code>getline()</code> define o delimitador. A leitura termina no separador, que é consumido e não entra no texto.</p>
+<pre class="code-box"><code>string nome, cidade;
+
+// Entrada: Ana Silva;Lavras
+getline(cin, nome, ';');
+getline(cin, cidade);       // até o fim da linha
+
+cout &lt;&lt; nome &lt;&lt; " mora em " &lt;&lt; cidade;</code></pre>
+<div class="info-box"><p>A mesma ideia funciona com <code>cin</code>, <code>ifstream</code> e <code>stringstream</code>. Use o delimitador que o arquivo realmente utiliza: <code>';'</code>, <code>','</code> ou outro.</p></div>
+</section>
+
+<section>
+<h2>📦 O que são <code>&lt;sstream&gt;</code> e <code>stringstream</code>?</h2>
+<div class="two-column"><div><h4><code>#include &lt;sstream&gt;</code></h4><p>Inclui as classes que tratam uma <strong>string como um fluxo de entrada e saída</strong>, usando a memória do programa.</p></div><div><h4><code>stringstream</code></h4><p>É um objeto que recebe uma string e permite ler seus dados aos poucos, usando <code>&gt;&gt;</code> ou <code>getline()</code>.</p></div></div>
+<pre class="code-box"><code>#include &lt;sstream&gt;
+
+std::string linha = "Ana Silva;20;8.5";
+std::stringstream campos(linha);</code></pre>
+<div class="info-box"><p><code>stringstream</code> não abre arquivo e não lê diretamente do teclado: ele organiza uma string que já está na memória para que possamos extrair e converter seus campos.</p></div>
+</section>
+
+<section>
+<h2>📄 Como enxergar um registro CSV</h2>
+<table><thead><tr><th>Campo</th><th>Texto no arquivo</th><th>Delimitador</th></tr></thead><tbody><tr><td>Nome</td><td><code>Ana Silva</code></td><td><code>;</code></td></tr><tr><td>Idade</td><td><code>20</code></td><td><code>;</code></td></tr><tr><td>Nota</td><td><code>8.5</code></td><td>fim da linha</td></tr></tbody></table>
+<pre class="code-box"><code>aluno.csv
+Ana Silva;20;8.5</code></pre>
+<div class="sequence-flow"><div><h3>1. Campo</h3><p><code>getline(..., ';')</code></p></div><div><h3>2. Campo</h3><p><code>getline(..., ';')</code></p></div><div><h3>3. Campo</h3><p><code>getline(...)</code></p></div></div>
+</section>
+
+<section>
+<h2>🧪 Separando uma linha CSV</h2>
+<pre class="code-box"><code>#include &lt;sstream&gt;
+
+string linha = "Ana Silva;20;8.5";
+stringstream campos(linha);
+string nome, idadeTexto, notaTexto;
+
+getline(campos, nome, ';');
+getline(campos, idadeTexto, ';');
+getline(campos, notaTexto);
+
+int idade = stoi(idadeTexto);
+double nota = stod(notaTexto);</code></pre>
+<div class="success-box"><p>Primeiro os campos são lidos como texto. Depois, <code>stoi()</code> e <code>stod()</code> convertem os números para os tipos necessários.</p></div>
+<div class="info-box"><p>Cada <code>getline(campos, ...)</code> consome o próximo campo e avança o cursor do fluxo. Por isso, a segunda leitura começa depois do primeiro <code>;</code>.</p></div>
+</section>
+
+<section>
+<h2>📚 Lendo um arquivo CSV</h2>
+<pre class="code-box"><code>#include &lt;fstream&gt;
+#include &lt;sstream&gt;
+
+ifstream arquivo("alunos.csv");
+if (!arquivo) return 1;
+
+string linha;
+getline(arquivo, linha); // descarta o cabeçalho
+while (getline(arquivo, linha)) {
+    stringstream campos(linha);
+    string nome, idadeTexto, notaTexto;
+    getline(campos, nome, ';');
+    getline(campos, idadeTexto, ';');
+    getline(campos, notaTexto);
+    cout &lt;&lt; nome &lt;&lt; " — " &lt;&lt; notaTexto &lt;&lt; '\n';
+}</code></pre>
+<div class="warning-box"><p>Use a própria leitura no <code>while</code>. Assim o laço termina no fim do arquivo ou quando ocorre uma falha de leitura.</p></div>
+</section>
+
+<section>
+<h2>🧭 Cuidados com CSV</h2>
+<ul class="step-list"><li>Confirme se o arquivo abriu antes de ler.</li><li>Identifique se o separador é <code>;</code> ou <code>,</code>.</li><li>Decida se a primeira linha é um cabeçalho e descarte-a quando necessário.</li><li>Verifique se todos os campos esperados foram encontrados antes de converter.</li><li>Use <code>getline()</code> para preservar espaços em nomes e descrições.</li></ul>
+<div class="info-box"><p>Um CSV não é necessariamente separado por vírgulas: no Brasil, o ponto e vírgula é comum quando a vírgula aparece em números decimais.</p></div>
+</section>
+
+<section>
+<h2>🔎 Percorrer uma string</h2>
+<pre class="code-box"><code>string palavra = "algoritmo";
 int vogais = 0;
 
 for (int i = 0; i &lt; palavra.size(); i++) {
@@ -296,27 +312,65 @@ for (int i = 0; i &lt; palavra.size(); i++) {
     if (c == 'a' or c == 'e' or c == 'i' or
         c == 'o' or c == 'u')
         vogais++;
-}</code></pre><p>Uma string pode ser percorrida como uma sequência de caracteres.</p></section>
-<section><h2>🧩 Desafio: cadastro simples</h2><p>Leia a idade e o nome completo de uma pessoa. Depois, mostre uma mensagem de apresentação.</p><ol class="step-list"><li>Leia a idade com <code>cin</code>.</li><li>Use <code>cin.ignore()</code>.</li><li>Leia o nome completo com <code>getline()</code>.</li></ol><div class="info-box"><p>Teste com nomes que tenham espaços para verificar se sua solução funciona.</p></div></section>
+}</code></pre>
+<p>Uma <code>string</code> pode ser percorrida como uma sequência de caracteres. O índice inicial é <code>0</code> e o último índice é <code>size() - 1</code>.</p>
+</section>
+
+<section>
+<h2>🧩 Desafio: cadastro simples</h2>
+<p>Leia a idade e o nome completo de uma pessoa. Depois, mostre uma mensagem de apresentação.</p>
+<ol class="step-list"><li>Leia a idade com <code>cin</code>.</li><li>Use <code>cin.ignore()</code> quando necessário.</li><li>Leia o nome completo com <code>getline()</code>.</li></ol>
+<div class="info-box"><p>Amplie o desafio: leia também cidade e curso em uma linha separada por <code>;</code>.</p></div>
+</section>
+
 <section class="practice-slide">
 <h2>🧩 Prática em aula</h2>
-<p>Leia um nome completo e conte quantas letras a ou A aparecem.</p>
-<div class="success-box"><p><strong>Gabarito orientador:</strong> Depois de uma leitura com cin, use cin.ignore() quando necessário e percorra a string com um laço.</p></div>
+<p>Leia uma linha no formato <code>nome;cidade;curso</code> e mostre cada campo em uma linha diferente.</p>
+<pre class="code-box"><code>Entrada: Maria Silva;Lavras;Engenharia
 
-</section><section class="references-slide">
+Saída esperada:
+Nome: Maria Silva
+Cidade: Lavras
+Curso: Engenharia</code></pre>
+<div class="success-box"><p><strong>Gabarito orientador:</strong> use <code>getline(cin, campo, ';')</code> para os dois primeiros campos e um <code>getline(cin, campo)</code> para o último.</p></div>
+</section>
+
+<section class="references-slide">
 <h2>📚 Referências e materiais</h2>
 <p>Use estas fontes para consultas pontuais depois da aula:</p>
-<ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/string/basic_string" target="_blank">cppreference — basic_string</a></li><li><a href="https://en.cppreference.com/w/cpp/string/basic_string/getline" target="_blank">cppreference — getline</a></li><li><a href="https://cpp.sh/" target="_blank">C++ Shell — testes rápidos</a></li></ul>
+<ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/string/basic_string" target="_blank">cppreference — basic_string</a></li><li><a href="https://en.cppreference.com/w/cpp/string/basic_string/getline" target="_blank">cppreference — getline</a></li><li><a href="https://en.cppreference.com/w/cpp/io/basic_ifstream" target="_blank">cppreference — ifstream</a></li><li><a href="https://cpp.sh/" target="_blank">C++ Shell — testes rápidos</a></li></ul>
 <div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
+</section>
 
-</section><section class="summary-slide">
+<section class="summary-slide">
 <h2>📌 Resumo da aula</h2>
-<ul class="step-list"><li>string armazena textos.</li><li>cin lê uma palavra; getline() lê uma linha inteira.</li><li>Após cin &gt;&gt;, descarte a quebra de linha quando necessário.</li><li>Strings podem ser indexadas e percorridas.</li></ul>
+<ul class="step-list"><li><code>string</code> armazena textos e possui <code>length()</code>, <code>size()</code>, <code>find()</code>, <code>erase()</code> e <code>replace()</code>.</li><li><code>std::string::npos</code> indica que uma busca não encontrou o trecho procurado.</li><li><code>cin</code> lê uma palavra; <code>getline()</code> lê uma linha inteira ou um campo até um separador.</li><li>Após <code>cin &gt;&gt;</code>, descarte a quebra de linha quando necessário.</li><li><code>#include &lt;sstream&gt;</code> disponibiliza o <code>stringstream</code> para separar e converter textos em memória.</li><li>Para CSV, combine <code>ifstream</code>, <code>getline()</code> e <code>stringstream</code>.</li></ul>
+</section>
 
-</section><section class="next-slide">
+<section class="next-slide">
 <p class="next-label">PRÓXIMA AULA</p>
 <h1>⏭️ Próxima aula</h1>
 <div class="subtitle">Ponteiros, alocação dinâmica, busca binária e recursão</div>
 <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
+</section>
 
-</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:1.0});</script></body></html>
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: true,
+  transition: 'slide',
+  controls: true,
+  progress: true,
+  width: 1024,
+  height: 768,
+  margin: 0.1,
+  minScale: 0.2,
+  maxScale: 1.0,
+  center: false,
+  navigationMode: 'linear'
+});
+</script>
+</body>
+</html>
