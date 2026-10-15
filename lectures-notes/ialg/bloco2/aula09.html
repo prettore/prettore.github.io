@@ -1,358 +1,543 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
-
-<!DOCTYPE html>
-
-<!DOCTYPE html>
-
-<!DOCTYPE html>
-
 <html lang="pt-BR">
-<head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" rel="stylesheet"/><title>Aula 09 — Ponteiros, Busca Binária e Recursão</title><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css" rel="stylesheet"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css" rel="stylesheet"/><link href="../css/style.css" rel="stylesheet"/><style id="aula03-template">
-        :root {
-            --ufla-green: #008B45;
-            --ufla-blue: #003366;
-            --soft-green: #eef8f1;
-            --soft-blue: #edf4fb;
-            --soft-orange: #fff4ed;
-        }
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Aula 09 — Ponteiros, Alocação Dinâmica, Busca Binária e Recursão</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css">
+<link rel="stylesheet" href="../css/style.css">
+<style id="aula09-typography">
+/* Ajuste local: títulos principais com peso visual regular, sem alterar o CSS oficial. */
+body.slides-page .reveal h1,
+body.slides-page .reveal h2 { font-weight: 400 !important; }
+</style>
+</head>
+<body class="slides-page aula09-page">
+<div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+<div class="reveal"><div class="slides">
 
-        * { box-sizing: border-box; }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .reveal {
-            width: 100% !important;
-            height: 100% !important;
-        }
-
-        .reveal .slides {
-            width: 100%;
-            height: 100%;
-        }
-
-        .reveal section {
-            width: 100%;
-            height: 100%;
-            padding: 40px !important;
-            display: flex !important;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .reveal .slide-background { background: #ffffff; }
-
-        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
-            color: var(--ufla-blue);
-            text-transform: none;
-            font-weight: 800;
-            width: 100%;
-        }
-
-        .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
-
-        .reveal h2 {
-            font-size: clamp(1.18em, 4vw, 1.8em);
-            border-bottom: 3px solid var(--ufla-green);
-            padding-bottom: 10px;
-            margin-bottom: 25px;
-        }
-
-        .reveal h3 { font-size: clamp(0.9em, 3vw, 1.25em); }
-
-        .reveal p, .reveal li {
-            color: #333333;
-            font-size: clamp(0.65em, 1.9vw, 0.88em);
-            line-height: 1.45;
-        }
-
-        .reveal ul, .reveal ol {
-            width: 100%;
-            text-align: left;
-            display: inline-block;
-        }
-
-        .reveal li {
-            text-align: left;
-            margin: 7px 0;
-        }
-
-        .highlight { color: var(--ufla-green); font-weight: 800; }
-
-        .logo-container {
-            position: absolute;
-            top: 18px;
-            right: 22px;
-            z-index: 10;
-        }
-
-        .logo-container img { height: clamp(35px, 8vw, 58px); }
-
-        .title-slide .subtitle {
-            color: var(--ufla-green);
-            font-size: clamp(0.9em, 3vw, 1.2em);
-            margin-top: 18px;
-        }
-
-        .title-slide .author {
-            margin-top: 48px;
-            font-size: clamp(0.62em, 1.8vw, 0.8em);
-            color: #555;
-        }
-
-        .emoji-large {
-            font-size: clamp(2em, 8vw, 3em);
-            margin: 12px 0;
-        }
-
-        .box, .info-box, .warning-box, .success-box {
-            width: 90%;
-            max-width: 950px;
-            margin: 14px auto;
-            padding: 14px 18px;
-            text-align: left;
-            border-radius: 4px;
-        }
-
-        .box { background: #f5f5f5; border-left: 5px solid var(--ufla-green); }
-        .info-box { background: var(--soft-blue); border-left: 5px solid var(--ufla-blue); }
-        .warning-box { background: var(--soft-orange); border-left: 5px solid #d85c42; }
-        .success-box { background: var(--soft-green); border-left: 5px solid var(--ufla-green); }
-
-        .code-box {
-            width: 90%;
-            max-width: 950px;
-            background: #f1f2f1;
-            border-top: 5px solid var(--ufla-blue);
-            padding: 15px 20px;
-            margin: 14px auto;
-            text-align: left;
-            font-family: 'Courier New', monospace;
-            font-size: clamp(0.57em, 1.75vw, 0.75em);
-            line-height: 1.4;
-            white-space: pre-wrap;
-            color: #172630;
-        }
-
-        .three-column, .two-column {
-            width: 90%;
-            margin: 14px auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            justify-content: center;
-        }
-
-        .three-column > div {
-            flex: 1;
-            min-width: 180px;
-            padding: 12px;
-            background: var(--soft-green);
-            border-top: 5px solid var(--ufla-green);
-        }
-
-        .two-column > div {
-            flex: 1;
-            min-width: 260px;
-            padding: 14px;
-            background: var(--soft-blue);
-            border-top: 5px solid var(--ufla-blue);
-        }
-
-        .three-column h4, .two-column h4 {
-            margin: 0 0 8px;
-            color: var(--ufla-blue);
-            font-size: clamp(0.8em, 2vw, 1em);
-        }
-
-        .step-list {
-            width: 90%;
-            max-width: 940px;
-            margin: 10px auto;
-        }
-
-        .step-list li {
-            position: relative;
-            padding-left: 28px;
-        }
-
-        .step-list li::before {
-            content: "→";
-            color: var(--ufla-green);
-            font-weight: 800;
-            position: absolute;
-            left: 0;
-        }
-
-        table {
-            width: 90%;
-            max-width: 1000px;
-            margin: 10px auto;
-            border-collapse: collapse;
-            font-size: clamp(0.58em, 1.55vw, 0.75em);
-            color: #333;
-        }
-
-        th {
-            background: var(--ufla-blue);
-            color: white;
-            text-align: left;
-            padding: 8px;
-        }
-
-        td {
-            padding: 8px;
-            border-bottom: 1px solid #d8e4dc;
-            text-align: left;
-        }
-
-        tr:nth-child(even) { background: #f4faf6; }
-
-        .sequence-flow {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            width: 90%;
-            max-width: 950px;
-            gap: 16px;
-            margin: 16px auto;
-            text-align: center;
-        }
-
-        .sequence-flow > div {
-            padding: 14px;
-            background: var(--soft-green);
-            border-top: 5px solid var(--ufla-green);
-        }
-
-        .sequence-flow > div:nth-child(2) {
-            background: var(--soft-blue);
-            border-top-color: var(--ufla-blue);
-        }
-
-        .sequence-flow h3 { margin: 0 0 8px; }
-@media (max-width: 768px) {
-            .reveal section { padding: 18px !important; }
-            .three-column > div, .two-column > div { min-width: 100%; }
-            .sequence-flow { grid-template-columns: 1fr; }
-            table { font-size: clamp(0.46em, 1.6vw, 0.68em); }
-            th, td { padding: 5px; }
-            .code-box { font-size: clamp(0.48em, 1.55vw, 0.68em); }
-        }
-    
-
-/* Extensão para códigos extensos: o slide não muda de escala. */
-.code-box {
-    max-height: 56vh;
-    overflow: auto;
-    scrollbar-width: thin;
-    white-space: pre-wrap;
-}
-pre.code-box { white-space: pre; }
-.code-box::-webkit-scrollbar { width: 8px; height: 8px; }
-.code-box::-webkit-scrollbar-thumb { background: #9bb9a7; border-radius: 4px; }
-@media (max-width: 768px) {
-    .code-box { max-height: 54vh; }
-}
-</style></head>
-<body class="slides-page"><div class="logo-container"><img alt="UFLA" src="../assets/ufla-logo.webp"/></div><div class="reveal"><div class="slides">
 <section class="title-slide">
 <h1>🎓 Aula 09</h1>
 <div class="subtitle">Ponteiros, Alocação Dinâmica, Busca Binária e Recursão</div>
 <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>GAC124 — Introdução aos Algoritmos</p></div>
-
 </section>
-<section><h2>🎯 Memória e algoritmos de busca</h2><ul class="step-list"><li>Entender endereços e ponteiros.</li><li>Alocar e desalocar memória com segurança.</li><li>Comparar busca linear e busca binária.</li><li>Reconhecer caso base e chamada recursiva.</li></ul><div class="success-box"><p>A aula integra memória e algoritmos: primeiro entendemos onde os dados estão; depois, como procurá-los.</p></div></section>
-<section><h2>📍 Variável, endereço e ponteiro</h2><pre class="code-box"><code>int numero = 25;
-int* ponteiro = &amp;numero;
 
-cout &lt;&lt; numero;    // valor
-cout &lt;&lt; &amp;numero;   // endereço
-cout &lt;&lt; *ponteiro; // valor apontado</code></pre><div class="three-column"><div><h4><code>&amp;</code></h4><p>Obtém o endereço.</p></div><div><h4><code>*</code></h4><p>Acessa o valor apontado.</p></div><div><h4><code>int*</code></h4><p>Ponteiro para um inteiro.</p></div></div></section>
-<section><h2>🛡️ Ponteiros seguros</h2><pre class="code-box"><code>int* p = nullptr;
+<section>
+<h2>🎯 O mapa da aula</h2>
+<ul class="step-list"><li>Entender como variáveis ocupam a memória e como ponteiros guardam endereços.</li><li>Usar vetores e ponteiros com segurança.</li><li>Alocar e liberar memória com <code>new/delete</code> e conhecer <code>malloc/free</code>.</li><li>Comparar busca linear, busca linear em vetor ordenado e busca binária.</li><li>Construir e acompanhar funções recursivas usando uma pilha de execução.</li></ul>
+<div class="success-box"><p>A ideia central: primeiro entendemos <strong>onde</strong> os dados estão; depois, <strong>como</strong> procurar e processar esses dados.</p></div>
+</section>
+
+<section>
+<h2>🧠 Variáveis vivem na memória</h2>
+<p>Uma variável possui um valor, um tipo, um tamanho e um endereço.</p>
+<div class="three-column"><div><h4>Valor</h4><p><code>numero = 25</code></p><p>É o dado que o programa utiliza.</p></div><div><h4>Tipo</h4><p><code>int</code></p><p>Define como interpretar os bits.</p></div><div><h4>Endereço</h4><p><code>&amp;numero</code></p><p>Indica onde o valor está guardado.</p></div></div>
+<pre class="code-box"><code>int numero = 25;
+
+cout &lt;&lt; numero &lt;&lt; endl;   // valor
+cout &lt;&lt; &amp;numero &lt;&lt; endl;  // endereço, por exemplo 0x7ffd...</code></pre>
+<div class="info-box"><p>O endereço muda entre execuções. O importante é entender que o computador consegue localizar a variável por esse endereço.</p></div>
+</section>
+
+<section>
+<h2>📍 O que é um ponteiro?</h2>
+<p>Um ponteiro é uma variável que armazena o endereço de outra variável.</p>
+<pre class="code-box"><code>int numero = 20;
+int* ptrNumero = &amp;numero;
+
+cout &lt;&lt; ptrNumero &lt;&lt; endl;   // endereço de numero
+cout &lt;&lt; *ptrNumero &lt;&lt; endl;  // valor guardado nesse endereço</code></pre>
+<div class="three-column"><div><h4><code>&amp;</code></h4><p>Obtém o endereço de uma variável.</p></div><div><h4><code>*</code></h4><p>Desreferencia: acessa o valor apontado.</p></div><div><h4><code>int*</code></h4><p>Declara um ponteiro para <code>int</code>.</p></div></div>
+</section>
+
+<section>
+<h2>🔁 Indireção: alterar por meio do endereço</h2>
+<p>O ponteiro não cria uma cópia de <code>numero</code>. Ele oferece outro caminho até a mesma variável.</p>
+<pre class="code-box"><code>int numero = 5;
+int* p = &amp;numero;
+
+cout &lt;&lt; *p &lt;&lt; endl;  // 5
+*p = 8;                // altera numero por indireção
+cout &lt;&lt; numero &lt;&lt; endl; // 8</code></pre>
+<div class="sequence-flow"><div><h3>1. Antes</h3><p><code>numero = 5</code></p></div><div><h3>2. Acesso</h3><p><code>*p</code> aponta para <code>numero</code></p></div><div><h3>3. Depois</h3><p><code>numero = 8</code></p></div></div>
+</section>
+
+<section>
+<h2>🧩 Três declarações que parecem iguais</h2>
+<div class="three-column"><div><h4>Preferida</h4><pre><code>int* p;</code></pre><p>Destaca o tipo do ponteiro.</p></div><div><h4>Também correta</h4><pre><code>int *p;</code></pre><p>Destaca o nome da variável.</p></div><div><h4>Evite confusão</h4><pre><code>int* p, q;</code></pre><p>Apenas <code>p</code> é ponteiro; <code>q</code> é um <code>int</code>.</p></div></div>
+<pre class="code-box"><code>int *p1, *p2; // os dois são ponteiros
+int* p3, p4;  // p3 é ponteiro; p4 é inteiro</code></pre>
+<div class="warning-box"><p>Uma declaração por linha é uma boa prática quando o código ainda está sendo aprendido.</p></div>
+</section>
+
+<section>
+<h2>🔢 Vetores e ponteiros</h2>
+<p>Em muitas expressões, o nome de um vetor representa o endereço do seu primeiro elemento. O vetor não deixa de ser um vetor: ele apenas pode ser acessado por outro caminho.</p>
+<pre class="code-box"><code>int vetor[3] = {10, 20, 30};
+int* p = vetor; // equivalente a &amp;vetor[0]
+
+cout &lt;&lt; vetor[1] &lt;&lt; endl; // 20
+cout &lt;&lt; p[1] &lt;&lt; endl;     // 20
+cout &lt;&lt; *(p + 1) &lt;&lt; endl; // 20</code></pre>
+<div class="info-box"><p><code>p[i]</code> é uma forma conveniente de escrever <code>*(p + i)</code>. A aritmética avança considerando o tamanho do tipo apontado.</p></div>
+</section>
+
+<section>
+<h2>↔️ Ponteiros em funções</h2>
+<p>Passar um ponteiro copia o endereço, mas permite alterar a variável original por indireção.</p>
+<pre class="code-box"><code>void dobro(int* valor) {
+    if (valor != nullptr)
+        *valor = 2 * (*valor);
+}
+
+int n = 7;
+dobro(&amp;n);
+cout &lt;&lt; n; // 14</code></pre>
+<div class="two-column"><div><h4>Chamada</h4><p><code>dobro(&amp;n)</code> envia o endereço de <code>n</code>.</p></div><div><h4>Dentro da função</h4><p><code>*valor</code> acessa o próprio <code>n</code>.</p></div></div>
+</section>
+
+<section>
+<h2>📦 Ponteiros para registros</h2>
+<p>Quando um ponteiro aponta para uma estrutura, o operador <code>-&gt;</code> acessa diretamente seus campos.</p>
+<pre class="code-box"><code>struct Ponto {
+    int x, y;
+};
+
+Ponto p1{3, 4};
+Ponto* ptr = &amp;p1;
+
+cout &lt;&lt; p1.x &lt;&lt; endl;
+cout &lt;&lt; (*ptr).y &lt;&lt; endl;
+cout &lt;&lt; ptr-&gt;x &lt;&lt; endl; // forma mais legível</code></pre>
+<div class="success-box"><p><code>ptr-&gt;x</code> é equivalente a <code>(*ptr).x</code>.</p></div>
+</section>
+
+<section>
+<h2>🛡️ Ponteiro nulo é diferente de ponteiro válido</h2>
+<pre class="code-box"><code>int* p = nullptr;
 
 if (p != nullptr) {
     cout &lt;&lt; *p;
-}</code></pre><div class="warning-box"><p>Não desreferencie um ponteiro nulo ou não inicializado. Primeiro verifique se ele aponta para uma região válida.</p></div></section>
-<section><h2>🧠 Alocação dinâmica</h2><pre class="code-box"><code>int n;
+} else {
+    cout &lt;&lt; "Ainda não aponta para um dado";
+}</code></pre>
+<div class="three-column"><div><h4><code>nullptr</code></h4><p>Não aponta para uma variável válida.</p></div><div><h4><code>&amp;numero</code></h4><p>Aponta para o endereço de <code>numero</code>.</p></div><div><h4><code>*p</code></h4><p>Só pode ser usado quando <code>p</code> é válido.</p></div></div>
+<div class="warning-box"><p><strong>Nunca</strong> desreferencie um ponteiro não inicializado ou nulo.</p></div>
+</section>
+
+<section class="scrollable">
+<h2>⚠️ Erros comuns com ponteiros</h2>
+<div class="two-column"><div><h4>Ponteiro não inicializado</h4><pre><code>int* p;
+*p = 10; // comportamento indefinido</code></pre></div><div><h4>Endereço inventado</h4><pre><code>int* p;
+p = 240; // não faça isso</code></pre></div><div><h4>Fora do limite</h4><pre><code>int v[3];
+v[3] = 10; // último índice é 2</code></pre></div><div><h4>Uso após liberar</h4><pre><code>int* p = new int;
+delete p;
+*p = 10; // ponteiro pendente</code></pre></div></div>
+<div class="warning-box"><p>Esses erros podem compilar e falhar somente durante a execução. Por isso, compilação bem-sucedida não garante acesso seguro à memória.</p></div>
+</section>
+
+<section>
+<h2>🧹 Vazamento e ponteiro pendente</h2>
+<pre class="code-box"><code>int* p = new int(10);
+int* copia = p;
+
+delete p;
+p = nullptr;
+// copia ainda guarda o endereço liberado: ponteiro pendente</code></pre>
+<div class="two-column"><div><h4>Ponteiro pendente</h4><p>Continua guardando um endereço depois de <code>delete</code>.</p></div><div><h4>Vazamento</h4><p>O programa perde o último endereço de um bloco que ainda não foi liberado.</p></div></div>
+<div class="info-box"><p>Ao liberar, invalide os ponteiros que possam ser reutilizados. Evite cópias de ponteiros sem definir quem será responsável pelo <code>delete</code>.</p></div>
+</section>
+
+<section>
+<h2>✅ Regras de segurança</h2>
+<ul class="step-list"><li>Inicialize com <code>nullptr</code> ou com o endereço de uma variável válida.</li><li>Teste o ponteiro antes de desreferenciar quando ele puder ser nulo.</li><li>Não acesse índices fora dos limites.</li><li>Use <code>delete</code> para um objeto e <code>delete[]</code> para um vetor.</li><li>Depois de liberar, atribua <code>nullptr</code> ao ponteiro principal.</li><li>Defina claramente quem aloca e quem libera a memória.</li></ul>
+</section>
+
+<section>
+<h2>🗂️ Alocação automática × dinâmica</h2>
+<div class="two-column"><div><h4>Automática</h4><ul><li>O compilador gerencia o espaço.</li><li>A variável nasce dentro do escopo.</li><li>Sai de cena no fim do escopo.</li><li>Exemplo: <code>int n;</code></li></ul></div><div><h4>Dinâmica</h4><ul><li>O programa solicita espaço durante a execução.</li><li>O tamanho pode depender de uma entrada.</li><li>O programador precisa liberar.</li><li>Exemplo: <code>new int[n]</code></li></ul></div></div>
+<div class="success-box"><p>Alocação dinâmica oferece controle sobre o momento e o tamanho da reserva, mas exige responsabilidade.</p></div>
+</section>
+
+<section>
+<h2>❓ Por que não usar simplesmente VLA?</h2>
+<pre class="code-box"><code>int tam;
+cin &gt;&gt; tam;
+int vetor[tam]; // parece resolver...</code></pre>
+<p>Essa declaração é conhecida como <strong>VLA</strong> (<em>variable-length array</em>).</p>
+<div class="warning-box"><p>Em C++, um vetor comum precisa ter tamanho conhecido em tempo de compilação. Alguns compiladores aceitam VLA como extensão, mas ele não faz parte do C++ padrão.</p></div>
+</section>
+
+<section>
+<h2>✅ O que usar no lugar do VLA?</h2>
+<pre class="code-box"><code>int tam;
+cin &gt;&gt; tam;
+
+if (tam &gt; 0) {
+    int* vetor = new int[tam];
+    // use vetor[0] até vetor[tam - 1]
+    delete[] vetor;
+    vetor = nullptr;
+}</code></pre>
+<div class="three-column"><div><h4>Padrão C++</h4><p><code>new[]</code> funciona com tamanho conhecido só em execução.</p></div><div><h4>Stack</h4><p>VLA ocuparia a pilha, que tem capacidade limitada.</p></div><div><h4>Responsabilidade</h4><p>Com <code>new[]</code>, lembre do <code>delete[]</code>.</p></div></div>
+</section>
+
+<section>
+<h2>🧭 Alocação dinâmica de um elemento</h2>
+<pre class="code-box"><code>int* ptr = new int;
+*ptr = 13;
+
+cout &lt;&lt; *ptr &lt;&lt; endl;
+
+delete ptr;
+ptr = nullptr;</code></pre>
+<div class="sequence-flow"><div><h3>1. <code>new</code></h3><p>Reserva um bloco e devolve um endereço.</p></div><div><h3>2. <code>*ptr</code></h3><p>Acessa o inteiro reservado.</p></div><div><h3>3. <code>delete</code></h3><p>Libera o bloco reservado.</p></div></div>
+<div class="info-box"><p>O elemento dinâmico não tem um nome próprio; usamos o ponteiro para encontrá-lo.</p></div>
+</section>
+
+<section>
+<h2>📦 Alocação dinâmica de vetor</h2>
+<pre class="code-box"><code>int n;
 cin &gt;&gt; n;
 
-int* v = new int[n];
-// use v[0] até v[n - 1]
+int* vetor = new int[n];
+for (int i = 0; i &lt; n; i++)
+    cin &gt;&gt; vetor[i];
 
-delete[] v;
-v = nullptr;</code></pre><div class="two-column"><div><h4><code>new</code></h4><p>Reserva memória durante a execução.</p></div><div><h4><code>delete[]</code></h4><p>Libera um vetor dinâmico.</p></div></div></section>
-<section><h2>⚠️ Cuidados com memória</h2><ul class="step-list"><li>Inicialize ponteiros com <code>nullptr</code> quando ainda não apontarem para dados.</li><li>Não acesse posições fora do limite alocado.</li><li>Use <code>delete</code> para um elemento e <code>delete[]</code> para um vetor.</li><li>Depois de liberar, não use o ponteiro como se ainda fosse válido.</li></ul><div class="warning-box"><p>A memória reservada com <code>new</code> precisa ser liberada pelo programa.</p></div></section>
-<section><h2>🔎 Busca linear</h2><pre class="code-box"><code>int buscaLinear(const int v[], int n, int chave) {
+cout &lt;&lt; vetor[0];
+delete[] vetor;
+vetor = nullptr;</code></pre>
+<div class="two-column"><div><h4><code>new int[n]</code></h4><p>Reserva posições contíguas para <code>n</code> inteiros.</p></div><div><h4><code>delete[] vetor</code></h4><p>Libera o bloco inteiro, não apenas a primeira posição.</p></div></div>
+</section>
+
+<section class="scrollable">
+<h2>🎞️ Crescer um vetor dinâmico</h2>
+<p>Um vetor criado com <code>new[]</code> não muda de tamanho sozinho. Para crescer, criamos outro bloco e copiamos os elementos.</p>
+<div class="ialg-visualizer" data-algo="resize" data-title="Redimensionamento: copiar e liberar" data-values="7,3,9" data-capacity="3"></div>
+<pre class="code-box"><code>int* maior = new int[novoTamanho];
+for (int i = 0; i &lt; tamanhoAtual; i++)
+    maior[i] = vetor[i];
+
+delete[] vetor;
+vetor = maior;</code></pre>
+</section>
+
+<section>
+<h2>🆚 <code>new/delete</code> e <code>malloc/free</code></h2>
+<div class="two-column"><div><h4>C++: <code>new/delete</code></h4><pre><code>int* v = new int[n];
+delete[] v;</code></pre><ul><li>Retorna ponteiro tipado.</li><li>Combina com <code>delete</code> ou <code>delete[]</code>.</li></ul></div><div><h4>C: <code>malloc/free</code></h4><pre><code>int* v = static_cast&lt;int*&gt;(
+    malloc(n * sizeof(int)));
+free(v);</code></pre><ul><li>Reserva quantidade de bytes.</li><li>Combina exclusivamente com <code>free</code>.</li></ul></div></div>
+<div class="warning-box"><p><strong>Não misture pares:</strong> memória de <code>new</code> não deve ser liberada com <code>free</code>; memória de <code>malloc</code> não deve ser liberada com <code>delete</code>.</p></div>
+</section>
+
+<section>
+<h2>🧰 Como funciona <code>malloc()</code>?</h2>
+<pre class="code-box"><code>#include &lt;cstdlib&gt;
+
+int n;
+cin &gt;&gt; n;
+
+int* vetor = static_cast&lt;int*&gt;(
+    malloc(n * sizeof(int))
+);
+
+if (vetor == nullptr) {
+    cout &lt;&lt; "Falha na alocação";
+} else {
+    vetor[0] = 42;
+    free(vetor);
+    vetor = nullptr;
+}</code></pre>
+<ul class="step-list"><li><code>sizeof(int)</code> informa quantos bytes um inteiro ocupa.</li><li><code>malloc</code> retorna um endereço bruto, convertido para <code>int*</code>.</li><li><code>free</code> devolve o bloco ao sistema.</li></ul>
+</section>
+
+<section>
+<h2>🧪 Qual escolher?</h2>
+<div class="three-column"><div><h4>Novo código C++</h4><p>Prefira <code>new/delete</code> quando o objetivo é estudar alocação dinâmica manual.</p></div><div><h4>Código C legado</h4><p>Você pode encontrar <code>malloc/free</code>; reconheça o par correto.</p></div><div><h4>Aplicações reais</h4><p>Estruturas como <code>std::vector</code> automatizam várias dessas responsabilidades.</p></div></div>
+<div class="info-box"><p>Nesta aula o foco é compreender a memória. Em projetos maiores, abstrações que gerenciam recursos reduzem erros.</p></div>
+</section>
+
+<section>
+<h2>🔎 O problema de busca em vetores</h2>
+<p>Dado um vetor <code>V</code> e uma chave <code>K</code>, queremos saber se <code>K</code> aparece e em qual índice.</p>
+<pre class="code-box"><code>V = {2, -3, 101, 104, 0, 1, 2, 3, -3, 0}
+K = 104
+
+// resposta: encontrado no índice 3</code></pre>
+<div class="three-column"><div><h4>Sem ordenação</h4><p>A busca linear funciona em qualquer vetor.</p></div><div><h4>Com ordenação</h4><p>Podemos descartar regiões inteiras.</p></div><div><h4>Escolha</h4><p>O formato dos dados orienta o algoritmo.</p></div></div>
+</section>
+
+<section>
+<h2>🔍 Busca linear: comparar um por um</h2>
+<pre class="code-box"><code>int buscaLinear(const int v[], int n, int chave) {
     for (int i = 0; i &lt; n; i++) {
         if (v[i] == chave)
             return i;
     }
     return -1;
-}</code></pre><p>Funciona em qualquer vetor. No pior caso, pode verificar todas as posições.</p></section>
-<section><h2>⚡ Busca binária: metade por vez</h2><p>A busca binária exige um vetor ordenado.</p><ol class="step-list"><li>Compare a chave com o elemento do meio.</li><li>Se forem iguais, termine.</li><li>Se a chave for menor, descarte a metade direita.</li><li>Se for maior, descarte a metade esquerda.</li></ol><div class="success-box"><p>A cada passo, a região de busca fica aproximadamente pela metade.</p></div></section>
-<section><h2>🧭 Exemplo de busca binária</h2><pre class="code-box"><code>v = {1, 4, 5, 10, 16, 19, 20, 27, 30};
-chave = 26;
+}</code></pre>
+<ul class="step-list"><li>Melhor caso: a chave está na primeira posição.</li><li>Pior caso: a chave está na última posição ou não aparece.</li><li>Não exige vetor ordenado.</li></ul>
+</section>
 
-meio = 16  -&gt; 26 é maior
-restam: 19, 20, 27, 30
-meio = 20  -&gt; 26 é maior
-restam: 27, 30
-meio = 27  -&gt; 26 é menor
-resultado: não encontrado</code></pre><div class="info-box"><p>Sem ordenação, não é possível descartar metades com segurança.</p></div></section>
-<section><h2>🔁 Recursão: um problema menor</h2><pre class="code-box"><code>int fatorial(int n) {
+<section class="scrollable">
+<h2>🎞️ Busca linear: execução passo a passo</h2>
+<p>Vetor: <code>{4, 9, 2, 7, 5, 1}</code> · chave: <strong>7</strong>.</p>
+<div class="ialg-visualizer" data-algo="linear-search" data-title="Busca linear" data-values="4,9,2,7,5,1" data-target="7"></div>
+<div class="info-box"><p>Use <strong>Próximo</strong> para testar cada comparação ou <strong>Reproduzir</strong> para assistir à sequência.</p></div>
+</section>
+
+<section>
+<h2>⏩ Busca linear com parada antecipada</h2>
+<p>Se o vetor estiver ordenado, ainda podemos evitar comparações depois que o valor atual ultrapassa a chave.</p>
+<pre class="code-box"><code>int i = 0;
+while (i &lt; n and v[i] &lt; chave)
+    i++;
+
+if (i &lt; n and v[i] == chave)
+    return i;
+return -1;</code></pre>
+<div class="success-box"><p>Essa melhoria reduz trabalho em alguns casos, mas o pior caso ainda pode visitar quase todo o vetor.</p></div>
+</section>
+
+<section class="scrollable">
+<h2>🎞️ Busca linear ordenada: quando parar?</h2>
+<p>Vetor ordenado: <code>{1, 4, 5, 10, 16, 19, 20, 27, 30}</code> · chave: <strong>26</strong>.</p>
+<div class="ialg-visualizer" data-algo="linear-search" data-title="Busca linear em vetor ordenado" data-values="1,4,5,10,16,19,20,27,30" data-target="26"></div>
+<div class="warning-box"><p>Ao encontrar <code>27</code>, já sabemos que <code>26</code> não aparece depois. A busca pode parar.</p></div>
+</section>
+
+<section>
+<h2>⚡ Busca binária: metade por vez</h2>
+<p>A busca binária exige um vetor ordenado e mantém apenas o intervalo onde a chave ainda pode estar.</p>
+<ol class="step-list"><li>Calcule o índice do meio.</li><li>Compare <code>chave</code> com <code>v[meio]</code>.</li><li>Se a chave for menor, descarte a metade direita.</li><li>Se for maior, descarte a metade esquerda.</li><li>Repita até encontrar ou o intervalo ficar vazio.</li></ol>
+<div class="success-box"><p>Em cada passo, o tamanho do problema cai aproximadamente pela metade. O custo é proporcional a <code>log₂(n)</code>.</p></div>
+</section>
+
+<section class="scrollable">
+<h2>🎞️ Busca binária: chave ausente</h2>
+<p>Vetor: <code>{1, 4, 5, 10, 16, 19, 20, 27, 30}</code> · chave: <strong>26</strong>.</p>
+<div class="ialg-visualizer" data-algo="binary-search" data-title="Busca binária" data-values="1,4,5,10,16,19,20,27,30" data-target="26"></div>
+<div class="info-box"><p>As células apagadas estão fora do intervalo atual. A busca termina quando não sobra posição possível.</p></div>
+</section>
+
+<section class="scrollable">
+<h2>🎞️ Busca binária: chave encontrada</h2>
+<p>Mesmo vetor, agora procurando a chave <strong>27</strong>.</p>
+<div class="ialg-visualizer" data-algo="binary-search" data-title="Busca binária encontra 27" data-values="1,4,5,10,16,19,20,27,30" data-target="27"></div>
+<div class="success-box"><p>Observe a diferença: encontrar o meio encerra a busca imediatamente.</p></div>
+</section>
+
+<section class="scrollable">
+<h2>🧮 Busca binária iterativa</h2>
+<pre class="code-box"><code>int buscaBinaria(const int v[], int n, int chave) {
+    int inicio = 0;
+    int fim = n - 1;
+
+    while (inicio &lt;= fim) {
+        int meio = (inicio + fim) / 2;
+        if (v[meio] == chave)
+            return meio;
+        if (chave &lt; v[meio])
+            fim = meio - 1;
+        else
+            inicio = meio + 1;
+    }
+    return -1;
+}</code></pre>
+<div class="info-box"><p><code>inicio</code>, <code>fim</code> e <code>meio</code> descrevem o intervalo que ainda precisa ser investigado.</p></div>
+</section>
+
+<section>
+<h2>🔁 Por que usar recursão?</h2>
+<p>Recursão é quando uma função chama a si mesma para resolver uma versão menor do mesmo problema.</p>
+<div class="two-column"><div><h4>Caso base</h4><p>Uma situação simples que pode ser respondida sem nova chamada.</p></div><div><h4>Caso geral</h4><p>Reduz o problema e chama a função novamente.</p></div></div>
+<pre class="code-box"><code>problema grande
+→ resolve um problema menor
+→ resolve um problema ainda menor
+→ caso base
+→ retorna os resultados</code></pre>
+<div class="warning-box"><p>Sem caso base ou sem redução, a função pode chamar a si mesma indefinidamente.</p></div>
+</section>
+
+<section>
+<h2>📐 Relação de recorrência: fatorial</h2>
+<p>A matemática já descreve o fatorial de forma recursiva:</p>
+<div class="sequence-flow"><div><h3>Caso base</h3><p><code>0! = 1</code></p></div><div><h3>Caso geral</h3><p><code>n! = n × (n - 1)!</code></p></div><div><h3>Exemplo</h3><p><code>4! = 4 × 3!</code></p></div></div>
+<pre class="code-box"><code>4! = 4 × 3 × 2 × 1 × 1 = 24</code></pre>
+</section>
+
+<section>
+<h2>🧩 Função recursiva do fatorial</h2>
+<pre class="code-box"><code>int fatorial(int n) {
     if (n == 0)          // caso base
         return 1;
-    return n * fatorial(n - 1);
-}</code></pre><div class="two-column"><div><h4>Caso base</h4><p>Interrompe a recursão.</p></div><div><h4>Passo recursivo</h4><p>Chama a função com uma entrada menor.</p></div></div></section>
-<section><h2>🧩 Busca binária recursiva</h2><pre class="code-box"><code>int busca(int v[], int inicio, int fim, int chave) {
-    if (inicio &gt; fim) return -1;
-    int meio = (inicio + fim) / 2;
-    if (v[meio] == chave) return meio;
-    if (chave &lt; v[meio])
-        return busca(v, inicio, meio - 1, chave);
-    return busca(v, meio + 1, fim, chave);
-}</code></pre><div class="success-box"><p>A função reduz o intervalo a cada chamada e termina quando encontra a chave ou quando o intervalo fica vazio.</p></div></section>
-<section class="practice-slide">
-<h2>🧩 Prática em aula</h2>
-<p>Em um vetor ordenado, implemente a busca binária e retorne o índice da chave ou -1.</p>
-<div class="success-box"><p><strong>Gabarito orientador:</strong> Atualize início, fim e meio até encontrar a chave ou esvaziar o intervalo. Explique o caso base se usar recursão.</p></div>
+    return n * fatorial(n - 1); // caso geral
+}</code></pre>
+<div class="two-column"><div><h4>Chamada</h4><p><code>fatorial(4)</code> ainda não sabe o resultado de <code>fatorial(3)</code>.</p></div><div><h4>Retorno</h4><p>A multiplicação fica aguardando na pilha.</p></div></div>
+</section>
 
-</section><section class="references-slide">
-<h2>📚 Referências e materiais</h2>
-<p>Use estas fontes para consultas pontuais depois da aula:</p>
-<ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/language/pointer" target="_blank">cppreference — ponteiros</a></li><li><a href="https://en.cppreference.com/w/cpp/language/recursion" target="_blank">cppreference — recursão</a></li><li><a href="https://beecrowd.com/" target="_blank">beecrowd — busca e vetores</a></li></ul>
-<div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
+<section class="scrollable">
+<h2>🎞️ Fatorial(4): pilha de chamadas</h2>
+<p>Primeiro acompanhamos a descida das chamadas; depois, os retornos resolvem a pilha.</p>
+<div class="ialg-visualizer" data-algo="recursion" data-title="Pilha de execução: fatorial(4)" data-n="4"></div>
+<div class="info-box"><p>O botão <strong>Próximo</strong> mostra uma nova chamada ou um retorno. A pilha cresce na descida e diminui na subida.</p></div>
+</section>
 
-</section><section class="scrollable"><h2>🔎 Busca linear: comparar um por um</h2><p>Vetor: <code>{4, 9, 2, 7, 5, 1}</code> · chave: <strong>7</strong>. A busca linear funciona mesmo sem ordenação.</p><div class="ialg-visualizer" data-algo="linear-search" data-title="Busca linear" data-values="4,9,2,7,5,1" data-target="7"></div><pre class="code-box"><code>for (int i = 0; i &lt; n; i++) {
-    if (v[i] == chave) return i;
-}
-return -1;</code></pre></section>
-<section class="scrollable"><h2>⚡ Busca binária: descartar metades</h2><p>Agora o vetor está ordenado: <code>{1, 4, 5, 10, 16, 19, 20, 27, 30}</code> · chave: <strong>26</strong>.</p><div class="ialg-visualizer" data-algo="binary-search" data-title="Busca binária" data-values="1,4,5,10,16,19,20,27,30" data-target="26"></div><pre class="code-box"><code>while (inicio &lt;= fim) {
-    int meio = (inicio + fim) / 2;
-    if (v[meio] == chave) return meio;
-    if (chave &lt; v[meio]) fim = meio - 1;
-    else inicio = meio + 1;
-}
-return -1;</code></pre></section>
-<section class="scrollable"><h2>🔁 Recursão: chamadas e retornos</h2><p>O caso base interrompe as chamadas; depois, a pilha retorna os resultados.</p><div class="ialg-visualizer" data-algo="recursion" data-title="fatorial(4)" data-n="4"></div><pre class="code-box"><code>int fatorial(int n) {
+<section>
+<h2>1️⃣ Fatorial(4): primeira chamada</h2>
+<div class="two-column"><div><h4>Pilha</h4><pre><code>fatorial(4)</code></pre></div><div><h4>O que fica pendente?</h4><pre><code>return 4 * fatorial(3);</code></pre></div></div>
+<p>A função ainda não retorna 24: ela precisa descobrir o resultado de <code>fatorial(3)</code>.</p>
+</section>
+
+<section>
+<h2>2️⃣ Fatorial(3): segunda chamada</h2>
+<div class="two-column"><div><h4>Pilha</h4><pre><code>fatorial(4)
+  fatorial(3)</code></pre></div><div><h4>Expressão pendente</h4><pre><code>4 * (3 * fatorial(2))</code></pre></div></div>
+<p>A chamada de número 3 é criada antes de qualquer produto ser finalizado.</p>
+</section>
+
+<section>
+<h2>3️⃣ Fatorial(2): terceira chamada</h2>
+<div class="two-column"><div><h4>Pilha</h4><pre><code>fatorial(4)
+  fatorial(3)
+    fatorial(2)</code></pre></div><div><h4>Expressão pendente</h4><pre><code>4 * (3 * (2 * fatorial(1)))</code></pre></div></div>
+</section>
+
+<section>
+<h2>4️⃣ Fatorial(1): quarta chamada</h2>
+<div class="two-column"><div><h4>Pilha</h4><pre><code>fatorial(4)
+  fatorial(3)
+    fatorial(2)
+      fatorial(1)</code></pre></div><div><h4>Expressão pendente</h4><pre><code>4 * (3 * (2 * (1 * fatorial(0))))</code></pre></div></div>
+<p>A próxima chamada será <code>fatorial(0)</code>, o caso base.</p>
+</section>
+
+<section>
+<h2>🛑 Fatorial(0): caso base</h2>
+<div class="two-column"><div><h4>Topo da pilha</h4><pre><code>fatorial(0)
+return 1;</code></pre></div><div><h4>Primeiro retorno</h4><pre><code>fatorial(1)
+= 1 * 1
+= 1</code></pre></div></div>
+<div class="success-box"><p>A recursão para aqui. Nenhuma nova chamada é criada.</p></div>
+</section>
+
+<section>
+<h2>↩️ Retorno 1: resolver fatorial(2)</h2>
+<div class="sequence-flow"><div><h3>Recebe</h3><p><code>fatorial(1) = 1</code></p></div><div><h3>Calcula</h3><p><code>2 × 1 = 2</code></p></div><div><h3>Devolve</h3><p><code>fatorial(2) = 2</code></p></div></div>
+<pre class="code-box"><code>fatorial(4)
+  fatorial(3)
+    fatorial(2) = 2</code></pre>
+</section>
+
+<section>
+<h2>↩️ Retorno 2: resolver fatorial(3)</h2>
+<div class="sequence-flow"><div><h3>Recebe</h3><p><code>fatorial(2) = 2</code></p></div><div><h3>Calcula</h3><p><code>3 × 2 = 6</code></p></div><div><h3>Devolve</h3><p><code>fatorial(3) = 6</code></p></div></div>
+<pre class="code-box"><code>fatorial(4)
+  fatorial(3) = 6</code></pre>
+</section>
+
+<section>
+<h2>↩️ Retorno final: resolver fatorial(4)</h2>
+<div class="sequence-flow"><div><h3>Recebe</h3><p><code>fatorial(3) = 6</code></p></div><div><h3>Calcula</h3><p><code>4 × 6 = 24</code></p></div><div><h3>Devolve</h3><p><code>fatorial(4) = 24</code></p></div></div>
+<pre class="code-box"><code>4! = 4 × 3 × 2 × 1 × 1 = 24</code></pre>
+<div class="success-box"><p>Teste de mesa: escreva as chamadas na descida e os valores na subida.</p></div>
+</section>
+
+<section>
+<h2>🌳 Árvore e pilha de recursão</h2>
+<div class="two-column"><div><h4>Fatorial: uma corrente</h4><pre><code>fatorial(4)
+└─ fatorial(3)
+   └─ fatorial(2)
+      └─ fatorial(1)
+         └─ fatorial(0)</code></pre></div><div><h4>Regra de leitura</h4><p>Na descida, cada chamada aguarda.</p><p>Na subida, cada chamada combina o resultado recebido com seu próprio valor.</p></div></div>
+<div class="info-box"><p>Em problemas com mais de uma chamada recursiva, como Fibonacci, a estrutura deixa de ser uma corrente e vira uma árvore de chamadas.</p></div>
+</section>
+
+<section>
+<h2>🧠 Recursão: erros que aparecem nos testes</h2>
+<div class="two-column"><div><h4>Sem caso base</h4><pre><code>int f(int n) {
+    return f(n - 1);
+}</code></pre><p>Chamadas infinitas.</p></div><div><h4>Sem reduzir</h4><pre><code>int f(int n) {
+    if (n == 0) return 1;
+    return f(n);
+}</code></pre><p>O parâmetro nunca se aproxima do caso base.</p></div></div>
+<div class="warning-box"><p>Outros problemas: caso base incorreto, retorno errado ou profundidade tão grande que esgota a pilha de execução.</p></div>
+</section>
+
+<section>
+<h2>🆚 Recursão e repetição</h2>
+<div class="two-column"><div><h4>Recursiva</h4><pre><code>int fatorial(int n) {
     if (n == 0) return 1;
     return n * fatorial(n - 1);
-}</code></pre></section>
-<section><h2>🔗 Complementos online</h2><div class="ialg-reference-panel"><ul><li><a href="https://www.geeksforgeeks.org/dsa/searching-algorithms/" target="_blank" rel="noopener">GeeksforGeeks — algoritmos de busca</a></li><li><a href="https://en.cppreference.com/w/cpp/algorithm/binary_search" target="_blank" rel="noopener">cppreference — std::binary_search</a></li><li><a href="https://visualgo.net/en/array" target="_blank" rel="noopener">VisuAlgo — vetores e busca</a></li></ul></div></section>
+}</code></pre><p>Expressa diretamente a relação matemática.</p></div><div><h4>Iterativa</h4><pre><code>int resultado = 1;
+for (int i = 2; i &lt;= n; i++)
+    resultado *= i;</code></pre><p>Usa uma única função e uma repetição.</p></div></div>
+<div class="info-box"><p>A versão recursiva pode ser mais didática para alguns problemas, mas normalmente usa mais memória para guardar chamadas pendentes.</p></div>
+</section>
+
+<section>
+<h2>🧩 Busca binária recursiva</h2>
+<pre class="code-box"><code>int buscaBinaria(const int v[], int inicio, int fim, int chave) {
+    if (inicio &gt; fim)
+        return -1; // intervalo vazio
+
+    int meio = (inicio + fim) / 2;
+    if (v[meio] == chave)
+        return meio;
+    if (chave &lt; v[meio])
+        return buscaBinaria(v, inicio, meio - 1, chave);
+    return buscaBinaria(v, meio + 1, fim, chave);
+}</code></pre>
+<div class="two-column"><div><h4>Casos base</h4><p>Encontrou a chave ou o intervalo ficou vazio.</p></div><div><h4>Caso geral</h4><p>Chama a função para a metade possível.</p></div></div>
+</section>
+
+<section>
+<h2>🎞️ Busca binária recursiva: pilha</h2>
+<p>Vetor: <code>{1, 4, 5, 10, 16, 19, 20, 27, 30}</code> · chave: <strong>27</strong>.</p>
+<div class="two-column"><div><h4>Chamadas</h4><pre><code>busca(0, 8)
+→ busca(5, 8)
+→ busca(7, 8)
+→ encontra em 7</code></pre></div><div><h4>Meios</h4><pre><code>meio = 4 → 16
+meio = 6 → 20
+meio = 7 → 27</code></pre></div></div>
+<div class="success-box"><p>Cada chamada reduz <code>[inicio, fim]</code>; o retorno devolve o mesmo índice até a chamada inicial.</p></div>
+</section>
+
+<section>
+<h2>🧪 Teste de mesa: escreva a execução</h2>
+<p>Para conferir uma busca binária recursiva, registre uma linha por chamada.</p>
+<table><thead><tr><th>Chamada</th><th>inicio</th><th>fim</th><th>meio</th><th>v[meio]</th><th>decisão</th></tr></thead><tbody><tr><td>1</td><td>0</td><td>8</td><td>4</td><td>16</td><td>direita</td></tr><tr><td>2</td><td>5</td><td>8</td><td>6</td><td>20</td><td>direita</td></tr><tr><td>3</td><td>7</td><td>8</td><td>7</td><td>27</td><td>encontrou</td></tr></tbody></table>
+<div class="info-box"><p>O teste de mesa transforma o movimento do algoritmo em evidências: valores de entrada, decisão e próximo intervalo.</p></div>
+</section>
+
+<section>
+<h2>🧩 Prática orientada</h2>
+<ol class="step-list"><li>Alocar dinamicamente um vetor de <code>n</code> inteiros.</li><li>Ler os valores em ordem crescente.</li><li>Ler uma chave e executar busca binária iterativa.</li><li>Repetir usando uma função recursiva.</li><li>Registrar em uma tabela cada valor de <code>inicio</code>, <code>fim</code> e <code>meio</code>.</li><li>Liberar o vetor com <code>delete[]</code>.</li></ol>
+<div class="success-box"><p>Teste três situações: chave no primeiro trecho, chave ausente e chave no último índice.</p></div>
+</section>
+
+<section class="references-slide">
+<h2>📚 Referências e materiais</h2>
+<p>Use estas fontes para consultas pontuais depois da aula:</p>
+<ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/language/pointer" target="_blank" rel="noopener">cppreference — ponteiros</a></li><li><a href="https://en.cppreference.com/w/cpp/memory/c" target="_blank" rel="noopener">cppreference — malloc e free</a></li><li><a href="https://en.cppreference.com/w/cpp/language/new" target="_blank" rel="noopener">cppreference — new e delete</a></li><li><a href="https://en.cppreference.com/w/cpp/language/recursion" target="_blank" rel="noopener">cppreference — recursão</a></li><li><a href="https://en.cppreference.com/w/cpp/algorithm/binary_search" target="_blank" rel="noopener">cppreference — busca binária</a></li><li><a href="https://visualgo.net/en/array" target="_blank" rel="noopener">VisuAlgo — vetores e busca</a></li></ul>
+<div class="info-box"><p>Os materiais completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
+</section>
+
 <section class="summary-slide">
 <h2>📌 Resumo da aula</h2>
-<ul class="step-list"><li>Ponteiro armazena endereço; * acessa o valor apontado.</li><li>new reserva e delete/delete[] liberam memória.</li><li>Busca binária exige vetor ordenado.</li><li>Recursão precisa de caso base e redução do problema.</li></ul>
+<ul class="step-list"><li>Ponteiros guardam endereços; <code>&amp;</code> obtém endereço e <code>*</code> acessa o valor.</li><li>Vetores podem ser percorridos por índices ou por ponteiros.</li><li>VLA não é C++ padrão; <code>new[]/delete[]</code> formam um par.</li><li><code>malloc/free</code> formam outro par e não devem ser misturados com <code>new/delete</code>.</li><li>Busca binária exige vetor ordenado e reduz o intervalo pela metade.</li><li>Recursão exige caso base, redução do problema e retorno bem definido.</li></ul>
+</section>
 
-</section><section class="next-slide">
-<p class="next-label">PRÓXIMA AULA</p>
-<h1>⏭️ Próxima aula</h1>
-<div class="subtitle">Registros e vetores de registros</div>
-<div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
+<section class="next-slide">
+<p class="next-label">PRÓXIMA AULA</p><h1>⏭️ Próxima aula</h1><div class="subtitle">Registros e vetores de registros</div><div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
+</section>
 
-</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:1.0});</script><script src="../assets/ialg-visualizer.js"></script>
-</body></html>
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+<script src="../assets/ialg-visualizer.js"></script>
+<script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:1.0});</script>
+</body>
+</html>
