@@ -417,33 +417,53 @@ return -1;</code></pre>
 
 <section>
 <h2>🛑 Fatorial(0): caso base</h2>
-<div class="two-column"><div><h4>Topo da pilha</h4><pre><code>fatorial(0)
-return 1;</code></pre></div><div><h4>Primeiro retorno</h4><pre><code>fatorial(1)
-= 1 * 1
-= 1</code></pre></div></div>
-<div class="success-box"><p>A recursão para aqui. Nenhuma nova chamada é criada.</p></div>
-</section>
-
-<section>
-<h2>↩️ Retorno 1: resolver fatorial(2)</h2>
-<div class="sequence-flow"><div><h3>Recebe</h3><p><code>fatorial(1) = 1</code></p></div><div><h3>Calcula</h3><p><code>2 × 1 = 2</code></p></div><div><h3>Devolve</h3><p><code>fatorial(2) = 2</code></p></div></div>
-<pre class="code-box"><code>fatorial(4)
+<div class="two-column"><div><h4>Pilha</h4><pre><code>fatorial(4)
   fatorial(3)
-    fatorial(2) = 2</code></pre>
+    fatorial(2)
+      fatorial(1)
+        fatorial(0)</code></pre></div><div><h4>Expressão pendente</h4><pre><code>4 * (3 * (2 * (1 * fatorial(0))))</code></pre></div></div>
+<div class="success-box"><p><code>fatorial(0)</code> é o caso base e devolve <code>1</code>. A chamada será removida na próxima etapa.</p></div>
 </section>
 
 <section>
-<h2>↩️ Retorno 2: resolver fatorial(3)</h2>
-<div class="sequence-flow"><div><h3>Recebe</h3><p><code>fatorial(2) = 2</code></p></div><div><h3>Calcula</h3><p><code>3 × 2 = 6</code></p></div><div><h3>Devolve</h3><p><code>fatorial(3) = 6</code></p></div></div>
-<pre class="code-box"><code>fatorial(4)
-  fatorial(3) = 6</code></pre>
+<h2>↩️ Retorno: fatorial(0)</h2>
+<div class="two-column"><div><h4>Pilha</h4><pre><code>fatorial(4)
+  fatorial(3)
+    fatorial(2)
+      fatorial(1)</code></pre></div><div><h4>Expressão pendente</h4><pre><code>4 * (3 * (2 * (1 * 1)))
+= 4 * (3 * (2 * 1))</code></pre></div></div>
+<div class="info-box"><p>A chamada <code>fatorial(0)</code> saiu da pilha. Seu retorno <code>1</code> ocupa o lugar da chamada na expressão.</p></div>
 </section>
 
 <section>
-<h2>↩️ Retorno final: resolver fatorial(4)</h2>
-<div class="sequence-flow"><div><h3>Recebe</h3><p><code>fatorial(3) = 6</code></p></div><div><h3>Calcula</h3><p><code>4 × 6 = 24</code></p></div><div><h3>Devolve</h3><p><code>fatorial(4) = 24</code></p></div></div>
-<pre class="code-box"><code>4! = 4 × 3 × 2 × 1 × 1 = 24</code></pre>
-<div class="success-box"><p>Teste de mesa: escreva as chamadas na descida e os valores na subida.</p></div>
+<h2>↩️ Desempilhar: fatorial(1)</h2>
+<div class="two-column"><div><h4>Pilha</h4><pre><code>fatorial(4)
+  fatorial(3)
+    fatorial(2)</code></pre></div><div><h4>Expressão pendente</h4><pre><code>4 * (3 * (2 * 1))
+= 4 * (3 * 2)</code></pre></div></div>
+<div class="info-box"><p><code>fatorial(1)</code> resolve <code>1 * 1 = 1</code>, devolve <code>1</code> e também é removido da pilha.</p></div>
+</section>
+
+<section>
+<h2>↩️ Desempilhar: fatorial(2)</h2>
+<div class="two-column"><div><h4>Pilha</h4><pre><code>fatorial(4)
+  fatorial(3)</code></pre></div><div><h4>Expressão pendente</h4><pre><code>4 * (3 * 2)
+= 4 * 6</code></pre></div></div>
+<div class="info-box"><p><code>fatorial(2)</code> resolve <code>2 * 1 = 2</code>, devolve <code>2</code> e deixa a expressão pronta para o próximo retorno.</p></div>
+</section>
+
+<section>
+<h2>↩️ Desempilhar: fatorial(3)</h2>
+<div class="two-column"><div><h4>Pilha</h4><pre><code>fatorial(4)</code></pre></div><div><h4>Expressão pendente</h4><pre><code>4 * 6
+= 24</code></pre></div></div>
+<div class="info-box"><p><code>fatorial(3)</code> resolve <code>3 * 2 = 6</code>, devolve <code>6</code> e é removido da pilha.</p></div>
+</section>
+
+<section>
+<h2>✅ Desempilhar: fatorial(4)</h2>
+<div class="two-column"><div><h4>Pilha</h4><pre><code>vazia</code></pre></div><div><h4>Expressão pendente</h4><pre><code>4 * 6
+= 24</code></pre></div></div>
+<div class="success-box"><p><code>fatorial(4)</code> resolve <code>4 * 6 = 24</code>. A pilha ficou vazia e o resultado pode ser enviado ao <code>cout</code>.</p></div>
 </section>
 
 <section>
