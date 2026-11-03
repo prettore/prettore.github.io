@@ -1,5 +1,498 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Mentorias do Projeto Prático — IAlg</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css"><link rel="stylesheet" href="css/style.css"></head><body class="slides-page"><div class="reveal"><div class="slides"><section class="title-slide"><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h1>🎓 Mentorias do Projeto Prático</h1><div class="rule"></div><div class="subtitle">Acompanhamento semanal do desenvolvimento em C++</div><div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>GAC124 — Introdução aos Algoritmos</p></div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>🧭 Como usar este guia</h2><div class="three-column"><div><h3>1. Antes da mentoria</h3><p>Compile o projeto, teste o que já existe e anote dúvidas concretas. Cada grupo deve trazer uma versão executável ou um avanço verificável.</p></div><div><h3>2. Durante a conversa</h3><p>Mostre o código, explique as decisões e converse sobre erros, alternativas e prioridades. A mentoria é um espaço de diálogo.</p></div><div><h3>3. Depois do encontro</h3><p>Registre o próximo incremento, divida tarefas e implemente o conceito da aula no contexto do próprio projeto.</p></div></div><div class="info-box"><strong>Regra de trabalho:</strong> conceitos anteriores podem ser reutilizados, combinados ou modificados quando isso melhorar a solução do grupo. Professores e alunos também podem usar o encontro para resolver dúvidas.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>🚀 Semana 5 — Começar com direção</h2><p class="meta">08/09 · Primeira mentoria do Projeto</p><div class="three-column"><div><h3>👥 Formar a equipe</h3><p>Organizem duplas ou trios, combinem canais de comunicação e definam como as tarefas serão compartilhadas.</p></div><div><h3>🎯 Definir tema e escopo</h3><p>Escolham um problema possível de resolver em C++ e escrevam o objetivo da primeira versão em uma frase.</p></div><div><h3>💬 Conversar e registrar</h3><p>Apresentem verbalmente a ideia, escutem as orientações e saiam com um próximo passo claro para cada integrante.</p></div></div><div class="warning-box"><strong>Presença:</strong> está condicionada à entrega, no Campus Virtual, das implementações realizadas em sala de aula. Consulte o ambiente para formato e prazo oficial.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>📝 Semana 5 — Primeiro incremento</h2><p class="meta">Transformar a ideia em um plano executável</p><div class="three-column"><div><h3>1. Problema em uma frase</h3><p>“Nosso programa ajudará <strong>quem</strong> a realizar <strong>qual tarefa</strong>?” Evitem objetivos amplos demais.</p></div><div><h3>2. Três ações iniciais</h3><p>Definam pelo menos três opções do menu, como cadastrar, listar e buscar. A primeira versão deve ser pequena e funcional.</p></div><div><h3>3. Divisão de responsabilidades</h3><p>Registrem quem ficará responsável por cada parte e combinem como o grupo revisará e integrará o trabalho.</p></div></div><div class="info-box"><strong>Saída da mentoria:</strong> uma descrição curta do problema, um esboço do menu e as tarefas iniciais registradas no Campus Virtual. Na próxima mentoria, essas ações serão transformadas em funções.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>🧩 Semana 6 — Modularizar para crescer</h2><p class="meta">15/09 · Mentoria do Projeto</p><div class="two-column"><div><h3>Por que dividir o programa?</h3><p>Uma <code>main()</code> muito grande é difícil de ler, testar e corrigir. Funções menores deixam cada responsabilidade mais clara.</p><ul><li>Facilitam a manutenção.</li><li>Permitem testar uma tarefa isoladamente.</li><li>Evita repetir o mesmo trecho de código.</li></ul></div><div><h3>Quais tarefas separar?</h3><p>Observe as ações do menu do grupo e transforme cada ação em uma possível função.</p><ul><li>Cadastrar e validar dados.</li><li>Listar ou buscar registros.</li><li>Salvar e ler arquivos.</li><li>Calcular, ordenar ou exibir relatórios.</li></ul></div></div><div class="info-box"><strong>Roteiro:</strong> no slide seguinte, veja como um menu pode chamar funções específicas. Adapte os nomes e parâmetros ao tema do próprio grupo.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>💻 Semana 6 — Modularização em C++</h2><p class="meta">Exemplo: dividir o menu em funções</p><p class="intro">Cada opção do menu pode chamar uma função específica do projeto.</p><pre class="code-box"><code>void mostrarMenu() { cout &lt;&lt; "1 - Cadastrar\n2 - Listar\n0 - Sair\n"; }
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Mentorias do Projeto Prático — IAlg</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css"><style id="ialg-official-style.css">
+:root {
+    --ufla-green: #008B45;
+    --ufla-blue: #003366;
+    --ufla-light-green: #e6f3eb;
+    --text-color: #333333;
+    --bg-color: #ffffff;
+    --light-gray: #f5f5f5;
+    --border-color: #e0e0e0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--light-gray);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+header {
+    background-color: var(--bg-color);
+    border-bottom: 4px solid var(--ufla-green);
+    padding: 20px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    max-height: 60px;
+}
+
+.site-title {
+    color: var(--ufla-blue);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.site-subtitle {
+    color: var(--ufla-green);
+    font-size: 16px;
+}
+
+/* Navigation */
+nav {
+    background-color: var(--ufla-blue);
+    color: white;
+    padding: 10px 0;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+nav a:hover {
+    background-color: var(--ufla-green);
+}
+
+/* Main Content */
+main {
+    background-color: var(--bg-color);
+    padding: 40px 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+h1, h2, h3 {
+    color: var(--ufla-blue);
+    margin-bottom: 15px;
+}
+
+h1 {
+    border-bottom: 2px solid var(--ufla-green);
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+}
+
+.blocks-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.block-card {
+    background-color: var(--light-gray);
+    border-top: 4px solid var(--ufla-green);
+    border-radius: 8px;
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.block-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.block-title {
+    color: var(--ufla-green);
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.lecture-list {
+    list-style-type: none;
+}
+
+.lecture-list li {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.lecture-list a {
+    color: var(--text-color);
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+.lecture-list a:hover {
+    color: var(--ufla-green);
+}
+
+/* Presentation Link */
+.presentation-link {
+    display: block;
+    background-color: var(--ufla-light-green);
+    border: 1px solid var(--ufla-green);
+    color: var(--ufla-green);
+    padding: 15px 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-bottom: 30px;
+    transition: all 0.3s;
+}
+
+.presentation-link:hover {
+    background-color: var(--ufla-green);
+    color: white;
+}
+
+/* CP-1 Complementary */
+.complementary-section {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 2px dashed var(--border-color);
+}
+
+.cp1-link {
+    display: inline-block;
+    background-color: var(--ufla-blue);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-top: 15px;
+}
+
+.cp1-link:hover {
+    background-color: #002244;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 30px 0;
+    margin-top: 40px;
+    color: #666;
+    border-top: 1px solid var(--border-color);
+}
+
+
+/* ==========================================================
+   Apresentações HTML — padrão compartilhado das aulas IAlg
+   ========================================================== */
+.slides-page { background: #ffffff; overflow: hidden; }
+.slides-page .reveal { width: 100% !important; height: 100% !important; }
+.slides-page .reveal .slides { width: 100%; height: 100%; }
+.slides-page .reveal section { width: 100%; height: 100%; padding: 40px !important; display: flex !important; flex-direction: column; justify-content: center; align-items: center; overflow: auto; }
+.slides-page .reveal .slide-background { background: #ffffff; }
+.slides-page .reveal h1,
+.slides-page .reveal h2,
+.slides-page .reveal h3,
+.slides-page .reveal h4 { color: var(--ufla-blue); text-transform: none; font-weight: 800; width: 100%; }
+.slides-page .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+.slides-page .reveal h2 { font-size: clamp(1.15em, 4vw, 1.8em); border-bottom: 3px solid var(--ufla-green); padding-bottom: 10px; margin-bottom: 22px; }
+.slides-page .reveal h3 { font-size: clamp(.9em, 3vw, 1.2em); }
+.slides-page .reveal p,
+.slides-page .reveal li { color: var(--text-color); font-size: clamp(.64em, 1.85vw, .88em); line-height: 1.4; }
+.slides-page .reveal ul,
+.slides-page .reveal ol { width: 100%; text-align: left; display: inline-block; }
+.slides-page .reveal li { margin: 6px 0; text-align: left; }
+.slides-page .logo-container { position: absolute; top: 18px; right: 22px; z-index: 10; }
+.slides-page .logo-container img { height: clamp(35px, 8vw, 58px); width: auto; object-fit: contain; }
+.slides-page .title-slide .subtitle { color: var(--ufla-green); font-size: clamp(.9em, 3vw, 1.2em); margin-top: 16px; }
+.slides-page .title-slide .author { margin-top: 42px; font-size: clamp(.62em, 1.8vw, .8em); color: #555; }
+.slides-page .box,
+.slides-page .info-box,
+.slides-page .warning-box,
+.slides-page .success-box { width: 90%; max-width: 950px; margin: 12px auto; padding: 13px 17px; text-align: left; border-radius: 4px; }
+.slides-page .box { background: #f5f5f5; border-left: 5px solid var(--ufla-green); }
+.slides-page .info-box { background: #edf4fb; border-left: 5px solid var(--ufla-blue); }
+.slides-page .warning-box { background: #fff4ed; border-left: 5px solid #d85c42; }
+.slides-page .success-box { background: var(--ufla-light-green); border-left: 5px solid var(--ufla-green); }
+.slides-page .code-box { width: 90%; max-width: 950px; background: #f1f2f1; border-top: 5px solid var(--ufla-blue); padding: 14px 19px; margin: 12px auto; text-align: left; font-family: 'Courier New', monospace; font-size: clamp(.54em, 1.65vw, .75em); line-height: 1.4; white-space: pre-wrap; color: #172630; }
+.slides-page .two-column,
+.slides-page .three-column { width: 90%; margin: 12px auto; display: flex; flex-wrap: wrap; gap: 13px; justify-content: center; }
+.slides-page .two-column > div { flex: 1; min-width: 260px; padding: 13px; background: #edf4fb; border-top: 5px solid var(--ufla-blue); }
+.slides-page .three-column > div { flex: 1; min-width: 180px; padding: 12px; background: var(--ufla-light-green); border-top: 5px solid var(--ufla-green); }
+.slides-page .three-column > div:nth-child(2) { background: #edf4fb; border-top-color: var(--ufla-blue); }
+.slides-page .two-column h4,
+.slides-page .three-column h4 { margin: 0 0 7px; color: var(--ufla-blue); font-size: clamp(.78em, 2vw, 1em); }
+.slides-page .step-list { width: 90%; max-width: 940px; margin: 8px auto; }
+.slides-page .step-list li { position: relative; padding-left: 26px; }
+.slides-page .step-list li::before { content: '→'; color: var(--ufla-green); font-weight: 800; position: absolute; left: 0; }
+.slides-page table { width: 90%; max-width: 1000px; margin: 8px auto; border-collapse: collapse; font-size: clamp(.55em, 1.5vw, .75em); color: var(--text-color); }
+.slides-page th { background: var(--ufla-blue); color: #fff; text-align: left; padding: 7px; }
+.slides-page td { padding: 7px; border-bottom: 1px solid #d8e4dc; text-align: left; }
+.slides-page tr:nth-child(even) { background: #f4faf6; }
+.slides-page .sequence-flow { display: grid; grid-template-columns: 1fr 1fr 1fr; width: 90%; max-width: 950px; gap: 14px; margin: 12px auto; text-align: center; }
+.slides-page .sequence-flow > div { padding: 12px; background: var(--ufla-light-green); border-top: 5px solid var(--ufla-green); }
+.slides-page .sequence-flow > div:nth-child(2) { background: #edf4fb; border-top-color: var(--ufla-blue); }
+.slides-page .sequence-flow h3 { margin: 0 0 7px; }
+.slides-page .highlight { color: var(--ufla-green); font-weight: 800; }
+.slides-page
+.slides-page .references-slide a { color: var(--ufla-blue); }
+.slides-page .next-slide .next-label { color: var(--ufla-green); font-weight: 800; letter-spacing: .03em; }
+@media (max-width: 768px) {
+    .slides-page .reveal section { padding: 18px !important; }
+    .slides-page .two-column > div,
+    .slides-page .three-column > div { min-width: 100%; }
+    .slides-page .sequence-flow { grid-template-columns: 1fr; }
+    .slides-page table { font-size: clamp(.44em, 1.55vw, .68em); }
+    .slides-page th,
+    .slides-page td { padding: 5px; }
+    .slides-page .code-box { font-size: clamp(.46em, 1.5vw, .66em); }
+}
+
+
+/* ==========================================================
+   Template oficial das aulas — espelhado da Aula 02
+   ========================================================== */
+body.slides-page { width: 100%; height: 100%; overflow: hidden; background: #ffffff; }
+body.slides-page .reveal { width: 100% !important; height: 100% !important; }
+body.slides-page .reveal .slides { width: 100%; height: 100%; }
+body.slides-page .reveal section { width: 100%; height: 100%; padding: 40px !important; display: flex !important; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
+body.slides-page .reveal .slide-background { background-color: #ffffff; }
+body.slides-page .reveal h1,
+body.slides-page .reveal h2,
+body.slides-page .reveal h3,
+body.slides-page .reveal h4 { color: var(--ufla-blue); text-transform: none; font-weight: bold; width: 100%; }
+body.slides-page .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+body.slides-page .reveal h2 { font-size: clamp(1.2em, 4vw, 1.8em); border-bottom: 3px solid var(--ufla-green); padding-bottom: 10px; margin-bottom: 30px; }
+body.slides-page .reveal h3 { font-size: clamp(1em, 3vw, 1.4em); }
+body.slides-page .reveal p,
+body.slides-page .reveal li { color: #333333; font-size: clamp(0.7em, 2vw, 0.9em); line-height: 1.6; }
+body.slides-page .reveal ul,
+body.slides-page .reveal ol { width: 100%; text-align: left; display: inline-block; }
+body.slides-page .reveal li { text-align: left; margin: 8px 0; }
+body.slides-page .reveal .box,
+body.slides-page .reveal .warning-box,
+body.slides-page .reveal .success-box,
+body.slides-page .reveal .info-box { padding: 15px; margin: 20px auto; text-align: left; border-radius: 5px; max-width: 90%; width: 100%; }
+body.slides-page .reveal .box { background-color: #f5f5f5; border-left: 5px solid var(--ufla-green); }
+body.slides-page .reveal .warning-box { background-color: #fff3cd; border-left: 5px solid #ff9900; }
+body.slides-page .reveal .success-box { background-color: #d4edda; border-left: 5px solid var(--ufla-green); }
+body.slides-page .reveal .info-box { background-color: #e7f3ff; border-left: 5px solid var(--ufla-blue); }
+body.slides-page .reveal .code-box { background-color: #f0f0f0; border: 1px solid #ccc; padding: 15px; margin: 15px auto; text-align: left; border-radius: 5px; font-family: 'Courier New', monospace; font-size: clamp(0.6em, 1.8vw, 0.75em); max-width: 90%; width: 100%; white-space: pre-wrap; }
+body.slides-page .logo-container { position: absolute; top: 20px; right: 20px; z-index: 1000; }
+body.slides-page .logo-container img { height: clamp(40px, 10vw, 60px); width: auto; object-fit: contain; }
+body.slides-page .title-slide .subtitle { color: var(--ufla-green); font-size: clamp(0.9em, 3vw, 1.2em); margin-top: 20px; }
+body.slides-page .title-slide .author { margin-top: 50px; font-size: clamp(0.6em, 1.5vw, 0.8em); color: #666; }
+body.slides-page .three-column,
+body.slides-page .two-column { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; flex-wrap: wrap; width: 100%; max-width: 90%; margin-left: auto; margin-right: auto; }
+body.slides-page .three-column > div { flex: 1; min-width: 150px; background: #f0f8ff; padding: 12px; border-top: 4px solid var(--ufla-blue); border-radius: 5px; font-size: clamp(0.6em, 1.5vw, 0.7em); }
+body.slides-page .two-column > div { flex: 1; min-width: 200px; background: #f0f8ff; padding: 15px; border-top: 4px solid var(--ufla-blue); border-radius: 5px; font-size: clamp(0.65em, 1.8vw, 0.8em); }
+body.slides-page .step-list { text-align: left; margin: 20px auto; max-width: 90%; width: 100%; }
+body.slides-page .step-list li { margin: 10px 0; padding-left: 30px; position: relative; font-size: clamp(0.7em, 1.8vw, 0.8em); }
+body.slides-page .step-list li::before { content: '→'; position: absolute; left: 0; color: var(--ufla-green); font-weight: bold; }
+body.slides-page table { font-size: clamp(0.6em, 1.5vw, 0.75em); margin: 20px auto; max-width: 90%; width: 100%; border-collapse: collapse; }
+body.slides-page table th { background-color: var(--ufla-blue); color: white; padding: 8px; text-align: left; }
+body.slides-page table td { padding: 8px; border-bottom: 1px solid #ddd; text-align: left; }
+body.slides-page table tr:nth-child(even) { background-color: #f9f9f9; }
+/* Código extenso rola internamente e não reduz o canvas do slide. */
+body.slides-page .code-box { max-height: 56vh; overflow: auto; scrollbar-width: thin; white-space: pre; }
+body.slides-page .code-box::-webkit-scrollbar { width: 8px; height: 8px; }
+body.slides-page .code-box::-webkit-scrollbar-thumb { background: #9bb9a7; border-radius: 4px; }
+@media (max-width: 768px) {
+  body.slides-page .reveal section { padding: 20px !important; }
+  body.slides-page .three-column > div,
+  body.slides-page .two-column > div { min-width: 100%; }
+  body.slides-page .code-box { max-height: 54vh; }
+}
+/* Override final: mesmo aproveitamento visual da Aula 03 */
+body.slides-page .reveal section {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 40px !important;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+body.slides-page .reveal h1,
+body.slides-page .reveal h2,
+body.slides-page .reveal h3,
+body.slides-page .reveal h4 {
+    color: var(--ufla-blue);
+    text-transform: none;
+    font-weight: 800;
+    width: 100%;
+}
+body.slides-page .reveal h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+body.slides-page .reveal h2 {
+    font-size: clamp(1.18em, 4vw, 1.8em);
+    border-bottom: 3px solid var(--ufla-green);
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+}
+body.slides-page .reveal h3 { font-size: clamp(.9em, 3vw, 1.25em); }
+body.slides-page .reveal p,
+body.slides-page .reveal li {
+    color: #333333;
+    font-size: clamp(.65em, 1.9vw, .88em);
+    line-height: 1.45;
+}
+body.slides-page .reveal li { margin: 7px 0; }
+body.slides-page .logo-container { top: 18px; right: 22px; z-index: 10; }
+body.slides-page .logo-container img { height: clamp(35px, 8vw, 58px); width: auto; object-fit: contain; }
+body.slides-page .title-slide .subtitle { margin-top: 18px; font-size: clamp(.9em, 3vw, 1.2em); }
+body.slides-page .title-slide .author { margin-top: 48px; font-size: clamp(.62em, 1.8vw, .8em); color: #555; }
+body.slides-page .box,
+body.slides-page .info-box,
+body.slides-page .warning-box,
+body.slides-page .success-box {
+    width: 90%;
+    max-width: 950px;
+    margin: 14px auto;
+    padding: 14px 18px;
+    text-align: left;
+    border-radius: 4px;
+}
+body.slides-page .code-box {
+    width: 90%;
+    max-width: 950px;
+    background: #f1f2f1;
+    border-top: 5px solid var(--ufla-blue);
+    padding: 15px 20px;
+    margin: 14px auto;
+    text-align: left;
+    font-family: 'Courier New', monospace;
+    font-size: clamp(.57em, 1.75vw, .75em);
+    line-height: 1.4;
+    color: #172630;
+    white-space: pre-wrap;
+    max-height: 56vh;
+    overflow: auto;
+    scrollbar-width: thin;
+}
+body.slides-page .code-box::-webkit-scrollbar { width: 8px; height: 8px; }
+body.slides-page .code-box::-webkit-scrollbar-thumb { background: #9bb9a7; border-radius: 4px; }
+body.slides-page .three-column,
+body.slides-page .two-column { width: 90%; max-width: 950px; margin: 14px auto; gap: 14px; }
+body.slides-page .three-column > div { min-width: 180px; padding: 12px; }
+body.slides-page .two-column > div { min-width: 260px; padding: 14px; }
+body.slides-page .step-list { width: 90%; max-width: 940px; margin: 10px auto; }
+body.slides-page table { width: 90%; max-width: 1000px; margin: 10px auto; font-size: clamp(.58em, 1.55vw, .75em); }
+body.slides-page table th { padding: 8px; }
+body.slides-page table td { padding: 8px; }
+body.slides-page .sequence-flow { width: 90%; max-width: 950px; gap: 16px; margin: 16px auto; }
+body.slides-page .sequence-flow > div { padding: 14px; }
+@media (max-width: 768px) {
+    body.slides-page .reveal section { padding: 18px !important; }
+    body.slides-page .three-column > div,
+    body.slides-page .two-column > div { min-width: 100%; }
+    body.slides-page .sequence-flow { grid-template-columns: 1fr; }
+    body.slides-page table { font-size: clamp(.46em, 1.6vw, .68em); }
+    body.slides-page table th,
+    body.slides-page table td { padding: 5px; }
+    body.slides-page .code-box { font-size: clamp(.48em, 1.55vw, .68em); max-height: 54vh; }
+}
+
+/* Visualizações didáticas interativas IAlg */
+.ialg-visualizer { width:90%; margin:16px auto 0; padding:14px 18px 12px; background:#f7fbff; border:2px solid var(--ufla-blue); border-radius:12px; box-sizing:border-box; color:#123; font-size:.72em; }
+.ialg-anim-header { display:flex; justify-content:space-between; align-items:center; gap:12px; color:var(--ufla-blue); margin-bottom:10px; }
+.ialg-anim-counter { color:var(--ufla-green); font-size:.82em; white-space:nowrap; }
+.ialg-anim-main { display:flex; align-items:center; gap:18px; min-height:104px; }
+.ialg-anim-track { flex:1; display:grid; grid-template-columns:repeat(auto-fit,minmax(52px,1fr)); gap:8px; align-items:stretch; }
+.ialg-anim-cell { position:relative; min-height:58px; display:flex; flex-direction:column; justify-content:center; align-items:center; border:2px solid #b8cbe0; border-radius:8px; background:#fff; color:var(--ufla-blue); box-sizing:border-box; }
+.ialg-anim-cell strong { font-size:1.2em; }
+.ialg-anim-index { position:absolute; left:5px; top:3px; font-size:.68em; color:#5d6b7a; }
+.ialg-anim-cell.active { background:#fff2b8; border-color:#d99000; transform:translateY(-3px); }
+.ialg-anim-cell.sorted { background:#dff4e7; border-color:var(--ufla-green); }
+.ialg-anim-cell.checked { background:#e9eef4; color:#657386; }
+.ialg-anim-cell.discarded { opacity:.35; }
+.ialg-anim-cell.pivot { background:#e7ddff; border-color:#6b35a8; }
+.ialg-anim-cell.diagonal { background:#ccebd9; border-color:var(--ufla-green); }
+.ialg-anim-cell.empty { background:repeating-linear-gradient(135deg,#f7f9fb,#f7f9fb 6px,#e7edf3 6px,#e7edf3 12px); color:#8a98a6; }
+.ialg-anim-caption { min-height:1.4em; margin:10px 0 8px; text-align:center; color:#303c48; }
+.ialg-anim-controls { display:flex; flex-wrap:wrap; justify-content:center; gap:7px; }
+.ialg-anim-controls button { border:1px solid var(--ufla-blue); border-radius:6px; padding:5px 9px; background:#fff; color:var(--ufla-blue); cursor:pointer; font:inherit; }
+.ialg-anim-controls button:hover { background:#eaf3fb; }
+.ialg-anim-side { min-width:130px; }
+.ialg-stack { display:flex; flex-direction:column; gap:4px; }
+.ialg-stack-frame { padding:5px 8px; border-left:4px solid var(--ufla-green); background:#e8f5ed; color:var(--ufla-blue); text-align:center; }
+.ialg-visualizer a { color:var(--ufla-blue); }
+@media (max-width:768px) { .ialg-visualizer { width:96%; font-size:.68em; } .ialg-anim-main { flex-direction:column; } .ialg-anim-track { width:100%; } .ialg-anim-side { width:100%; min-width:0; } }
+
+.ialg-record-grid { width:90%; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:12px auto; }
+.ialg-record-card { background:#edf4fb; border-top:5px solid var(--ufla-blue); padding:12px; border-radius:8px; text-align:left; }
+.ialg-record-card:nth-child(2) { background:#e8f5ed; border-top-color:var(--ufla-green); }
+.ialg-record-card h4 { color:var(--ufla-blue); margin:0 0 6px; }
+.ialg-record-card p { margin:3px 0; font-size:.72em; }
+.ialg-reference-panel { width:90%; padding:12px 16px; background:#f7fbff; border-left:5px solid var(--ufla-green); text-align:left; }
+.ialg-reference-panel a { color:var(--ufla-blue); }
+@media (max-width:768px) { .ialg-record-grid { grid-template-columns:1fr; } }
+
+/* Override responsivo final: escala estável em telas wide e não wide */
+body.slides-page .reveal section { position: relative; box-sizing: border-box; overflow: hidden !important; }
+body.slides-page .reveal section.scrollable { overflow-y: auto !important; overflow-x: hidden !important; }
+body.slides-page .reveal h1 { font-size: 52px !important; line-height: 1.12 !important; }
+body.slides-page .reveal h2 { font-size: 34px !important; line-height: 1.16 !important; margin-bottom: 24px !important; }
+body.slides-page .reveal h3 { font-size: 25px !important; line-height: 1.2 !important; }
+body.slides-page .reveal h4 { font-size: 20px !important; line-height: 1.2 !important; }
+body.slides-page .reveal p,
+body.slides-page .reveal li { font-size: 20px !important; line-height: 1.42 !important; }
+body.slides-page .reveal li { margin: 6px 0 !important; }
+body.slides-page .reveal .code-box { font-size: 16px !important; line-height: 1.38 !important; max-height: 390px !important; overflow: auto !important; white-space: pre !important; }
+body.slides-page .reveal .box,
+body.slides-page .reveal .info-box,
+body.slides-page .reveal .warning-box,
+body.slides-page .reveal .success-box { font-size: 20px !important; line-height: 1.4 !important; }
+body.slides-page .logo-container img { height: 56px !important; width: auto !important; }
+body.slides-page .reveal section::after { content: 'Prof. Paulo Rettore'; position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); color: #666; font-family: 'Segoe UI', Arial, sans-serif; font-size: 13px; line-height: 1; font-weight: 400; pointer-events: none; z-index: 20; white-space: nowrap; }
+body.slides-page .ialg-visualizer { font-size: 16px !important; max-width: 920px !important; }
+body.slides-page .ialg-anim-cell strong { font-size: 19px !important; }
+@media (max-width: 768px) {
+  body.slides-page .reveal section { padding: 24px !important; }
+  body.slides-page .reveal h1 { font-size: 38px !important; }
+  body.slides-page .reveal h2 { font-size: 29px !important; }
+  body.slides-page .reveal h3 { font-size: 22px !important; }
+  body.slides-page .reveal h4 { font-size: 18px !important; }
+  body.slides-page .reveal p,
+  body.slides-page .reveal li,
+  body.slides-page .reveal .box,
+  body.slides-page .reveal .info-box,
+  body.slides-page .reveal .warning-box,
+  body.slides-page .reveal .success-box { font-size: 18px !important; }
+  body.slides-page .reveal .code-box { font-size: 14px !important; max-height: 340px !important; }
+  body.slides-page .reveal section::after { font-size: 11px; bottom: 7px; }
+}
+
+body.slides-page .reveal pre { max-height:390px !important; overflow:auto !important; white-space:pre !important; font-size:16px !important; line-height:1.38 !important; }
+@media (max-width:768px) { body.slides-page .reveal pre { max-height:340px !important; font-size:14px !important; } }
+
+/* Correção crítica: o Reveal.js posiciona cada seção sobre o mesmo canvas. */
+body.slides-page .reveal .slides > section,
+body.slides-page .reveal .slides > section.present,
+body.slides-page .reveal .slides > section.past,
+body.slides-page .reveal .slides > section.future { position:absolute !important; top:0 !important; left:0 !important; }
+</style></head><body class="slides-page"><div class="reveal"><div class="slides"><section class="title-slide"><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h1>🎓 Mentorias do Projeto Prático</h1><div class="rule"></div><div class="subtitle">Acompanhamento semanal do desenvolvimento em C++</div><div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>GAC124 — Introdução aos Algoritmos</p></div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>🧭 Como usar este guia</h2><div class="three-column"><div><h3>1. Antes da mentoria</h3><p>Compile o projeto, teste o que já existe e anote dúvidas concretas. Cada grupo deve trazer uma versão executável ou um avanço verificável.</p></div><div><h3>2. Durante a conversa</h3><p>Mostre o código, explique as decisões e converse sobre erros, alternativas e prioridades. A mentoria é um espaço de diálogo.</p></div><div><h3>3. Depois do encontro</h3><p>Registre o próximo incremento, divida tarefas e implemente o conceito da aula no contexto do próprio projeto.</p></div></div><div class="info-box"><strong>Regra de trabalho:</strong> conceitos anteriores podem ser reutilizados, combinados ou modificados quando isso melhorar a solução do grupo. Professores e alunos também podem usar o encontro para resolver dúvidas.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>🚀 Semana 5 — Começar com direção</h2><p class="meta">08/09 · Primeira mentoria do Projeto</p><div class="three-column"><div><h3>👥 Formar a equipe</h3><p>Organizem duplas ou trios, combinem canais de comunicação e definam como as tarefas serão compartilhadas.</p></div><div><h3>🎯 Definir tema e escopo</h3><p>Escolham um problema possível de resolver em C++ e escrevam o objetivo da primeira versão em uma frase.</p></div><div><h3>💬 Conversar e registrar</h3><p>Apresentem verbalmente a ideia, escutem as orientações e saiam com um próximo passo claro para cada integrante.</p></div></div><div class="warning-box"><strong>Presença:</strong> está condicionada à entrega, no Campus Virtual, das implementações realizadas em sala de aula. Consulte o ambiente para formato e prazo oficial.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>📝 Semana 5 — Primeiro incremento</h2><p class="meta">Transformar a ideia em um plano executável</p><div class="three-column"><div><h3>1. Problema em uma frase</h3><p>“Nosso programa ajudará <strong>quem</strong> a realizar <strong>qual tarefa</strong>?” Evitem objetivos amplos demais.</p></div><div><h3>2. Três ações iniciais</h3><p>Definam pelo menos três opções do menu, como cadastrar, listar e buscar. A primeira versão deve ser pequena e funcional.</p></div><div><h3>3. Divisão de responsabilidades</h3><p>Registrem quem ficará responsável por cada parte e combinem como o grupo revisará e integrará o trabalho.</p></div></div><div class="info-box"><strong>Saída da mentoria:</strong> uma descrição curta do problema, um esboço do menu e as tarefas iniciais registradas no Campus Virtual. Na próxima mentoria, essas ações serão transformadas em funções.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>🧩 Semana 6 — Modularizar para crescer</h2><p class="meta">15/09 · Mentoria do Projeto</p><div class="two-column"><div><h3>Por que dividir o programa?</h3><p>Uma <code>main()</code> muito grande é difícil de ler, testar e corrigir. Funções menores deixam cada responsabilidade mais clara.</p><ul><li>Facilitam a manutenção.</li><li>Permitem testar uma tarefa isoladamente.</li><li>Evita repetir o mesmo trecho de código.</li></ul></div><div><h3>Quais tarefas separar?</h3><p>Observe as ações do menu do grupo e transforme cada ação em uma possível função.</p><ul><li>Cadastrar e validar dados.</li><li>Listar ou buscar registros.</li><li>Salvar e ler arquivos.</li><li>Calcular, ordenar ou exibir relatórios.</li></ul></div></div><div class="info-box"><strong>Roteiro:</strong> no slide seguinte, veja como um menu pode chamar funções específicas. Adapte os nomes e parâmetros ao tema do próprio grupo.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>💻 Semana 6 — Modularização em C++</h2><p class="meta">Exemplo: dividir o menu em funções</p><p class="intro">Cada opção do menu pode chamar uma função específica do projeto.</p><pre class="code-box"><code>void mostrarMenu() { cout &lt;&lt; "1 - Cadastrar\n2 - Listar\n0 - Sair\n"; }
 void cadastrarProduto() { /* ler e validar */ }
 void listarProdutos() { /* percorrer e exibir */ }
 int main() {
@@ -43,17 +536,22 @@ int main() {
 }
 
 // pos = buscaBinaria(codigos, 0, quantidade - 1, codigo);
-</code></pre><div class="three-column"><div><strong>Caso-base</strong><br/>intervalo vazio retorna <code>-1</code>.</div><div><strong>Comparação</strong><br/>o meio pode ser a resposta.</div><div><strong>Recursão</strong><br/>continue apenas em uma metade.</div></div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>📦 Semana 11 — Entrega parcial</h2><p class="lead">A entrega parcial deve mostrar uma primeira versão que <strong>compile, execute e demonstre os conceitos já estudados</strong>.</p><div class="two-column"><div><h3>🖥️ Um programa que funciona</h3><p>O usuário deve conseguir abrir o sistema, escolher opções e perceber mensagens claras.</p><ul><li>Menu com pelo menos três opções.</li><li>Entrada pelo teclado.</li><li>Condicionais e repetições.</li><li>Fluxos principais testados.</li></ul></div><div><h3>🧩 Código que evolui</h3><p>O programa já deve mostrar a organização que será ampliada nas próximas mentorias.</p><ul><li>Funções além da <code>main()</code>.</li><li>Vetor ou vetor de registros.</li><li><code>getline()</code> em campos textuais.</li><li>Arquivos CSV, busca e memória.</li></ul></div></div><div class="info-box"><strong>Próximo passo:</strong> use o slide seguinte como checklist. O Campus Virtual é a referência oficial para prazo, formato e detalhes da submissão.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>✅ Semana 11 — Revisar antes de enviar</h2><p class="meta">Checklist da entrega parcial no Campus Virtual</p><div class="two-column"><div><h3>🖥️ Operações e estrutura</h3><ul><li>Menu com, no mínimo, <strong>3 opções</strong>.</li><li>Leitura pelo teclado e mensagens claras.</li><li>Pelo menos <strong>2 funções</strong> além da <code>main()</code>.</li><li>Condicionais e estruturas de repetição.</li><li>Vetor ou vetor de registros para armazenar dados.</li><li><code>getline()</code> nos campos com espaços.</li></ul></div><div><h3>📁 Arquivos, busca e integridade</h3><ul><li>Leitura e escrita em arquivo texto no formato CSV.</li><li>Busca binária recursiva em vetor ordenado.</li><li>Noções de alocação dinâmica.</li><li>Compilação e execução sem erros.</li><li>Teste dos fluxos principais e de entradas inválidas.</li><li>Arquivos do grupo conferidos antes do envio.</li></ul></div></div><div class="info-box"><strong>Conferência final:</strong> execute o sistema do início ao fim e consulte o Campus Virtual para prazo, formato do ZIP e demais orientações oficiais.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>📈 Semana 12 — Redimensionar dados</h2><p class="meta">03/11 · Mentoria do Projeto</p><div class="two-column"><div><h3>📊 Quando o vetor ficou pequeno?</h3><p>A capacidade é o número de posições reservadas. A quantidade é o número de registros usados.</p><ol><li>Compare quantidade e capacidade.</li><li>Se estiver cheio, reserve espaço novo.</li><li>Escolha uma capacidade maior, como o dobro.</li></ol></div><div><h3>🔁 Preserve os dados</h3><p>Redimensionar não é apagar o conteúdo. É criar espaço maior e transferir os registros.</p><ol><li>Crie um vetor maior.</li><li>Copie os registros válidos.</li><li>Libere o vetor antigo.</li><li>Atualize ponteiro e capacidade.</li></ol></div></div><div class="info-box"><strong>Aplicação:</strong> use registros para representar entidades do tema, como produtos, alunos, livros ou tarefas. O slide seguinte mostra a função de crescimento.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>📈 Semana 12 — Redimensionar sem perder dados</h2><p class="meta">Exemplo: crescer um vetor dinâmico de registros</p><p class="intro">A função é chamada quando <code>quantidade == capacidade</code>. O vetor maior preserva os registros válidos.</p><pre class="code-box"><code>struct Item { int codigo; string nome; };
+</code></pre><div class="three-column"><div><strong>Caso-base</strong><br/>intervalo vazio retorna <code>-1</code>.</div><div><strong>Comparação</strong><br/>o meio pode ser a resposta.</div><div><strong>Recursão</strong><br/>continue apenas em uma metade.</div></div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>📦 Semana 11 — Entrega parcial</h2><p class="lead">A entrega parcial deve mostrar uma primeira versão que <strong>compile, execute e demonstre os conceitos já estudados</strong>.</p><div class="two-column"><div><h3>🖥️ Um programa que funciona</h3><p>O usuário deve conseguir abrir o sistema, escolher opções e perceber mensagens claras.</p><ul><li>Menu com pelo menos três opções.</li><li>Entrada pelo teclado.</li><li>Condicionais e repetições.</li><li>Fluxos principais testados.</li></ul></div><div><h3>🧩 Código que evolui</h3><p>O programa já deve mostrar a organização que será ampliada nas próximas mentorias.</p><ul><li>Funções além da <code>main()</code>.</li><li>Vetor ou vetor de registros.</li><li><code>getline()</code> em campos textuais.</li><li>Arquivos CSV, busca e memória.</li></ul></div></div><div class="info-box"><strong>Próximo passo:</strong> use o slide seguinte como checklist. O Campus Virtual é a referência oficial para prazo, formato e detalhes da submissão.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>✅ Semana 11 — Revisar antes de enviar</h2><p class="meta">Checklist da entrega parcial no Campus Virtual</p><div class="two-column"><div><h3>🖥️ Operações e estrutura</h3><ul><li>Menu com, no mínimo, <strong>3 opções</strong>.</li><li>Leitura pelo teclado e mensagens claras.</li><li>Pelo menos <strong>2 funções</strong> além da <code>main()</code>.</li><li>Condicionais e estruturas de repetição.</li><li>Vetor ou vetor de registros para armazenar dados.</li><li><code>getline()</code> nos campos com espaços.</li></ul></div><div><h3>📁 Arquivos, busca e integridade</h3><ul><li>Leitura e escrita em arquivo texto no formato CSV.</li><li>Busca binária recursiva em vetor ordenado.</li><li>Noções de alocação dinâmica.</li><li>Compilação e execução sem erros.</li><li>Teste dos fluxos principais e de entradas inválidas.</li><li>Arquivos do grupo conferidos antes do envio.</li></ul></div></div><div class="info-box"><strong>Conferência final:</strong> execute o sistema do início ao fim e consulte o Campus Virtual para prazo, formato do ZIP e demais orientações oficiais.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>📈 Semana 12 — Redimensionar dados</h2><p class="meta">03/11 · Mentoria do Projeto</p><div class="two-column"><div><h3>📊 Quando o vetor ficou pequeno?</h3><p>A capacidade é o número de posições reservadas. A quantidade é o número de registros usados.</p><ol><li>Compare quantidade e capacidade.</li><li>Se estiver cheio, reserve espaço novo.</li><li>Escolha uma capacidade maior, como o dobro.</li></ol></div><div><h3>🔁 Preserve os dados</h3><p>Redimensionar não é apagar o conteúdo. É criar espaço maior e transferir os registros.</p><ol><li>Crie um vetor maior.</li><li>Copie os registros válidos.</li><li>Libere o vetor antigo.</li><li>Atualize ponteiro e capacidade.</li></ol></div></div><div class="info-box"><strong>Aplicação:</strong> use registros para representar entidades do tema, como produtos, alunos, livros ou tarefas. O slide seguinte mostra a função de crescimento.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>📈 Semana 12 — Redimensionar sem perder dados</h2><p class="meta">Exemplo: crescer um vetor dinâmico de registros</p><p class="intro">A função é chamada quando <code>quantidade == capacidade</code>. <code>capacidade</code> é atualizada por referência; o novo ponteiro é retornado e atribuído a <code>itens</code>.</p><pre class="code-box"><code>struct Item { int codigo; string nome; };
 
-void redimensionar(Item*&amp; itens, int quantidade, int&amp; capacidade) {
+Item* redimensionar(Item* itens, int quantidade, int&amp; capacidade) {
     int novaCapacidade = capacidade * 2;
     Item* maior = new Item[novaCapacidade];
-    for (int i = 0; i &lt; quantidade; i++) maior[i] = itens[i];
-    delete[] itens; itens = maior; capacidade = novaCapacidade;
+    for (int i = 0; i &lt; quantidade; i++)
+        maior[i] = itens[i];
+
+    delete[] itens;
+    capacidade = novaCapacidade;
+    return maior;
 }
 
 // Antes de inserir:
-if (quantidade == capacidade) redimensionar(itens, quantidade, capacidade);
+if (quantidade == capacidade)
+    itens = redimensionar(itens, quantidade, capacidade);
 </code></pre><div class="three-column"><div><strong>Preserve:</strong><br/>copie somente os registros válidos.</div><div><strong>Libere:</strong><br/>use <code>delete[]</code> no vetor antigo.</div><div><strong>Teste:</strong><br/>comece com capacidade pequena.</div></div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>↕️ Semana 14 — Ordenar com métodos básicos</h2><p class="meta">17/11 · Mentoria do Projeto</p><div class="two-column"><div><h3>Insertion sort</h3><p>Insere cada elemento na posição correta da parte que já está ordenada.</p><ul><li>Fácil de acompanhar passo a passo.</li><li>Funciona bem com poucos dados.</li><li>É interessante quando o vetor já está quase ordenado.</li></ul></div><div><h3>Selection sort</h3><p>Procura o menor elemento da parte restante e o coloca na próxima posição.</p><ul><li>Ajuda a visualizar comparações e trocas.</li><li>Usa um critério claro de seleção.</li><li>Pode ordenar registros pelo campo escolhido.</li></ul></div></div><div class="info-box"><strong>No projeto:</strong> definam se a ordenação será por código, nome, data, preço ou prioridade. O slide seguinte mostra uma função que pode ser adaptada aos registros do grupo.</div></div></section><section><div class="slide-container"><div class="logo-container"><img alt="UFLA" src="assets/ufla-logo.webp"/></div><h2>↕️ Semana 14 — Ordenação básica em função</h2><p class="meta">Exemplo: insertion sort por código</p><p class="intro">A função organiza o vetor e pode ser adaptada para comparar <code>nome</code>, <code>data</code>, <code>preco</code> ou outro campo do projeto.</p><pre class="code-box"><code>void insertionSort(int codigos[], int total) {
     for (int i = 1; i &lt; total; i++) {
         int atual = codigos[i];
