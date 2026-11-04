@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revisão do Bloco 2 — GAC124 Introdução aos Algoritmos</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-zoom-controls { position: fixed; left: 18px; bottom: 14px; z-index: 1000; display: flex; gap: 7px; align-items: center; }
+    .code-zoom-controls button { min-width: 48px; min-height: 42px; border: 2px solid #003366; border-radius: 6px; background: #fff; color: #003366; font: 700 21px/1 'Segoe UI', Arial, sans-serif; cursor: pointer; }
+    .code-zoom-controls button:hover, .code-zoom-controls button:focus-visible { background: #e7f3ff; outline: 3px solid #008B45; outline-offset: 2px; }
+    @media (max-width: 768px) { .code-zoom-controls { left: 10px; bottom: 10px; } .code-zoom-controls button { min-width: 42px; min-height: 38px; font-size: 18px; } }
+  </style>
+</head>
+<body class="slides-page">
+<div class="code-zoom-controls" role="group" aria-label="Ajustar tamanho dos códigos">
+  <button type="button" aria-label="Diminuir tamanho do código" title="Diminuir tamanho do código" onclick="adjustCodeZoom(-2)">A−</button>
+  <button type="button" aria-label="Aumentar tamanho do código" title="Aumentar tamanho do código" onclick="adjustCodeZoom(2)">A+</button>
+</div>
+<div class="reveal">
+<div class="slides">
+
+<section class="title-slide">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h1>🎓 Revisão do Bloco 2</h1>
+  <div class="subtitle">Estruturas de dados, memória e busca</div>
+  <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>GAC124 — Introdução aos Algoritmos</p></div>
+</section>
+
+<section>
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🧭 O caminho da revisão</h2>
+  <div class="three-column">
+    <div><h3>Aula 07</h3><p>Matrizes: dados organizados em linhas e colunas.</p></div>
+    <div><h3>Aula 08</h3><p><code>string</code>, leitura de linhas completas e <code>getline()</code>.</p></div>
+    <div><h3>Aula 09</h3><p>Ponteiros, alocação dinâmica, busca binária e recursão.</p></div>
+  </div>
+  <div class="two-column">
+    <div><h3>Aula 10</h3><p>Registros com <code>struct</code> e vetores de registros.</p></div>
+    <div><h3>Aula 11</h3><p>Redimensionamento: reservar, copiar e atualizar.</p></div>
+  </div>
+  <div class="info-box"><p>Ao final, vamos construir um catálogo pequeno que reúne esses conceitos em um único programa.</p></div>
+</section>
+
+<section>
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🧮 Aula 07 — Matrizes</h2>
+  <p>Uma matriz organiza valores do mesmo tipo em <strong>linhas e colunas</strong>. Pense em uma tabela de notas ou assentos.</p>
+  <pre class="code-box"><code>int notas[2][3] = {
+    {8, 7, 9},
+    {6, 10, 8}
+};
+
+for (int linha = 0; linha &lt; 2; linha++) {
+    for (int coluna = 0; coluna &lt; 3; coluna++)
+        cout &lt;&lt; notas[linha][coluna] &lt;&lt; ' ';
+    cout &lt;&lt; '\n';
+}</code></pre>
+  <div class="success-box"><p>O primeiro índice escolhe a linha; o segundo, a coluna. Os índices começam em zero.</p></div>
+</section>
+
+<section>
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🔤 Aula 08 — Strings guardam texto</h2>
+  <div class="two-column">
+    <div><h3><code>string</code></h3><p>Representa uma sequência de caracteres e pode guardar nomes, títulos e descrições.</p><pre class="code-box"><code>string titulo = "Algoritmos";
+cout &lt;&lt; titulo.length();</code></pre></div>
+    <div><h3>Texto completo</h3><p><code>cin &gt;&gt;</code> para no espaço; <code>getline()</code> lê a linha inteira, incluindo espaços.</p><pre class="code-box"><code>string nome;
+getline(cin, nome);</code></pre></div>
+  </div>
+  <div class="info-box"><p>Ao ler um número com <code>cin</code> antes de chamar <code>getline()</code>, descarte o <code>\n</code> pendente com <code>cin.ignore()</code>.</p></div>
+</section>
+
+<section>
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+ <h2>⌨️ Exemplo: número e linha completa</h2>
+ <pre class="code-box"><code>int codigo;
+string titulo;
+
+cin &gt;&gt; codigo;
+cin.ignore();
+getline(cin, titulo);
+
+cout &lt;&lt; codigo &lt;&lt; " — " &lt;&lt; titulo &lt;&lt; '\n';</code></pre>
+ <div class="step-list"><ul><li><code>cin</code> lê o campo numérico.</li><li><code>ignore()</code> consome o fim da linha anterior.</li><li><code>getline()</code> captura o texto com espaços.</li></ul></div>
+ <p>Neste exemplo, <code>cin.ignore()</code> descarta o <code>\n</code> deixado por <code>cin</code> antes de <code>getline()</code>.</p>
+</section>
+
+<section>
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>📍 Aula 09 — Ponteiro: endereço e acesso</h2>
+  <p>Um ponteiro guarda o endereço de outra variável. O operador <code>*</code> acessa o valor guardado naquele endereço.</p>
+  <div class="sequence-flow">
+    <div><h3>Variável</h3><p><code>int quantidade = 3;</code></p></div>
+    <div><h3>Endereço</h3><p><code>int* p = &amp;quantidade;</code></p></div>
+    <div><h3>Indireção</h3><p><code>*p = 4;</code> altera <code>quantidade</code>.</p></div>
+  </div>
+  <div class="warning-box"><p>Use um ponteiro somente quando ele aponta para uma região válida. Depois de liberar a memória, não use o endereço antigo.</p></div>
+</section>
+
+<section>
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🧱 Alocação dinâmica</h2>
+  <p>Com <code>new[]</code>, o programa solicita espaço durante a execução. A capacidade pode ser decidida enquanto o programa roda.</p>
+  <pre class="code-box"><code>int capacidade = 2;
+int quantidade = 0;
+Livro* livros = new Livro[capacidade];
+
+// ... usar livros[0] e livros[1]
+
+delete[] livros;</code></pre>
+  <div class="info-box"><p><strong>Quantidade</strong> = posições preenchidas. <strong>Capacidade</strong> = posições reservadas. Um vetor criado com <code>new[]</code> deve ser liberado com <code>delete[]</code>.</p></div>
+</section>
+
+<section>
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🔎 Busca binária: metade por vez</h2>
+  <p>Ela exige que os dados estejam <strong>ordenados pela chave pesquisada</strong>. Cada comparação descarta metade do intervalo.</p>
+  <div class="sequence-flow">
+    <div><h3>1. Meio</h3><p><code>[10, 20, 30, 40, 50, 60]</code><br>meio = 30</p></div>
+    <div><h3>2. Direita</h3><p>Procuramos 50.<br>30 &lt; 50 → descarta a esquerda.</p></div>
+    <div><h3>3. Encontrou</h3><p>Novo meio = 50.<br>Chave localizada.</p></div>
+  </div>
+  <div class="warning-box"><p>Se o vetor estiver fora de ordem, a decisão de descartar metade pode eliminar a resposta correta.</p></div>
+</section>
+
+<section>
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🔁 Recursão: resolver uma parte menor</h2>
+  <div class="two-column">
+    <div><h3>Caso-base</h3><p>Uma condição que encerra as chamadas. No fatorial, <code>fatorial(1)</code> vale 1.</p></div>
+    <div><h3>Passo recursivo</h3><p>A função chama a si mesma com um problema menor: <code>n - 1</code>.</p></div>
+  </div>
+  <pre class="code-box"><code>int fatorial(int n) {
+    if (n &lt;= 1) return 1;       // caso-base
+    return n * fatorial(n - 1);  // passo recursivo
+}</code></pre>
+  <div class="success-box"><p>A busca binária do exercício será iterativa, sem chamadas recursivas.</p></div>
+</section>
+
+<section>
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🧾 Aula 10 — Registros</h2>
+  <p>Um registro agrupa campos relacionados, mesmo quando os campos têm tipos diferentes.</p>
+  <pre class="code-box"><code>struct Livro {
+    int codigo;
+    string titulo;
+};
+
+Livro livro;
+livro.codigo = 42;
+livro.titulo = "A vida de Ada Lovelace";</code></pre>
+  <div class="info-box"><p>Um vetor de registros guarda muitos itens com o mesmo formato: <code>Livro livros[capacidade]</code>. A posição escolhe um livro; o campo escolhe uma informação.</p></div>
+</section>
+
+<section>
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>📈 Aula 11 — Redimensionar sem perder dados</h2>
+  <div class="sequence-flow">
+    <div><h3>1. Reservar</h3><p>Alocar um vetor maior.</p></div>
+    <div><h3>2. Copiar</h3><p>Transferir somente os registros válidos.</p></div>
+    <div><h3>3. Atualizar</h3><p>Liberar o antigo e apontar para o novo.</p></div>
+  </div>
+  <pre class="code-box"><code>if (quantidade == capacidade) {
+    // criar maior, copiar, liberar e atualizar
+}</code></pre>
+  <p>O exercício começa com capacidade 2 e dobra o espaço quando todos os lugares estiverem ocupados.</p>
+</section>
+
+<section class="scrollable">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🧩 Desafio: um catálogo de livros</h2>
+  <div class="info-box"><p>Faça um programa de console que cadastra, lista e procura livros pelo código.</p></div>
+  <ul class="step-list">
+    <li>Cada livro tem código e título; o título pode conter espaços.</li>
+    <li>Armazene os registros em um vetor alocado dinamicamente.</li>
+    <li>Comece com capacidade 2 e dobre-a quando o vetor encher.</li>
+    <li>Para este exercício, cadastre os códigos em ordem crescente, por exemplo: 10, 20, 30.</li>
+    <li>Use busca binária iterativa para procurar um código.</li>
+  </ul>
+  <div class="success-box"><p>Vamos montar o programa em pequenos trechos. Copie cada bloco no local indicado; compile e teste ao terminar a sequência.</p></div>
+</section>
+
+<section>
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🧩 Código — Passo 1A: estrutura e menu</h2>
+  <p>Comece o programa com as bibliotecas, o registro <code>Livro</code> e a função do menu.</p>
+  <pre class="code-box"><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+struct Livro {
+    int codigo;
+    string titulo;
+};
+
+void mostrarMenu() {
+    cout &lt;&lt; "1-Cadastrar  2-Listar  3-Buscar  0-Sair\n";
+}</code></pre>
+  <div class="info-box"><p>Essas definições ficam antes de <code>main()</code>. No próximo slide, vamos acrescentar os procedimentos.</p></div>
+</section>
+
+<section>
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🧩 Código — Passo 1B: leitura e listagem</h2>
+  <p>Continue o arquivo, logo depois da função <code>mostrarMenu()</code>.</p>
+  <pre class="code-box"><code>void lerLivro(Livro&amp; livro) {
+    cout &lt;&lt; "Codigo: ";
+    cin &gt;&gt; livro.codigo;
+    cin.ignore();
+    cout &lt;&lt; "Titulo: ";
+    getline(cin, livro.titulo);
+}
+
+void listarLivros(const Livro livros[], int quantidade) {
+    for (int i = 0; i &lt; quantidade; i++)
+        cout &lt;&lt; livros[i].codigo &lt;&lt; " - "
+             &lt;&lt; livros[i].titulo &lt;&lt; '\n';
+}</code></pre>
+  <div class="info-box"><p><code>lerLivro</code> preenche um registro e <code>getline()</code> guarda o título completo. Use os botões <strong>A−</strong> e <strong>A+</strong> no canto inferior esquerdo para ajustar o tamanho do código.</p></div>
+</section>
+
+<section class="scrollable">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>📦 Código — Passo 2: função de redimensionamento</h2>
+  <p>Adicione a função abaixo antes de <code>main()</code>.</p>
+  <pre class="code-box"><code>Livro* redimensionar(Livro* livros, int quantidade,
+                     int&amp; capacidade) {
+    int novaCapacidade = capacidade * 2;
+    Livro* maior = new Livro[novaCapacidade];
+
+    for (int i = 0; i &lt; quantidade; i++)
+        maior[i] = livros[i];
+
+    delete[] livros;
+    capacidade = novaCapacidade;
+    return maior;
+}</code></pre>
+  <div class="three-column"><div><h3>Recebe</h3><p>Vetor atual e quantidade usada.</p></div><div><h3>Atualiza</h3><p><code>capacidade</code> por referência.</p></div><div><h3>Devolve</h3><p>O novo endereço do vetor.</p></div></div>
+</section>
+
+<section class="scrollable">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🔍 Código — Passo 3: busca binária iterativa</h2>
+  <p>Adicione antes de <code>main()</code>. As variáveis <code>inicio</code> e <code>fim</code> delimitam a parte ainda examinada.</p>
+  <pre class="code-box"><code>int buscaBinaria(const Livro livros[], int quantidade,
+                 int codigo) {
+    int inicio = 0;
+    int fim = quantidade - 1;
+
+    while (inicio &lt;= fim) {
+        int meio = inicio + (fim - inicio) / 2;
+        if (livros[meio].codigo == codigo) return meio;
+
+        if (codigo &lt; livros[meio].codigo)
+            fim = meio - 1;
+        else
+            inicio = meio + 1;
+    }
+    return -1;
+}</code></pre>
+  <div class="info-box"><p>A cada repetição, o intervalo fica menor. Para funcionar, os códigos precisam estar em ordem crescente.</p></div>
+</section>
+
+<section class="scrollable">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🧱 Código — Passo 4: iniciar o programa</h2>
+  <p>Agora escreva <code>main()</code>. No próximo passo, preencheremos o ponto indicado com as opções.</p>
+  <pre class="code-box"><code>int main() {
+    int capacidade = 2;
+    int quantidade = 0;
+    Livro* livros = new Livro[capacidade];
+    int opcao;
+
+    do {
+        mostrarMenu();
+        cin &gt;&gt; opcao;
+
+        // Os blocos dos passos 5 e 6 entram aqui.
+
+    } while (opcao != 0);
+
+    delete[] livros;
+    return 0;
+}</code></pre>
+  <div class="success-box"><p>O vetor nasce com duas posições. A memória será liberada ao encerrar.</p></div>
+</section>
+
+<section class="scrollable">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>➕ Código — Passo 5: cadastrar e crescer</h2>
+  <p>Dentro do <code>do</code> de <code>main()</code>, logo após <code>cin &gt;&gt; opcao;</code>, substitua o comentário por este bloco.</p>
+  <pre class="code-box"><code>if (opcao == 1) {
+    if (quantidade == capacidade)
+        livros = redimensionar(livros, quantidade,
+                               capacidade);
+
+    Livro novo;
+    lerLivro(novo);
+    livros[quantidade] = novo;
+    quantidade++;
+}</code></pre>
+  <div class="info-box"><p>Digite os códigos em ordem crescente para manter o vetor pronto para a busca binária. Quando o vetor enche, ele é ampliado antes do novo cadastro.</p></div>
+</section>
+
+<section class="scrollable">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🔎 Código — Passo 6: listar e buscar</h2>
+  <p>Logo depois do <code>}</code> do cadastro, ainda dentro do <code>do</code>, acrescente os casos seguintes.</p>
+  <pre class="code-box"><code>else if (opcao == 2) {
+    listarLivros(livros, quantidade);
+} else if (opcao == 3) {
+    int codigo;
+    cout &lt;&lt; "Codigo procurado: ";
+    cin &gt;&gt; codigo;
+    int pos = buscaBinaria(livros, quantidade, codigo);
+    if (pos == -1) cout &lt;&lt; "Nao encontrado\n";
+    else cout &lt;&lt; livros[pos].titulo &lt;&lt; '\n';
+} else if (opcao != 0) {
+    cout &lt;&lt; "Opcao invalida\n";
+}</code></pre>
+  <div class="success-box"><p>A busca retorna o índice encontrado ou <code>-1</code> quando o código não aparece.</p></div>
+</section>
+
+<section>
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>🧪 Teste de mesa: o que deve acontecer?</h2>
+  <div class="two-column">
+    <div><h3>Cadastros</h3><p>Comece com capacidade 2. Digite os códigos <code>10</code> e <code>20</code>; ao cadastrar <code>30</code>, o vetor cresce para capacidade 4.</p><p>Os dados ficam <code>[10, 20, 30]</code>, na ordem digitada.</p></div>
+    <div><h3>Busca</h3><p>Procure <code>20</code>. O meio é a posição 1 e a chave é encontrada.</p><p>Procure <code>99</code>. O intervalo diminui até ficar vazio; a função retorna <code>-1</code>.</p></div>
+  </div>
+  <div class="info-box"><p>Teste também títulos com espaços, por exemplo: <em>Estruturas de Dados</em>.</p></div>
+</section>
+
+<section class="scrollable">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>✅ Checklist para revisar</h2>
+  <ul class="step-list">
+    <li><code>getline()</code> lê o título inteiro; <code>ignore()</code> remove a quebra pendente.</li>
+    <li><code>new[]</code> aloca o vetor; <code>delete[]</code> libera a mesma alocação.</li>
+    <li>Digite os códigos em ordem crescente para que a busca binária funcione.</li>
+    <li>A busca binária iterativa atualiza <code>inicio</code> ou <code>fim</code> a cada repetição.</li>
+    <li>Na recursão, o caso-base encerra as chamadas e cada passo reduz o problema.</li>
+    <li>Ao redimensionar, copie apenas <code>quantidade</code> registros e guarde o novo ponteiro.</li>
+  </ul>
+  <div class="warning-box"><p>Erros frequentes: buscar em dados fora de ordem, esquecer a capacidade, usar o ponteiro antigo depois de <code>delete[]</code> ou liberar com <code>delete</code> em vez de <code>delete[]</code>.</p></div>
+</section>
+
+<section class="references-slide">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <h2>📚 Referências e materiais</h2>
+  <ul class="step-list">
+    <li><a href="aula07.html" target="_blank" rel="noopener">Aula 07 — Matrizes</a></li>
+    <li><a href="aula08.html" target="_blank" rel="noopener">Aula 08 — Strings e <code>getline()</code></a></li>
+    <li><a href="aula09.html" target="_blank" rel="noopener">Aula 09 — Ponteiros, busca e recursão</a></li>
+    <li><a href="aula10.html" target="_blank" rel="noopener">Aula 10 — Registros</a></li>
+    <li><a href="aula11.html" target="_blank" rel="noopener">Aula 11 — Redimensionamento</a></li>
+  </ul>
+  <div class="info-box"><p>As aulas completas, o Campus Virtual e as orientações do DREDD continuam sendo as referências da disciplina.</p></div>
+</section>
+
+<section class="next-slide">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
+  <p class="next-label">REVISÃO CONCLUÍDA</p>
+  <h1>🎯 Agora é praticar!</h1>
+  <div class="subtitle">Acrescente uma opção para remover um livro pelo código.</div>
+  <div class="author"><p>Prof. Paulo Rettore</p><p>GAC124 — Introdução aos Algoritmos</p></div>
+</section>
+
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: true,
+  transition: 'slide',
+  controls: true,
+  progress: true,
+  width: 1024,
+  height: 768,
+  margin: 0.1,
+  minScale: 0.2,
+  maxScale: 1.0,
+  center: false
+});
+let codeZoom = 16;
+function adjustCodeZoom(delta) {
+  codeZoom = Math.max(12, Math.min(30, codeZoom + delta));
+  document.querySelectorAll('.reveal pre.code-box').forEach(function (block) {
+    block.style.setProperty('font-size', codeZoom + 'px', 'important');
+  });
+  Reveal.layout();
+}
+</script>
+</body>
+</html>
