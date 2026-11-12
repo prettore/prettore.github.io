@@ -257,7 +257,14 @@ pre.code-box { white-space: pre; }
 @media (max-width: 768px) {
     .code-box { max-height: 54vh; }
 }
-</style></head><body class="slides-page"><div class="logo-container"><img alt="UFLA" src="../assets/ufla-logo.webp"/></div><div class="reveal"><div class="slides">
+</style>
+<style id="ialg-code-zoom-style">
+.code-zoom-controls { position: fixed; left: 18px; bottom: 14px; z-index: 1000; display: flex; gap: 7px; align-items: center; }
+.code-zoom-controls button { min-width: 48px; min-height: 42px; border: 2px solid #003366; border-radius: 6px; background: #fff; color: #003366; font: 700 21px/1 'Segoe UI', Arial, sans-serif; cursor: pointer; }
+.code-zoom-controls button:hover, .code-zoom-controls button:focus-visible { background: #e7f3ff; outline: 3px solid #008B45; outline-offset: 2px; }
+@media (max-width: 768px) { .code-zoom-controls { left: 10px; bottom: 10px; } .code-zoom-controls button { min-width: 42px; min-height: 38px; font-size: 18px; } }
+</style>
+</head><body class="slides-page"><div class="logo-container"><img alt="UFLA" src="../assets/ufla-logo.webp"/></div><div class="reveal"><div class="slides">
 <section class="title-slide">
 <h1>🎓 Aula 10</h1>
 <div class="subtitle">Registros e Vetores de Registros</div>
@@ -334,4 +341,32 @@ cin.ignore();</code></pre><div class="info-box"><p>Use uma função como <code>l
 <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
 
 </section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:1.0});</script><script src="../assets/ialg-visualizer.js"></script>
+
+<script id="ialg-code-zoom-script">
+(() => {
+  'use strict';
+  let codeZoom = 16;
+  const changeZoom = (delta) => {
+    codeZoom = Math.max(12, Math.min(30, codeZoom + delta));
+    document.querySelectorAll('.reveal pre, .reveal .code-box').forEach((block) => {
+      block.style.setProperty('font-size', codeZoom + 'px', 'important');
+    });
+    if (window.Reveal && typeof window.Reveal.layout === 'function') window.Reveal.layout();
+  };
+  const controls = document.createElement('div');
+  controls.className = 'code-zoom-controls';
+  controls.setAttribute('role', 'group');
+  controls.setAttribute('aria-label', 'Ajustar tamanho dos códigos');
+  [['A−', -2, 'Diminuir tamanho do código'], ['A+', 2, 'Aumentar tamanho do código']].forEach(([text, delta, label]) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = text;
+    button.title = label;
+    button.setAttribute('aria-label', label);
+    button.addEventListener('click', () => changeZoom(delta));
+    controls.appendChild(button);
+  });
+  document.body.appendChild(controls);
+})();
+</script>
 </body></html>

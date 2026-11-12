@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 
-<!DOCTYPE html>
 
-<!DOCTYPE html>
 
-<!DOCTYPE html>
+
+
+
+
 
 <html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" rel="stylesheet"/><title>Aula 14 — Ordenação: Métodos Avançados</title><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css" rel="stylesheet"/><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css" rel="stylesheet"/><link href="../css/style.css" rel="stylesheet"/><style id="aula03-template">
         :root {
@@ -257,6 +257,15 @@ pre.code-box { white-space: pre; }
 @media (max-width: 768px) {
     .code-box { max-height: 54vh; }
 }
+.ialg-algo-vars { display:grid; grid-template-columns:repeat(2,minmax(105px,1fr)); gap:5px; min-width:245px; }
+.ialg-algo-vars .ialg-stack-frame { padding:5px 7px; text-align:left; font-size:.82em; overflow-wrap:anywhere; }
+.ialg-visualizer[data-algo="merge-sort"] .ialg-anim-side { min-width:260px; max-width:300px; }
+.ialg-merge-groups { display:grid; gap:4px; margin-top:6px; }
+.ialg-merge-groups .ialg-stack-frame { padding:5px 7px; text-align:left; font-size:.8em; overflow-wrap:anywhere; }
+.code-zoom-controls { position:fixed; left:18px; bottom:14px; z-index:1000; display:flex; gap:7px; align-items:center; }
+.code-zoom-controls button { min-width:48px; min-height:42px; border:2px solid #003366; border-radius:6px; background:#fff; color:#003366; font:700 21px/1 'Segoe UI',Arial,sans-serif; cursor:pointer; }
+.code-zoom-controls button:hover, .code-zoom-controls button:focus-visible { background:#e7f3ff; outline:3px solid #008B45; outline-offset:2px; }
+@media (max-width:768px) { .code-zoom-controls { left:10px; bottom:10px; } .code-zoom-controls button { min-width:42px; min-height:38px; font-size:18px; } }
 </style></head><body class="slides-page"><div class="logo-container"><img alt="UFLA" src="../assets/ufla-logo.webp"/></div><div class="reveal"><div class="slides">
 <section class="title-slide">
 <h1>🎓 Aula 14</h1>
@@ -289,10 +298,19 @@ maiores: {7, 9}</code></pre><div class="info-box"><p>Depois do particionamento, 
     swap(v[i], v[fim]);
     return i;
 }</code></pre><div class="warning-box"><p>A escolha do pivô influencia o desempenho. Vetores já ordenados podem gerar casos ruins dependendo da estratégia.</p></div></section>
-<section><h2>🧩 MergeSort: intercalar ordenados</h2><p>O MergeSort divide o vetor ao meio até sobrar um elemento por parte. Depois, intercala partes já ordenadas.</p><pre class="code-box"><code>{1, 7, 9}  e  {2, 4, 10}
+<section class="scrollable"><h2>✂️ QuickSort: acompanhar o pivô</h2><p>Acompanhe <code>i</code>, <code>j</code> e o pivô. <code>j</code> percorre o trecho; <code>i</code> marca onde ficam os valores ≤ pivô. No fim, o pivô ocupa sua posição definitiva.</p><div class="ialg-visualizer" data-algo="quick-sort" data-title="QuickSort — particionamento" data-values="7,2,9,4,6"></div><pre class="code-box"><code>int p = particiona(v, inicio, fim);
+quicksort(v, inicio, p - 1);
+quicksort(v, p + 1, fim);</code></pre></section>
+<section class="scrollable"><h2>🧾 QuickSort: teste de mesa</h2><p>Vetor <code>{7, 2, 9, 4, 6}</code>; pivô <code>6</code>; <code>i</code> aponta a posição do próximo valor ≤ pivô.</p><pre class="code-box"><code>início: i = 0
+j=0: 7 &gt; 6  → não troca; i continua 0
+j=1: 2 ≤ 6  → troca v[0] com v[1]: {2, 7, 9, 4, 6}; i=1
+j=2: 9 &gt; 6  → não troca; i continua 1
+j=3: 4 ≤ 6  → troca v[1] com v[3]: {2, 4, 9, 7, 6}; i=2
+fim: trocar pivô 6 com v[2] → {2, 4, 6, 7, 9}</code></pre><div class="info-box"><p>O pivô está fixo no índice 2. Depois, QuickSort ordena os trechos à esquerda e à direita, sem incluir esse pivô novamente.</p></div></section>
+<section><h2>🧩 MergeSort: intercalar ordenados</h2><p>O MergeSort divide o vetor ao meio até sobrar um elemento por parte. Depois, compara o primeiro valor ainda não usado de cada metade e copia o menor.</p><pre class="code-box"><code>{1, 7, 9}  e  {2, 4, 10}
 
 intercalação:
-{1, 2, 4, 7, 9, 10}</code></pre><div class="success-box"><p>Intercalar compara os primeiros elementos disponíveis dos dois trechos e copia o menor.</p></div></section>
+{1, 2, 4, 7, 9, 10}</code></pre><div class="success-box"><p>Se uma metade terminar primeiro, copie a sobra da outra: ela já está ordenada.</p></div></section>
 <section><h2>🔀 Estrutura do MergeSort</h2><pre class="code-box"><code>void mergesort(int v[], int inicio, int fim) {
     if (inicio &gt;= fim) return;
 
@@ -306,6 +324,16 @@ intercalação:
 
 copie o restante do trecho que ainda não terminou
 copie o auxiliar de volta para o vetor original</code></pre><div class="info-box"><p>O MergeSort geralmente precisa de memória auxiliar para realizar a intercalação.</p></div></section>
+<section class="scrollable"><h2>🔀 MergeSort: dividir e intercalar</h2><p>Avance passo a passo: <code>i</code> aponta para a esquerda, <code>j</code> para a direita e <code>k</code> para a próxima posição de escrita. Observe divisão, comparação, cópia e sobras.</p><div class="ialg-visualizer" data-algo="merge-sort" data-title="MergeSort — intercalação" data-values="8,3,7,2,6,4"></div><pre class="code-box"><code>mergesort(v, inicio, meio);
+mergesort(v, meio + 1, fim);
+merge(v, inicio, meio, fim);</code></pre></section>
+<section class="scrollable"><h2>🧾 MergeSort: dividir e voltar</h2><p>Com <code>{8, 3, 7, 2, 6, 4}</code>, dividimos até cada parte ter um valor; na volta, intercalamos as partes ordenadas.</p><pre class="code-box"><code>DIVIDIR: {8,3,7,2,6,4} → {8,3,7} | {2,6,4}
+         {8} | {3,7}  e  {2} | {6,4}
+BASE:    {8} {3} {7}   e  {2} {6} {4}
+VOLTAR:  {8} + {3} → {3,8};  {6} + {4} → {4,6}
+         {3,8} + {7} → {3,7,8}
+         {2} + {4,6} → {2,4,6}
+FINAL:   {3,7,8} + {2,4,6} → {2,3,4,6,7,8}</code></pre><div class="info-box"><p>Cada intercalação recebe duas partes ordenadas e devolve uma parte maior também ordenada.</p></div></section>
 <section><h2>⚖️ QuickSort x MergeSort</h2><table><tr><th>Aspecto</th><th>QuickSort</th><th>MergeSort</th></tr><tr><td>Estratégia</td><td>Particionamento por pivô.</td><td>Divisão e intercalação.</td></tr><tr><td>Memória auxiliar</td><td>Geralmente menor.</td><td>Normalmente precisa de auxiliar.</td></tr><tr><td>Pior caso</td><td>Pode ser quadrático.</td><td>Permanece em O(n log n).</td></tr><tr><td>Uso típico</td><td>Muito eficiente em memória.</td><td>Útil para intercalação e dados externos.</td></tr></table></section>
 <section><h2>📈 Complexidade: leitura essencial</h2><div class="three-column"><div><h4>QuickSort médio</h4><p>O(n log n)</p></div><div><h4>QuickSort pior caso</h4><p>O(n²)</p></div><div><h4>MergeSort</h4><p>O(n log n)</p></div></div><div class="warning-box"><p>Complexidade é uma forma de comparar como o custo cresce. Não substitui observar entradas reais e requisitos de memória.</p></div></section>
 <section class="practice-slide">
@@ -313,29 +341,27 @@ copie o auxiliar de volta para o vetor original</code></pre><div class="info-box
 <p>Para o vetor {8, 3, 6, 2, 7}, mostre uma etapa do particionamento do QuickSort e uma intercalação do MergeSort.</p>
 <div class="success-box"><p><strong>Gabarito orientador:</strong> Explique o pivô, o caso base da recursão e como dois trechos ordenados produzem um único trecho ordenado.</p></div>
 
-</section><section class="references-slide">
+</section>
+<section class="references-slide">
 <h2>📚 Referências e materiais</h2>
 <p>Use estas fontes para consultas pontuais depois da aula:</p>
 <ul class="step-list"><li><a href="https://en.cppreference.com/w/cpp/algorithm/sort" target="_blank">cppreference — sort</a></li><li><a href="https://en.cppreference.com/w/cpp/algorithm" target="_blank">cppreference — algoritmos</a></li><li><a href="https://beecrowd.com/" target="_blank">beecrowd — exercícios de ordenação</a></li></ul>
 <div class="info-box"><p>Os slides completos, o Campus Virtual e o DREDD continuam sendo as fontes principais da disciplina.</p></div>
 
-</section><section class="scrollable"><h2>✂️ QuickSort: acompanhar o pivô</h2><p>O último elemento é o pivô. Avance para acompanhar as comparações e trocas do particionamento de Lomuto.</p><div class="ialg-visualizer" data-algo="quick-sort" data-title="QuickSort — particionamento" data-values="7,2,9,4,6"></div><pre class="code-box"><code>int p = particiona(v, inicio, fim);
-quicksort(v, inicio, p - 1);
-quicksort(v, p + 1, fim);</code></pre></section>
-<section class="scrollable"><h2>🔀 MergeSort: dividir e intercalar</h2><p>Primeiro dividimos; depois, intercalamos os trechos ordenados em uma nova sequência.</p><div class="ialg-visualizer" data-algo="merge-sort" data-title="MergeSort — intercalação" data-values="8,3,7,2,6,4"></div><pre class="code-box"><code>mergesort(v, inicio, meio);
-mergesort(v, meio + 1, fim);
-merge(v, inicio, meio, fim);</code></pre></section>
+</section>
 <section><h2>🎬 Compare animações</h2><div class="ialg-reference-panel"><p>Use a animação para observar trocas, pivôs, divisões e intercalações com diferentes entradas:</p><p><a href="https://visualgo.net/en/sorting" target="_blank" rel="noopener">Abrir VisuAlgo — Sorting</a></p><p><a href="https://www.geeksforgeeks.org/dsa/sorting-algorithms/" target="_blank" rel="noopener">Consultar GeeksforGeeks — Sorting Algorithms</a></p></div></section>
 <section><h2>🔗 Complementos online</h2><div class="ialg-reference-panel"><ul><li><a href="https://www.geeksforgeeks.org/dsa/quick-sort-algorithm/" target="_blank" rel="noopener">GeeksforGeeks — QuickSort</a></li><li><a href="https://www.geeksforgeeks.org/dsa/merge-sort/" target="_blank" rel="noopener">GeeksforGeeks — MergeSort</a></li><li><a href="https://en.cppreference.com/w/cpp/algorithm" target="_blank" rel="noopener">cppreference — biblioteca de algoritmos</a></li></ul></div></section>
 <section class="summary-slide">
 <h2>📌 Resumo da aula</h2>
 <ul class="step-list"><li>QuickSort particiona em torno de um pivô.</li><li>MergeSort divide e intercala trechos ordenados.</li><li>Ambos usam divisão do problema e recursão.</li><li>Complexidade e memória ajudam a escolher o método.</li></ul>
 
-</section><section class="next-slide">
+</section>
+<section class="next-slide">
 <p class="next-label">PRÓXIMA AULA</p>
 <h1>⏭️ Próxima aula</h1>
 <div class="subtitle">Projeto, revisão e avaliações finais</div>
 <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>GAC124 — Introdução aos Algoritmos</p></div>
 
-</section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:1.0});</script><script src="../assets/ialg-visualizer.js"></script>
+</section>
+</div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script><script>Reveal.initialize({hash:true,slideNumber:true,transition:'slide',controls:true,progress:true,width:1024,height:768,margin:0.1,minScale:0.2,maxScale:1.0});</script><script src="../assets/ialg-visualizer.js"></script><script>(()=>{let codeZoom=16;const adjustCodeZoom=delta=>{codeZoom=Math.max(12,Math.min(30,codeZoom+delta));document.querySelectorAll('.reveal pre.code-box').forEach(block=>block.style.setProperty('font-size',codeZoom+'px','important'));if(window.Reveal&&typeof Reveal.layout==='function')Reveal.layout();};const setup=()=>{if(document.querySelector('.code-zoom-controls'))return;const bar=document.createElement('div');bar.className='code-zoom-controls';bar.setAttribute('role','group');bar.setAttribute('aria-label','Ajustar tamanho dos códigos');for(const [text,delta,label] of [['A−',-2,'Diminuir tamanho do código'],['A+',2,'Aumentar tamanho do código']]){const button=document.createElement('button');button.type='button';button.textContent=text;button.title=label;button.setAttribute('aria-label',label);button.addEventListener('click',()=>adjustCodeZoom(delta));bar.appendChild(button);}document.body.appendChild(bar);};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});else setup();})();</script>
 </body></html>

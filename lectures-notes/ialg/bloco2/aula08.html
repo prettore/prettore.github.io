@@ -105,6 +105,13 @@ pre.code-box { white-space: pre; }
     .code-box { font-size: clamp(0.48em, 1.55vw, 0.68em); max-height: 54vh; }
 }
 </style>
+
+<style id="ialg-code-zoom-style">
+.code-zoom-controls { position: fixed; left: 18px; bottom: 14px; z-index: 1000; display: flex; gap: 7px; align-items: center; }
+.code-zoom-controls button { min-width: 48px; min-height: 42px; border: 2px solid #003366; border-radius: 6px; background: #fff; color: #003366; font: 700 21px/1 'Segoe UI', Arial, sans-serif; cursor: pointer; }
+.code-zoom-controls button:hover, .code-zoom-controls button:focus-visible { background: #e7f3ff; outline: 3px solid #008B45; outline-offset: 2px; }
+@media (max-width: 768px) { .code-zoom-controls { left: 10px; bottom: 10px; } .code-zoom-controls button { min-width: 42px; min-height: 38px; font-size: 18px; } }
+</style>
 </head>
 <body class="slides-page">
 <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="UFLA"></div>
@@ -470,6 +477,34 @@ Reveal.initialize({
   center: false,
   navigationMode: 'linear'
 });
+</script>
+
+<script id="ialg-code-zoom-script">
+(() => {
+  'use strict';
+  let codeZoom = 16;
+  const changeZoom = (delta) => {
+    codeZoom = Math.max(12, Math.min(30, codeZoom + delta));
+    document.querySelectorAll('.reveal pre, .reveal .code-box').forEach((block) => {
+      block.style.setProperty('font-size', codeZoom + 'px', 'important');
+    });
+    if (window.Reveal && typeof window.Reveal.layout === 'function') window.Reveal.layout();
+  };
+  const controls = document.createElement('div');
+  controls.className = 'code-zoom-controls';
+  controls.setAttribute('role', 'group');
+  controls.setAttribute('aria-label', 'Ajustar tamanho dos códigos');
+  [['A−', -2, 'Diminuir tamanho do código'], ['A+', 2, 'Aumentar tamanho do código']].forEach(([text, delta, label]) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = text;
+    button.title = label;
+    button.setAttribute('aria-label', label);
+    button.addEventListener('click', () => changeZoom(delta));
+    controls.appendChild(button);
+  });
+  document.body.appendChild(controls);
+})();
 </script>
 </body>
 </html>
