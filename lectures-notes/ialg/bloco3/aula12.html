@@ -289,10 +289,11 @@ for (int i = 0; i &lt; n - 1; i++) {
 v[i] = v[menor];
 v[menor] = aux_troca;</code></pre><div class="three-column"><div><strong>1. Guarde</strong><br/>salve v[i] em aux_troca.</div><div><strong>2. Copie</strong><br/>coloque o menor valor em v[i].</div><div><strong>3. Complete</strong><br/>grave o valor guardado em v[menor].</div></div></section>
 <section class="scrollable"><h2>🎯 Selection Sort: fixar o menor</h2><p>Amarelo destaca a comparação atual; verde marca posições fixadas. Acompanhe <code>i</code>, <code>j</code> e <code>menor</code>: a troca só acontece depois de examinar todo o trecho restante.</p><div class="ialg-visualizer" data-detailed="true" data-algo="selection-sort" data-title="Selection Sort" data-values="7,3,5,1,4"></div><pre class="code-box"><code>for (int i = 0; i &lt; n - 1; i++) {
-    int p = i;
+    int menor = i;
     for (int j = i + 1; j &lt; n; j++)
-        if (v[j] &lt; v[p]) p = j;
-    std::swap(v[i], v[p]);
+        if (v[j] &lt; v[menor])
+            menor = j;
+    std::swap(v[i], v[menor]);
 }</code></pre></section>
 <section><h2>🧩 Selection Sort: teste de mesa</h2><pre class="code-box"><code>início: {7, 3, 5, 1, 4}
 i=0: menor é 1; trocar com 7 → {1, 3, 5, 7, 4}
