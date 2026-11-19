@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Processos e threads como unidades de execução, seus modelos, APIs e implementação em Linux e Windows.">
+  <title>Aula 02 — Processos, Threads e Multiprogramação — Sistemas Operacionais</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/so.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco1/aula01.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 02 — Processos, Threads e Multiprogramação">
+      <h1>Aula 02</h1>
+      <p class="subtitle">Processos, Threads e Multiprogramação</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Sistemas Operacionais</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><div class="box"><p>Ao final, você deverá ser capaz de:</p><ul><li>distinguir processo, thread, multiprogramação e tempo compartilhado;</li><li>identificar o que é privado e o que é compartilhado entre threads;</li><li>comparar os modelos N:1, 1:1 e N:M;</li><li>reconhecer as principais operações POSIX e equivalentes de Linux/Windows;</li><li>explicar por que concorrência exige coordenação e pode afetar responsividade e desempenho.</li></ul></div><p>O foco é entender as abstrações e os mecanismos, não memorizar uma API isolada.</p></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–5</a>
+    </section><section id="simultaneidade" data-title="Multiprogramação e tempo compartilhado">
+      <h2>Multiprogramação e tempo compartilhado</h2>
+      <div class="slide-content"><div class="two-column"><div><h3>Multiprogramação</h3><p>Vários processos permanecem na memória. O sistema alterna o uso da CPU entre eles, aproveitando melhor o processador quando um processo aguarda E/S.</p></div><div><h3>Tempo compartilhado</h3><p>É uma extensão interativa: o escalonamento alterna tarefas com rapidez suficiente para que vários usuários ou programas tenham a impressão de usar a máquina simultaneamente.</p></div></div><div class="info-box"><p><strong>Ideia-chave:</strong> concorrência é a composição dos avanços das tarefas; paralelismo é execução simultânea em mais de um núcleo.</p></div></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="diagrama-recursos" data-title="Do programa aos fluxos de execução">
+      <h2>Do programa aos fluxos de execução</h2>
+      <div class="slide-content"><div class="diagram-flow"><div class="diagram-node"><strong>Programa</strong><br>código armazenado</div><div class="diagram-node"><strong>Processo</strong><br>programa em execução + recursos</div><div class="diagram-node"><strong>Threads</strong><br>fluxos que usam a CPU</div><div class="diagram-node"><strong>CPU</strong><br>execução escalonada</div></div><p>O sistema operacional cria, escalona, sincroniza e termina processos; as threads são as unidades básicas de utilização da CPU.</p></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="estrutura-processo" data-title="O que compõe um processo">
+      <h2>O que compõe um processo</h2>
+      <div class="slide-content"><div class="two-column"><div><ul><li><strong>Texto:</strong> instruções do programa.</li><li><strong>Contador de programa:</strong> próxima instrução.</li><li><strong>Registradores:</strong> estado do processador.</li><li><strong>Pilha (stack):</strong> parâmetros, retornos e variáveis locais.</li></ul></div><div><ul><li><strong>Dados:</strong> variáveis globais.</li><li><strong>Heap:</strong> memória alocada dinamicamente.</li><li><strong>Espaço virtual:</strong> visão de memória própria e protegida.</li></ul></div></div><p>Processo não é apenas o arquivo executável: é o programa junto de seu estado e dos recursos necessários para executar.</p></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="estrutura-thread" data-title="O que é uma thread">
+      <h2>O que é uma thread</h2>
+      <div class="slide-content"><p>Uma <strong>thread</strong> (fluxo de execução) é a unidade básica de utilização da CPU. Ela possui:</p><div class="three-column"><div class="info-box"><strong>ID</strong><br>identifica o fluxo</div><div class="info-box"><strong>Estado próprio</strong><br>contador de programa e registradores</div><div class="info-box"><strong>Pilha</strong><br>chamadas e variáveis locais</div></div><p>Threads do mesmo processo compartilham código, dados, arquivos abertos e sinais. Por isso, comunicam-se diretamente pela memória, mas também precisam de sincronização.</p></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="processo-thread-comparacao" data-title="Processo e thread: isolamento versus compartilhamento">
+      <h2>Processo e thread: isolamento versus compartilhamento</h2>
+      <div class="slide-content"><table><thead><tr><th>Aspecto</th><th>Processo</th><th>Threads do mesmo processo</th></tr></thead><tbody><tr><td>Memória</td><td>Espaço virtual próprio e protegido</td><td>Compartilham código e dados</td></tr><tr><td>Estado de execução</td><td>Inclui o estado do processo</td><td>Cada uma tem PC, registradores e pilha</td></tr><tr><td>Comunicação</td><td>IPC, com fronteira entre processos</td><td>Memória comum, mais direta</td></tr><tr><td>Falha/coordenação</td><td>Maior isolamento</td><td>Erro ou corrida pode afetar o processo inteiro</td></tr></tbody></table><div class="warning-box"><p>Compartilhar memória reduz custo de comunicação, mas aumenta a responsabilidade de coordenar acessos.</p></div></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="concorrencia-exemplo" data-title="Exemplo: servidor responsivo">
+      <h2>Exemplo: servidor responsivo</h2>
+      <div class="slide-content"><p>Imagine um servidor que recebe uma requisição e precisa ler um arquivo.</p><div class="sequence-flow"><div>1. Thread recebe a requisição</div><div>2. A leitura bloqueia ou espera E/S</div><div>3. Outra thread pode atender outro cliente</div><div>4. A primeira retoma quando os dados chegam</div></div><p>Multithreading pode melhorar a responsividade e o aproveitamento do hardware, especialmente em sistemas multiprocessadores. O ganho não é automático: trabalho compartilhado requer sincronização.</p></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="modelos-visao" data-title="Modelos de threads: como usuário chega ao núcleo">
+      <h2>Modelos de threads: como usuário chega ao núcleo</h2>
+      <div class="slide-content"><p>Threads de nível de usuário são gerenciadas por uma biblioteca da aplicação; threads de nível de núcleo são gerenciadas pelo sistema operacional. O modelo descreve o mapeamento entre ambas.</p><div class="diagram-flow"><div class="diagram-node"><strong>N:1</strong><br>muitas → uma</div><div class="diagram-node"><strong>1:1</strong><br>uma → uma</div><div class="diagram-node"><strong>N:M</strong><br>muitas → várias</div></div><p>O mapeamento influencia bloqueio, paralelismo, custo de criação e complexidade da implementação.</p></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="modelo-n1" data-title="Modelo Muitos-para-Um (N:1)">
+      <h2>Modelo Muitos-para-Um (N:1)</h2>
+      <div class="slide-content"><div class="two-column"><div><h3>Funcionamento</h3><p>Várias threads de usuário são mapeadas para uma única thread de núcleo. A biblioteca gerencia a troca no espaço do usuário, sem exigir uma chamada de sistema a cada troca.</p></div><div><h3>Limitações</h3><ul><li>uma chamada bloqueante pode bloquear todo o processo;</li><li>não explora paralelismo em múltiplos processadores;</li><li>apenas uma thread chega ao núcleo por vez.</li></ul></div></div><div class="highlight">Vantagem: gerenciamento rápido e eficiente no espaço do usuário.</div></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="modelo-11" data-title="Modelo Um-para-Um (1:1)">
+      <h2>Modelo Um-para-Um (1:1)</h2>
+      <div class="slide-content"><p>Cada thread de usuário corresponde a uma thread de núcleo. Assim, o núcleo pode escalonar threads individualmente.</p><div class="three-column"><div class="success-box"><strong>Bloqueio isolado</strong><br>uma thread bloqueada não precisa parar as demais.</div><div class="success-box"><strong>Paralelismo</strong><br>threads podem executar em processadores diferentes.</div><div class="warning-box"><strong>Custo</strong><br>muitas threads implicam mais estruturas e trabalho no núcleo.</div></div><p>A nota identifica Linux e versões mais recentes do Windows como sistemas que adotam predominantemente este modelo. A formulação é contextual à implementação descrita na fonte.</p></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="modelo-nm" data-title="Modelo Muitos-para-Muitos (N:M)">
+      <h2>Modelo Muitos-para-Muitos (N:M)</h2>
+      <div class="slide-content"><p>Muitas threads de usuário são multiplexadas sobre um número menor ou igual de threads de núcleo.</p><ul><li>permite criar muitas threads de usuário sem uma thread de núcleo para cada uma;</li><li>possibilita execução paralela quando há múltiplas threads de núcleo;</li><li>uma thread bloqueada pode liberar o núcleo para outra;</li><li>combina flexibilidade com paralelismo, mas é mais complexo de implementar.</li></ul><div class="info-box"><p>Comparação: N:1 simplifica e limita; 1:1 expõe paralelismo e custa mais; N:M tenta equilibrar os dois.</p></div></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="posix-contexto" data-title="POSIX e o gerenciamento de execução">
+      <h2>POSIX e o gerenciamento de execução</h2>
+      <div class="slide-content"><p><strong>POSIX</strong> (Portable Operating System Interface) define uma interface padrão para sistemas operacionais do tipo Unix. A nota usa POSIX para organizar operações de processos e a API <strong>Pthreads</strong> para threads.</p><div class="two-column"><div><h3>Processo</h3><p>criação, substituição da imagem, espera, término e identificação.</p></div><div><h3>Thread</h3><p>criação, espera por outra thread, término, identificação, cancelamento e sincronização.</p></div></div><p>Uma API descreve como solicitar operações; o escalonamento e os recursos continuam sob controle do sistema operacional.</p></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="posix-processos" data-title="Operações POSIX para processos">
+      <h2>Operações POSIX para processos</h2>
+      <div class="slide-content"><div class="compact"><ul><li><code>fork()</code>: cria um filho; retorna o ID do filho ao pai, 0 ao filho e -1 em caso de erro.</li><li><code>exec()</code> e família: substituem a imagem do processo por outro programa; em sucesso, não retornam.</li><li><code>wait()</code>/<code>waitpid()</code>: permitem ao pai esperar pelo término de filho(s).</li><li><code>exit()</code>: termina e devolve status ao pai.</li><li><code>getpid()</code>/<code>getppid()</code>: obtêm os IDs do processo e do pai.</li></ul></div><div class="sequence-flow"><div>fork: pai cria filho</div><div>exec: uma imagem pode ser substituída</div><div>waitpid: pai coordena término</div></div></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="posix-threads" data-title="Operações Pthreads para threads">
+      <h2>Operações Pthreads para threads</h2>
+      <div class="slide-content"><ul><li><code>pthread_create()</code>: cria uma thread e define a função que ela executará.</li><li><code>pthread_join()</code>: bloqueia a chamadora até a thread indicada terminar.</li><li><code>pthread_exit()</code>: termina a thread e pode fornecer um valor de retorno.</li><li><code>pthread_self()</code>: obtém o ID da thread chamadora.</li><li><code>pthread_cancel()</code>: solicita o cancelamento de outra thread.</li></ul><div class="info-box"><p>Sincronização faz parte do Pthreads: mutexes e variáveis de condição incluem operações como <code>pthread_mutex_lock()</code> e <code>pthread_cond_wait()</code>.</p></div></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="atividade-1" data-title="Atividade 1 — escolha do modelo">
+      <h2>Atividade 1 — escolha do modelo</h2>
+      <div class="slide-content"><p>Um processo possui várias threads de usuário. Em uma arquitetura com vários processadores, uma delas faz uma chamada bloqueante, enquanto as demais poderiam continuar. Compare N:1 e 1:1: qual modelo permite melhor continuidade e por quê?</p><details class="answer"><summary>Ver resposta</summary><p>No N:1, a chamada bloqueante da única thread de núcleo bloqueia o processo inteiro e não há paralelismo. No 1:1, cada thread de usuário tem uma thread de núcleo; outra pode ser escalonada e, em multiprocessador, executar em paralelo.</p></details></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="linux" data-title="Processos e threads no Linux">
+      <h2>Processos e threads no Linux</h2>
+      <div class="slide-content"><p>A nota descreve o Linux como tratando processos e threads de forma integrada: uma thread pode ser vista como um tipo especial de processo que compartilha certos recursos. <code>clone()</code> permite controlar quais recursos pai e filho compartilharão.</p><ul><li><code>task_struct</code> representa cada tarefa no kernel;</li><li><code>fork()</code> cria um novo processo duplicando a estrutura do pai;</li><li><code>exec()</code> carrega outro programa na imagem do processo;</li><li>a NPTL (Native POSIX Thread Library) implementa Pthreads e usa o modelo 1:1, conforme a nota.</li></ul><div class="warning-box"><p>Detalhes internos de kernel podem variar por versão; aqui são apresentados no contexto da fonte da aula.</p></div></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="windows" data-title="Processos e threads no Windows">
+      <h2>Processos e threads no Windows</h2>
+      <div class="slide-content"><p>No Windows, processos e threads são objetos distintos gerenciados pelo kernel.</p><div class="two-column"><div><h3>Processo</h3><p>Contêiner com espaço virtual privado, token de acesso e pelo menos uma thread. A criação usa <code>CreateProcess()</code>; o processo precisa de threads para executar código.</p></div><div><h3>Thread</h3><p>Cada processo começa com uma thread primária e pode criar outras com <code>CreateThread()</code> ou <code>_beginthreadex</code> em C/C++. O kernel escalona threads individualmente.</p></div></div><p>O Windows oferece primitivas de sincronização para coordenar threads.</p></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4–5</a>
+    </section><section id="atividade-2" data-title="Atividade 2 — raciocínio sobre concorrência">
+      <h2>Atividade 2 — raciocínio sobre concorrência</h2>
+      <div class="slide-content"><p>Duas threads incrementam uma variável global compartilhada. Cada incremento é lido como: ler valor, somar 1, gravar valor. Se ambas leem o mesmo valor antes de gravar, o que pode ocorrer? Qual mecanismo deve ser considerado?</p><details class="answer"><summary>Ver resposta</summary><p>Pode ocorrer uma condição de corrida: uma gravação sobrescreve a outra e o resultado fica menor que o número de incrementos esperado. O acesso precisa ser coordenado, por exemplo com um mutex; a nota cita mutexes e operações de lock/unlock como mecanismos Pthreads.</p></details></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2, 4</a>
+    </section><section id="comparativo" data-title="Linux e Windows: comparação">
+      <h2>Linux e Windows: comparação</h2>
+      <div class="slide-content"><table><thead><tr><th>Aspecto</th><th>Linux</th><th>Windows</th></tr></thead><tbody><tr><td>Processos</td><td><code>fork()</code> + <code>exec()</code>; <code>clone()</code> para controle de compartilhamento</td><td><code>CreateProcess()</code></td></tr><tr><td>Threads</td><td>Pthreads; NPTL e modelo 1:1 na nota</td><td><code>CreateThread()</code> ou <code>_beginthreadex</code>; modelo 1:1 na nota</td></tr><tr><td>Interface</td><td>APIs alinhadas ao padrão POSIX</td><td>API própria Win32/Win64</td></tr><tr><td>Compartilhamento</td><td colspan="2">Threads compartilham recursos do processo; processos são mais isolados</td></tr></tbody></table></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="sintese" data-title="Síntese: decisões e consequências">
+      <h2>Síntese: decisões e consequências</h2>
+      <div class="slide-content"><div class="three-column"><div><strong>Processo</strong><p>programa em execução, com espaço de endereçamento e recursos próprios.</p></div><div><strong>Thread</strong><p>fluxo leve de execução, compartilhando recursos do processo.</p></div><div><strong>SO</strong><p>cria, escalona, sincroniza e termina essas entidades.</p></div></div><ul><li>Multiprogramação mantém trabalhos disponíveis e alterna CPU.</li><li>Tempo compartilhado acrescenta interatividade para usuários concorrentes.</li><li>O modelo de threads afeta bloqueio, paralelismo, custo e complexidade.</li><li>Linux e Windows modernos usam predominantemente 1:1, mas suas APIs de criação diferem.</li></ul></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–5</a>
+    </section><section id="referencias" data-title="Referências e leitura-base">
+      <h2>Referências e leitura-base</h2>
+      <div class="slide-content"><p>Material original da aula: Prof. Paulo Rettore, <em>Processos e Threads em Sistemas Operacionais com Multiprogramação e Tempo Compartilhado</em>, adaptação educacional baseada nas referências abaixo.</p><ul><li>Silberschatz, A.; Galvin, P. B.; Gagne, G. <em>Operating System Concepts</em>, 10ª ed., Wiley, 2018.</li><li>Tanenbaum, A. S.; Bos, H. <em>Modern Operating Systems</em>, 4ª ed., Pearson, 2015.</li><li>Love, R. <em>Linux Kernel Development</em>, 3ª ed., Addison-Wesley, 2010.</li><li>Russinovich, M. E.; Solomon, D. A.; Ionescu, A. <em>Windows Internals, Part 1</em>, 6ª ed., Microsoft Press, 2012.</li></ul><p>Fonte consultada para esta aula: o PDF indicado no contrato.</p></div>
+      <a class="source-note" href="../notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 03</h1><p class="subtitle">Sincronização e Comunicação (IPC)</p><p><a href="../bloco1/aula03.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/so-visualizer.js"></script>
+  <script src="../assets/so-slides.js"></script>
+    </body>
+</html>

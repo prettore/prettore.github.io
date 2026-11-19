@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Coordenação, exclusão mútua e comunicação entre processos e threads em sistemas concorrentes.">
+  <title>Aula 03 — Sincronização e Comunicação (IPC) — Sistemas Operacionais</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/so.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco1/aula02.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 03 — Sincronização e Comunicação (IPC)">
+      <h1>Aula 03</h1>
+      <p class="subtitle">Sincronização e Comunicação (IPC)</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Sistemas Operacionais</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><ul><li>Distinguir concorrência, seção crítica, condição de corrida e exclusão mútua.</li><li>Comparar soluções de software, hardware e primitivas de alto nível.</li><li>Explicar produtor–consumidor, leitores–escritores e jantar dos filósofos.</li><li>Descrever passagem de mensagens, barreiras e mecanismos de IPC em Linux e Windows.</li></ul><div class="info-box"><strong>Ideia central:</strong> coordenar acesso e troca de dados é parte da corretude, não apenas uma otimização.</div></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–6</a>
+    </section><section id="concorrencia" data-title="Concorrência e recursos compartilhados">
+      <h2>Concorrência e recursos compartilhados</h2>
+      <div class="slide-content"><div class="two-column"><div><h3>Concorrência</h3><p>Múltiplos processos ou threads progridem de forma intercalada. Em um processador, isso ocorre por multiprogramação; em vários, pode haver paralelismo real.</p></div><div><h3>Recurso compartilhado</h3><p>É acessado por mais de uma entidade: memória, arquivo, dispositivo de E/S ou estrutura de dados. O acesso precisa de um protocolo.</p></div></div><div class="highlight">Concorrência pode existir sem paralelismo físico, mas uma corrida pode ocorrer nos dois cenários.</div></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="corrida" data-title="Seção crítica e condição de corrida">
+      <h2>Seção crítica e condição de corrida</h2>
+      <div class="slide-content"><p>A <strong>seção crítica</strong> é o trecho que acessa o recurso compartilhado. Há <strong>condição de corrida</strong> quando o resultado depende da ordem imprevisível dos acessos.</p><div class="diagram-flow"><div class="diagram-node"><strong>saldo = 100</strong><br>Thread A lê 100</div><div class="diagram-node"><strong>saldo = 100</strong><br>Thread B lê 100</div><div class="diagram-node"><strong>saldo = 110</strong><br>ambas gravam sobre a outra</div></div><div class="warning-box">Duas operações aparentemente simples (ler, alterar, gravar) não são necessariamente uma operação indivisível.</div></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="exclusao-mutua" data-title="Exclusão mútua: o contrato">
+      <h2>Exclusão mútua: o contrato</h2>
+      <div class="slide-content"><p>Exclusão mútua garante que, para um recurso, apenas uma entidade esteja na seção crítica por vez. Uma solução útil também deve preservar:</p><div class="three-column"><div class="box"><strong>Exclusão</strong><br>não há dois participantes críticos simultaneamente.</div><div class="box"><strong>Progresso</strong><br>se a seção está livre, uma decisão não é adiada indefinidamente.</div><div class="box"><strong>Espera limitada</strong><br>um participante não deve esperar para sempre.</div></div><p>Deadlock é diferente de corrida: no deadlock, entidades ficam bloqueadas esperando recursos umas das outras.</p></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="peterson" data-title="Soluções de software: Peterson e Padaria">
+      <h2>Soluções de software: Peterson e Padaria</h2>
+      <div class="slide-content"><div class="two-column"><div><h3>Peterson</h3><p>Para dois processos, usa <code>flag[]</code> para indicar interesse e <code>turn</code> para desempatar. A ideia combina intenção e deferência ao outro.</p></div><div><h3>Padaria de Lamport</h3><p>Para N processos, cada participante escolhe um número; entra primeiro o menor par (número, identificador). É uma analogia com senhas de atendimento.</p></div></div><div class="info-box">São algoritmos didáticos e históricos: a implementação real depende do modelo de memória e de primitivas atômicas disponíveis.</div></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="hardware" data-title="Suporte de hardware">
+      <h2>Suporte de hardware</h2>
+      <div class="slide-content"><ul><li><strong>Desabilitar interrupções:</strong> em monoprocessadores, impede preempção durante o trecho; é perigoso por prolongar a indisponibilidade e não resolve multiprocessadores.</li><li><strong>Test-and-Set:</strong> lê e marca um lock em uma operação atômica.</li><li><strong>Compare-and-Swap:</strong> compara com um valor esperado e, se igual, substitui por outro atomicamente.</li></ul><div class="warning-box">Atômico não significa automaticamente justo: espera ocupada pode desperdiçar CPU e ainda permitir inanição.</div></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="semaforos" data-title="Semáforos: wait e signal">
+      <h2>Semáforos: wait e signal</h2>
+      <div class="slide-content"><p>Um semáforo é acessado por operações atômicas <code>wait()</code> (ou P) e <code>signal()</code> (ou V). O de contagem representa unidades disponíveis; o binário assume 0 ou 1 e pode proteger exclusão mútua.</p><pre class="code-box"><code>wait(mutex)      // adquire antes da seção
+// seção crítica
+signal(mutex)    // libera ao sair</code></pre><p>O protocolo exige disciplina: esquecer <code>signal</code>, liberar o semáforo errado ou ordenar aquisições de modo circular pode causar bloqueio.</p></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="mutex-cond-monitor" data-title="Mutexes, variáveis de condição e monitores">
+      <h2>Mutexes, variáveis de condição e monitores</h2>
+      <div class="slide-content"><div class="three-column"><div><strong>Mutex</strong><p>Lock de exclusão mútua: uma thread detém o recurso por vez.</p></div><div><strong>Variável de condição</strong><p>Permite esperar uma condição, liberando o mutex; outra thread sinaliza uma ou todas as esperas.</p></div><div><strong>Monitor</strong><p>Encapsula dados, operações e sincronização; apenas uma thread fica ativa no monitor.</p></div></div><div class="highlight">Uma condição descreve <em>o que deve ser verdade</em>; o mutex protege a verificação e a atualização do estado.</div></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="produtor-consumidor" data-title="Produtor–consumidor: buffer limitado">
+      <h2>Produtor–consumidor: buffer limitado</h2>
+      <div class="slide-content"><p>Produtores inserem itens e consumidores removem itens de um buffer finito. São necessárias três garantias: exclusão no acesso ao buffer, espera quando ele está cheio e espera quando está vazio.</p><div class="diagram-flow"><div class="diagram-node">produtor<br><strong>itens disponíveis</strong></div><div class="diagram-node">buffer compartilhado<br><strong>vagas livres</strong></div><div class="diagram-node">consumidor<br><strong>remove item</strong></div></div><p>Sem coordenação, o produtor pode sobrescrever dados ou o consumidor observar uma posição ainda não preenchida.</p></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="leitores-escritores" data-title="Leitores–escritores e justiça">
+      <h2>Leitores–escritores e justiça</h2>
+      <div class="slide-content"><p>Leitores podem acessar simultaneamente; um escritor precisa de acesso exclusivo. O protocolo precisa decidir o que ocorre quando leitores e escritores chegam juntos.</p><table><thead><tr><th>Política</th><th>Risco</th></tr></thead><tbody><tr><td>Prioridade a leitores</td><td>escritores podem sofrer inanição.</td></tr><tr><td>Prioridade a escritores</td><td>novos leitores podem esperar mais.</td></tr><tr><td>Equidade</td><td>busca limitar espera de ambos.</td></tr></tbody></table><p>A escolha é requisito de projeto, não detalhe incidental: throughput e latência podem mudar.</p></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="filosofos" data-title="Jantar dos filósofos: deadlock e inanição">
+      <h2>Jantar dos filósofos: deadlock e inanição</h2>
+      <div class="slide-content"><p>Cinco filósofos alternam entre pensar e comer. Para comer, cada um precisa dos dois garfos adjacentes.</p><div class="sequence-flow"><div>cada um pega o garfo esquerdo</div><div>todos esperam pelo garfo direito</div><div class="warning-box">espera circular: ninguém progride</div></div><p>Uma solução deve evitar <strong>deadlock</strong> e, idealmente, <strong>inanição</strong>. Estratégias possíveis incluem impor uma ordem global de aquisição ou limitar quem tenta adquirir garfos, mas o protocolo concreto precisa ser especificado.</p></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="atividade-1" data-title="Atividade 1 — encontre a corrida">
+      <h2>Atividade 1 — encontre a corrida</h2>
+      <div class="slide-content"><p>Dois workers executam este pseudocódigo sobre <code>contador</code>, inicialmente 0:</p><pre class="code-box"><code>temp = contador
+contador = temp + 1</code></pre><p>Uma possível intercalação executa a leitura de A, a leitura de B, a escrita de A e a escrita de B. Qual resultado final aparece? Como preservar o incremento?</p><details class="answer"><summary>Ver resposta</summary><p>O resultado pode ser 1, pois ambos leem 0 e a última escrita sobrescreve a primeira. Proteger o trecho com mutex (ou usar uma operação atômica de incremento) torna a atualização indivisível.</p></details></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="message-passing" data-title="Passagem de mensagens (IPC)">
+      <h2>Passagem de mensagens (IPC)</h2>
+      <div class="slide-content"><p><strong>IPC</strong> (Inter-Process Communication, comunicação entre processos) pode evitar espaço de endereçamento compartilhado: processos trocam mensagens por <code>send(message)</code> e <code>receive(message)</code>.</p><div class="two-column"><div><strong>Direta</strong><p>o remetente ou destinatário é nomeado explicitamente, como <code>send(P, m)</code>.</p></div><div><strong>Indireta</strong><p>mensagens passam por mailbox/porta, que pode ser compartilhada por vários processos.</p></div></div><div class="info-box">A mensagem transporta dados e o protocolo de envio/recepção também pode sincronizar.</div></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="bloqueio-buffer" data-title="Bloqueante, não bloqueante e buffering">
+      <h2>Bloqueante, não bloqueante e buffering</h2>
+      <div class="slide-content"><div class="three-column"><div><strong>Send bloqueante</strong><p>remetente espera a entrega ao receptor ou à caixa.</p></div><div><strong>Receive bloqueante</strong><p>receptor espera até haver mensagem.</p></div><div><strong>Não bloqueante</strong><p>a operação retorna; uma recepção vazia indica falha ou mensagem nula.</p></div></div><p>O buffer pode ter capacidade <strong>zero</strong> (rendezvous), <strong>limitada</strong> ou <strong>ilimitada</strong>. A capacidade altera quando produtores e consumidores podem prosseguir.</p></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="barreiras" data-title="Barreiras por fases">
+      <h2>Barreiras por fases</h2>
+      <div class="slide-content"><p>Uma barreira é um ponto em que todos os membros de um grupo precisam chegar antes de qualquer um continuar.</p><div class="diagram-flow"><div class="diagram-node">Thread A<br>fase 1 concluída</div><div class="diagram-node">Thread B<br>fase 1 concluída</div><div class="diagram-node">barreira<br><strong>libera o grupo</strong></div><div class="diagram-node">todos iniciam<br>fase 2</div></div><p>É útil quando um cálculo paralelo é dividido em fases: dados da fase seguinte não devem ser usados antes que todos terminem a atual.</p></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="visualizador-barreira" data-title="Visualização: chegada à barreira">
+      <h2>Visualização: chegada à barreira</h2>
+      <div class="slide-content"><div class="so-visualizer" data-title="Três threads e uma barreira"><script type="application/json">{"steps":[{"cells":["A: chegou","B: fase 1","C: fase 1","barreira"],"active":[0,3],"caption":"A espera; B e C ainda executam a fase 1."},{"cells":["A: chegou","B: chegou","C: fase 1","barreira"],"active":[0,1,3],"caption":"A e B aguardam; a barreira ainda não libera."},{"cells":["A: fase 2","B: fase 2","C: fase 2","barreira liberada"],"active":[0,1,2,3],"caption":"Com todos presentes, o grupo pode iniciar a próxima fase."}]}</script></div></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="linux" data-title="Linux: sincronização e IPC">
+      <h2>Linux: sincronização e IPC</h2>
+      <div class="slide-content"><p>O Linux oferece mecanismos no kernel e interfaces para aplicações, em grande parte alinhadas a POSIX (Portable Operating System Interface).</p><div class="two-column"><div><h3>Sincronização</h3><ul><li>kernel: spinlocks, mutexes, semáforos, read-write locks e completions;</li><li>POSIX/Pthreads: <code>pthread_mutex_t</code>, condições, barreiras e <code>pthread_rwlock_t</code>;</li><li>semáforos nomeados (<code>sem_open</code>) e não nomeados (<code>sem_init</code>).</li></ul></div><div><h3>IPC</h3><ul><li>pipes/FIFOs e filas de mensagens;</li><li>memória compartilhada;</li><li>sockets, Unix Domain Sockets e sinais.</li></ul></div></div></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="windows" data-title="Windows: objetos e IPC">
+      <h2>Windows: objetos e IPC</h2>
+      <div class="slide-content"><p>A Win32 API oferece objetos de sincronização e mecanismos de comunicação.</p><div class="two-column"><div><h3>Sincronização</h3><p>Mutexes, semáforos e eventos; <strong>critical sections</strong> para threads do mesmo processo; SRW locks (Slim Reader/Writer) e variáveis de condição.</p><p>Exemplos de famílias de API: <code>CreateMutex</code>, <code>WaitForSingleObject</code> e <code>EnterCriticalSection</code>.</p></div><div><h3>IPC</h3><p>Pipes anônimos/nomeados, mailslots, memory-mapped files, Winsock, RPC e mensagens do Windows.</p><p>RPC (Remote Procedure Call) pode comunicar processos inclusive em máquinas diferentes.</p></div></div></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5–6</a>
+    </section><section id="atividade-2" data-title="Atividade 2 — escolha o mecanismo">
+      <h2>Atividade 2 — escolha o mecanismo</h2>
+      <div class="slide-content"><p>Associe cada situação ao mecanismo mais adequado e justifique: (A) threads precisam esperar o fim de uma fase; (B) processos trocam registros formatados sem compartilhar memória; (C) vários leitores acessam dados, mas escritor exige exclusividade.</p><ol><li>barreira</li><li>passagem de mensagens</li><li>read-write lock/protocolo leitores–escritores</li></ol><details class="answer"><summary>Ver resposta</summary><p>A–1: a barreira libera a fase seguinte quando todos chegam. B–2: send/receive transporta mensagens sem o mesmo espaço de endereçamento. C–3: o read-write lock permite leitores concorrentes e exclui o escritor.</p></details></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–6</a>
+    </section><section id="criterios" data-title="Como escolher e revisar um protocolo">
+      <h2>Como escolher e revisar um protocolo</h2>
+      <div class="slide-content"><ol class="step-list"><li>Identifique o recurso, os participantes e o trecho crítico.</li><li>Defina se precisa de exclusão, contagem, espera por condição, fase ou troca de dados.</li><li>Escolha memória compartilhada + sincronização ou passagem de mensagens.</li><li>Verifique corrida, deadlock, inanição e comportamento em buffer cheio/vazio.</li><li>Teste intercalamentos e documente a ordem de aquisição e liberação.</li></ol><div class="warning-box">A API muda entre plataformas; o raciocínio sobre propriedades do protocolo vem antes do nome da função.</div></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–6</a>
+    </section><section id="resumo" data-title="Resumo">
+      <h2>Resumo</h2>
+      <div class="slide-content"><ul><li>Concorrência torna ordem de execução imprevisível; seções críticas sem proteção podem produzir corridas.</li><li>Peterson/Padaria são soluções didáticas; hardware oferece atomicidade; mutexes, semáforos, condições e monitores elevam o nível.</li><li>Produtor–consumidor, leitores–escritores e filósofos revelam espera, justiça e deadlock.</li><li>Mensagens combinam comunicação e sincronização; barreiras coordenam fases.</li><li>Linux e Windows oferecem conjuntos ricos de primitivas, com APIs e nomes diferentes.</li></ul></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–6</a>
+    </section><section id="referencias" data-title="Referências">
+      <h2>Referências</h2>
+      <div class="slide-content"><p>Fonte principal e adaptação didática:</p><ul><li>Rettore, Paulo. <em>Sincronização e Comunicação entre Processos (IPC)</em>. PDF da aula, páginas 1–7.</li></ul><p>Referências bibliográficas listadas na nota:</p><ul><li>Silberschatz, Galvin &amp; Gagne (2018), <em>Operating System Concepts</em>, 10ª ed.</li><li>Tanenbaum &amp; Bos (2015), <em>Modern Operating Systems</em>, 4ª ed.</li><li>Downey (2016), <em>The Little Book of Semaphores</em>, 2ª ed.</li><li>Hart (2005), <em>Windows System Programming</em>, 3ª ed.; Love (2010), <em>Linux Kernel Development</em>, 3ª ed.</li></ul></div>
+      <a class="source-note" href="../notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6–7</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 04</h1><p class="subtitle">Escalonamento de Processos</p><p><a href="../bloco1/aula04.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/so-visualizer.js"></script>
+  <script src="../assets/so-slides.js"></script>
+    </body>
+</html>

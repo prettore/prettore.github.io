@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Conceitos, hipervisores, execução multicore, containers e migração de máquinas virtuais.">
+  <title>Aula 12 — Virtualização — Sistemas Operacionais</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/so.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco3/aula11.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/12_Virtualizacao.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 12 — Virtualização">
+      <h1>Aula 12</h1>
+      <p class="subtitle">Virtualização</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Sistemas Operacionais</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><p>Ao final, você deverá ser capaz de:</p><ul><li>explicar a virtualização como uma camada de abstração entre hardware e ambientes de execução;</li><li>distinguir virtualização total, paravirtualização e assistência por hardware;</li><li>comparar hipervisores Tipo 1 e Tipo 2;</li><li>descrever a distribuição de vCPUs em hosts multicore, incluindo NUMA;</li><li>escolher entre máquinas virtuais e containers em cenários concretos;</li><li>explicar as etapas e os objetivos da migração ao vivo.</li></ul></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1-5</a>
+    </section><section id="conceito" data-title="O que é virtualização?">
+      <h2>O que é virtualização?</h2>
+      <div class="slide-content"><p>Virtualização insere uma camada de abstração entre o hardware físico e os sistemas operacionais ou aplicações. Essa camada apresenta recursos virtuais — CPU, memória, armazenamento e rede — para ambientes isolados.</p><div class="highlight"><strong>Ideia central:</strong> vários ambientes podem coexistir em uma única máquina física, com o software de virtualização controlando a alocação e o isolamento.</div><p>O ambiente que fornece os recursos é o <em>host</em>; o sistema executado sobre a abstração é o <em>guest</em>.</p></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="beneficios" data-title="Por que virtualizar?">
+      <h2>Por que virtualizar?</h2>
+      <div class="slide-content"><div class="two-column"><div class="info-box"><h3>Ganhos</h3><ul><li>consolidação de servidores;</li><li>melhor aproveitamento de recursos;</li><li>isolamento para segurança e testes;</li><li>provisionamento flexível;</li><li>migração e manutenção com menos interrupção.</li></ul></div><div class="warning-box"><h3>Custos</h3><ul><li>sobrecarga de gerenciamento;</li><li>contenção por CPU, memória ou E/S;</li><li>novas superfícies de segurança;</li><li>necessidade de otimização e conhecimento especializado.</li></ul></div></div></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1, 5</a>
+    </section><section id="tipos-visao" data-title="Tipos de virtualização">
+      <h2>Tipos de virtualização</h2>
+      <div class="slide-content"><p>A nota destaca três formas relacionadas, mas distintas:</p><div class="three-column"><div class="box"><strong>Total (completa)</strong><p>O guest vê uma plataforma virtual completa e não precisa ser modificado.</p></div><div class="box"><strong>Paravirtualização</strong><p>O guest conhece o ambiente e usa uma interface específica do hipervisor.</p></div><div class="box"><strong>Assistida por hardware</strong><p>Extensões da CPU ajudam a executar instruções privilegiadas com menos sobrecarga.</p></div></div><p>Containers constituem outra abordagem: virtualização no nível do sistema operacional, discutida adiante.</p></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1-2</a>
+    </section><section id="virtualizacao-total" data-title="Virtualização total">
+      <h2>Virtualização total</h2>
+      <div class="slide-content"><p>Na virtualização total, o hipervisor apresenta a cada máquina virtual um conjunto completo de hardware virtual. O sistema convidado acredita estar usando uma máquina real, portanto pode rodar sem alterações.</p><div class="diagram-flow"><div class="diagram-node">Sistema operacional guest<br><small>instruções privilegiadas</small></div><div class="diagram-node">Hipervisor<br><small>intercepta e traduz</small></div><div class="diagram-node">Hardware físico</div></div><p>A compatibilidade é a principal vantagem. A interceptação e a tradução de instruções podem acrescentar sobrecarga. Exemplos citados: VMware Workstation/ESXi e VirtualBox em configurações padrão.</p></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1-2</a>
+    </section><section id="para-hardware" data-title="Paravirtualização e assistência por hardware">
+      <h2>Paravirtualização e assistência por hardware</h2>
+      <div class="slide-content"><p>Na <strong>paravirtualização</strong>, o guest é modificado ou preparado para saber que está virtualizado. Em vez de depender apenas da emulação, ele solicita operações privilegiadas por uma API do hipervisor. Isso pode reduzir interceptações, mas diminui a compatibilidade com guests não adaptados.</p><p>Extensões como <strong>Intel VT-x</strong> e <strong>AMD-V</strong> auxiliam a execução de instruções privilegiadas. Hipervisores modernos frequentemente combinam assistência por hardware com técnicas de virtualização total e paravirtualização.</p><div class="info-box"><strong>Contexto:</strong> os exemplos de extensões são tecnologias de processadores; a disponibilidade e o comportamento concreto dependem do hardware e da configuração.</div></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="hipervisor-papel" data-title="O papel do hipervisor">
+      <h2>O papel do hipervisor</h2>
+      <div class="slide-content"><p>Hipervisor, ou <strong>VMM</strong> (<em>Virtual Machine Monitor</em>, Monitor de Máquina Virtual), é a camada de software, firmware ou hardware que cria, executa e gerencia ambientes virtualizados.</p><div class="diagram-flow"><div class="diagram-node">VM A<br><small>vCPU · memória · E/S</small></div><div class="diagram-node">Hipervisor / VMM<br><small>isola e agenda</small></div><div class="diagram-node">CPU · RAM · disco · rede<br><small>recursos físicos</small></div></div><ul><li>aloca CPU, memória e E/S;</li><li>mantém isolamento entre ambientes;</li><li>mede e arbitra o uso de recursos.</li></ul></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="tipo1" data-title="Hipervisor Tipo 1: bare-metal">
+      <h2>Hipervisor Tipo 1: bare-metal</h2>
+      <div class="slide-content"><p>O Tipo 1 roda diretamente sobre o hardware físico, sem um sistema operacional hospedeiro convencional abaixo dele. É um software mínimo otimizado para gerenciar VMs.</p><div class="success-box"><strong>Perfil típico:</strong> acesso direto ao hardware, bom desempenho, escalabilidade e robustez; por isso é predominante em data centers e nuvens.</div><p>Exemplos da nota: VMware ESXi, Microsoft Hyper-V Server, Xen e KVM (<em>Kernel-based Virtual Machine</em>). O KVM é integrado ao kernel Linux, mas opera de modo semelhante a um hipervisor bare-metal.</p></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2-3</a>
+    </section><section id="tipo2" data-title="Hipervisor Tipo 2: hosted">
+      <h2>Hipervisor Tipo 2: hosted</h2>
+      <div class="slide-content"><p>O Tipo 2 é executado como uma aplicação sobre um sistema operacional hospedeiro convencional, como Windows, macOS ou Linux. O sistema hospedeiro continua gerenciando o hardware.</p><div class="two-column"><div class="box"><strong>Vantagens</strong><p>Instalação e administração simples; adequado para usuários finais, desenvolvimento e testes.</p></div><div class="warning-box"><strong>Trade-off</strong><p>A camada adicional do SO hospedeiro pode introduzir latência e sobrecarga.</p></div></div><p>Exemplos: VMware Workstation, Oracle VirtualBox e Parallels Desktop. A escolha depende de desempenho, escalabilidade, segurança e gerenciamento.</p></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="comparacao-hipervisores" data-title="Tipo 1 ou Tipo 2?">
+      <h2>Tipo 1 ou Tipo 2?</h2>
+      <div class="slide-content"><table><thead><tr><th>Critério</th><th>Tipo 1</th><th>Tipo 2</th></tr></thead><tbody><tr><th>Camada inferior</th><td>Hardware físico</td><td>SO hospedeiro</td></tr><tr><th>Uso típico</th><td>Data center e nuvem</td><td>Desktop, testes e desenvolvimento</td></tr><tr><th>Desempenho</th><td>Geralmente maior</td><td>Pode sofrer com uma camada extra</td></tr><tr><th>Praticidade</th><td>Focado em infraestrutura</td><td>Mais fácil de instalar</td></tr></tbody></table><p>“Melhor” depende do objetivo: a mesma máquina virtual pode exigir decisões diferentes em laboratório e em produção.</p></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2-3</a>
+    </section><section id="multicore-vcpu" data-title="VMs em CPUs multicore">
+      <h2>VMs em CPUs multicore</h2>
+      <div class="slide-content"><p>Em um host multicore, o hipervisor agenda <strong>vCPUs</strong> (CPUs virtuais) sobre <strong>pCPUs</strong> (núcleos ou CPUs físicas). Várias VMs podem avançar em paralelo, mas ainda competem por núcleos e outros recursos.</p><div class="diagram-flow"><div class="diagram-node">VM A: vCPU 0 · vCPU 1</div><div class="diagram-node">Hipervisor<br><small>escalonamento e contenção</small></div><div class="diagram-node">pCPU 0 · pCPU 1 · pCPU 2 · pCPU 3</div></div><p>O escalonamento busca justiça, menor contenção e boa localidade de cache; manter uma vCPU em um núcleo ou soquete próximo pode ajudar.</p></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="numa" data-title="Localidade de memória e NUMA">
+      <h2>Localidade de memória e NUMA</h2>
+      <div class="slide-content"><p><strong>NUMA</strong> (<em>Non-Uniform Memory Access</em>, acesso não uniforme à memória) é comum em servidores multicore: o custo de acessar a memória varia conforme o nó físico ao qual ela pertence.</p><div class="two-column"><div class="box"><strong>Alocação local</strong><p>Priorizar memória no mesmo nó NUMA dos núcleos que executam a VM reduz latência.</p></div><div class="warning-box"><strong>Problema</strong><p>Acesso remoto a outro nó pode elevar a latência; o hipervisor precisa considerar essa topologia.</p></div></div><p>Uma VM com várias vCPUs também permite que aplicações multithreaded aproveitem o paralelismo do host, desde que haja recursos disponíveis.</p></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="arquitetura-vm" data-title="O que existe dentro de uma VM?">
+      <h2>O que existe dentro de uma VM?</h2>
+      <div class="slide-content"><p>Uma VM recebe uma visão virtualizada de CPU, memória, disco e rede. Ela executa um sistema operacional guest completo, separado do hospedeiro e das demais VMs.</p><div class="diagram-flow"><div class="diagram-node">Aplicações da VM</div><div class="diagram-node">SO guest completo</div><div class="diagram-node">Hardware virtual<br><small>vCPU · RAM · disco · rede</small></div><div class="diagram-node">Hipervisor</div><div class="diagram-node">Hardware físico</div></div><p>Esse modelo favorece compatibilidade e isolamento, mas cada instância carrega o custo de um SO guest, memória e armazenamento.</p></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3-4</a>
+    </section><section id="containers" data-title="Containers: virtualização no nível do SO">
+      <h2>Containers: virtualização no nível do SO</h2>
+      <div class="slide-content"><p>Containers isolam processos no espaço de usuário, compartilhando o kernel do sistema operacional hospedeiro. Cada container recebe uma visão própria de arquivos, rede e identificadores de processo.</p><p>No Linux, a nota cita <strong>namespaces</strong> e <strong>cgroups</strong> como mecanismos usados por tecnologias como Docker e LXC para isolamento e controle de recursos.</p><div class="success-box"><strong>Consequência:</strong> sem um SO guest completo por instância, containers tendem a iniciar rapidamente, consumir menos recursos e permitir maior densidade.</div><div class="warning-box"><strong>Limite:</strong> containers dependem do kernel do host; uma vulnerabilidade nesse kernel pode, teoricamente, afetar vários containers.</div></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="vm-containers" data-title="VMs e containers: comparação">
+      <h2>VMs e containers: comparação</h2>
+      <div class="slide-content"><table><thead><tr><th>Aspecto</th><th>Máquina virtual</th><th>Container</th></tr></thead><tbody><tr><th>Abstração</th><td>Hardware virtual completo</td><td>Kernel compartilhado</td></tr><tr><th>SO</th><td>Um guest completo por VM</td><td>Processos no host</td></tr><tr><th>Isolamento</th><td>Mais forte no nível de hardware/kernel</td><td>Menor que o de uma VM</td></tr><tr><th>Densidade e início</th><td>Mais consumo e inicialização mais pesada</td><td>Mais leve e rápida</td></tr><tr><th>Compatibilidade</th><td>Pode executar SOs diferentes</td><td>Precisa compatibilidade com o kernel do host</td></tr></tbody></table></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3-4</a>
+    </section><section id="escolha-cen-rios" data-title="Escolha orientada ao cenário">
+      <h2>Escolha orientada ao cenário</h2>
+      <div class="slide-content"><div class="two-column"><div class="info-box"><h3>Prefira VM quando</h3><ul><li>for necessário isolamento forte;</li><li>houver SOs diferentes ou legados;</li><li>o ambiente exigir controle completo do SO.</li></ul></div><div class="success-box"><h3>Prefira container quando</h3><ul><li>for preciso empacotar e distribuir aplicações;</li><li>o alvo for microsserviços;</li><li>início rápido, alta densidade e desempenho próximo ao nativo forem prioritários.</li></ul></div></div><p>A escolha não é uma disputa universal: depende do isolamento, desempenho, densidade e gerenciamento requeridos.</p></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="migracao-motivacao" data-title="Por que migrar uma VM?">
+      <h2>Por que migrar uma VM?</h2>
+      <div class="slide-content"><p>Migração transfere uma VM entre hosts físicos. Em data centers e nuvens, isso pode:</p><ul><li>permitir manutenção de hardware sem interromper o serviço;</li><li>balancear carga entre servidores;</li><li>otimizar consumo de energia;</li><li>aumentar a resiliência a falhas.</li></ul><div class="highlight"><strong>Migração ao vivo (live migration)</strong> move uma VM em execução com interrupção mínima ou imperceptível para usuários e aplicações.</div><p>As condições concretas dependem da infraestrutura de rede, armazenamento e compatibilidade dos hosts.</p></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4-5</a>
+    </section><section id="migracao-etapas" data-title="Etapas da migração ao vivo">
+      <h2>Etapas da migração ao vivo</h2>
+      <div class="slide-content"><ol class="step-list"><li><strong>Pré-cópia:</strong> copia a memória da VM pela rede enquanto ela continua executando.</li><li><strong>Rastreamento:</strong> páginas alteradas, ou <em>dirty pages</em>, são identificadas e recopiadas em iterações.</li><li><strong>Troca:</strong> quando a taxa de alteração é suficientemente baixa, pausa-se brevemente a VM.</li><li><strong>Finalização:</strong> transfere as últimas páginas sujas e o estado da CPU.</li><li><strong>Retomada:</strong> a VM continua no host destino.</li></ol><p>Com armazenamento compartilhado, como SAN ou NAS, normalmente transfere-se o acesso ao disco em vez de copiar todo o armazenamento.</p></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4-5</a>
+    </section><section id="visualizador-dirty-pages" data-title="Visualizando a troca de host">
+      <h2>Visualizando a troca de host</h2>
+      <div class="slide-content"><div class="so-visualizer" data-title="Migração ao vivo"><script type="application/json">{"steps":[{"cells":["Origem executa","Destino vazio","Memória inicial"],"active":[0,2],"caption":"A VM segue executando enquanto a primeira cópia da memória é enviada."},{"cells":["Origem executa","Destino recebe","Dirty pages"],"active":[0,1,2],"caption":"Páginas alteradas durante a cópia são rastreadas e reenviadas."},{"cells":["Pausa breve","Destino recebe estado","CPU final"],"active":[0,1,2],"caption":"A execução é pausada para enviar as últimas páginas e o estado da CPU."},{"cells":["Origem liberada","Destino executa","Serviço continua"],"active":[1,2],"caption":"A VM retoma no destino com interrupção mínima."}]}</script></div></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4-5</a>
+    </section><section id="atividade-classificacao" data-title="Atividade 1 — escolha a abordagem">
+      <h2>Atividade 1 — escolha a abordagem</h2>
+      <div class="slide-content"><p>Para cada situação, indique <strong>VM</strong> ou <strong>container</strong> e justifique em uma frase:</p><ol><li>Executar um sistema operacional legado diferente do host.</li><li>Distribuir rapidamente vários microsserviços compatíveis com o kernel Linux do host.</li><li>Separar ambientes de teste com maior isolamento e controle do SO.</li></ol><details class="answer"><summary>Ver resposta</summary><p>1. VM: permite um SO guest diferente e completo. 2. Container: favorece distribuição rápida, densidade e microsserviços, desde que haja compatibilidade com o kernel. 3. VM: oferece isolamento mais forte e controle total do ambiente; a decisão final ainda depende dos requisitos de custo e desempenho.</p></details></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3-4</a>
+    </section><section id="atividade-migracao" data-title="Atividade 2 — raciocine sobre a migração">
+      <h2>Atividade 2 — raciocine sobre a migração</h2>
+      <div class="slide-content"><p>Durante a migração ao vivo, a VM continua alterando páginas de memória. Por que o destino não pode simplesmente copiar a memória uma única vez e iniciar a VM?</p><p>Ordene os passos: (A) transferir estado final da CPU; (B) copiar memória inicial; (C) retomar no destino; (D) recopi​ar páginas sujas; (E) pausar brevemente a origem.</p><details class="answer"><summary>Ver resposta</summary><p>A cópia única ficaria desatualizada enquanto a VM executa. A ordem é B, D, E, A, C. As iterações reduzem o conjunto de páginas alteradas; a pausa curta garante um estado final coerente antes da retomada.</p></details></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4-5</a>
+    </section><section id="complexidade" data-title="Virtualização também exige engenharia">
+      <h2>Virtualização também exige engenharia</h2>
+      <div class="slide-content"><p>Os benefícios não eliminam decisões de projeto. É preciso observar:</p><ul><li>contenção entre vCPUs e pCPUs;</li><li>localidade de cache e memória NUMA;</li><li>desempenho de E/S e rede;</li><li>isolamento e segurança do hipervisor ou kernel;</li><li>compatibilidade entre host, guest, hardware e ferramentas;</li><li>custo operacional de monitorar e otimizar o ambiente.</li></ul><div class="warning-box"><strong>Regra prática:</strong> mais instâncias ou camadas não significam automaticamente melhor utilização; o resultado depende da carga e do dimensionamento.</div></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3-5</a>
+    </section><section id="resumo" data-title="Resumo">
+      <h2>Resumo</h2>
+      <div class="slide-content"><ul><li>Virtualização abstrai hardware para permitir ambientes isolados na mesma máquina.</li><li>Virtualização total privilegia compatibilidade; paravirtualização usa cooperação do guest; extensões da CPU podem reduzir a sobrecarga.</li><li>Tipo 1 roda sobre o hardware; Tipo 2 roda sobre um SO hospedeiro.</li><li>Em multicore, o hipervisor agenda vCPUs em pCPUs e considera NUMA.</li><li>VMs incluem um SO guest completo; containers compartilham o kernel do host.</li><li>Migração ao vivo recopia páginas sujas e pausa brevemente a VM para concluir a troca.</li></ul></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1-5</a>
+    </section><section id="referencias" data-title="Referências">
+      <h2>Referências</h2>
+      <div class="slide-content"><p>Material-base da aula:</p><ul><li>Rettore, P. <em>Virtualização de Sistemas Operacionais</em>, nota da Aula 12.</li><li>Silberschatz, A.; Galvin, P. B.; Gagne, G. <em>Operating System Concepts</em>, 10ª ed., Wiley, 2018.</li><li>Tanenbaum, A. S.; Bos, H. <em>Modern Operating Systems</em>, 4ª ed., Pearson, 2015.</li><li>Silva, G. S.; Sousa, J. F.; Silva, E. R. C. <em>Virtualização de Sistemas Operacionais: Análise Comparativa entre os Ambientes Físico e Virtual</em>, 2017. A nota sinaliza que os dados bibliográficos devem ser verificados para publicação formal.</li></ul><p class="compact">Fonte PDF da aula: <a href="../notas/12_Virtualizacao.pdf">12_Virtualizacao.pdf</a></p></div>
+      <a class="source-note" href="../notas/12_Virtualizacao.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 13</h1><p class="subtitle">Segurança em Sistemas Operacionais</p><p><a href="../bloco3/aula13.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/so-visualizer.js"></script>
+  <script src="../assets/so-slides.js"></script>
+    </body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Como o sistema operacional abstrai, coordena e otimiza a comunicação entre processos, CPU, memória e dispositivos de E/S.">
+  <title>Aula 09 — Gerenciamento de Entrada e Saída — Sistemas Operacionais</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/so.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco2/aula08.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/09_Gerenciamento_Entrada_Saida.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 09 — Gerenciamento de Entrada e Saída">
+      <h1>Aula 09</h1>
+      <p class="subtitle">Gerenciamento de Entrada e Saída</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Sistemas Operacionais</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><div class="two-column"><div class="info-box"><strong>Ao final, você deverá</strong><ul><li>explicar por que E/S precisa de abstração e camadas;</li><li>distinguir dispositivos de bloco, caractere e rede;</li><li>comparar polling, interrupções e DMA.</li></ul></div><div class="info-box"><strong>Também deverá</strong><ul><li>descrever drivers, buffering, caching e spooling;</li><li>relacionar HDD, SSD e escalonamento;</li><li>explicar o papel do relógio, da interface de usuário e da energia.</li></ul></div></div></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–6</a>
+    </section><section id="visao-geral" data-title="O problema que o subsistema de E/S resolve">
+      <h2>O problema que o subsistema de E/S resolve</h2>
+      <div class="slide-content"><p>Teclado, SSD, impressora, rede e sensores têm velocidades, formatos e formas de operação diferentes. Ainda assim, uma aplicação precisa de uma interface previsível para ler e escrever.</p><div class="highlight"><strong>Ideia central:</strong> o sistema operacional (SO) esconde detalhes do hardware, coordena concorrência e busca eficiência, segurança e tratamento de erros.</div><p>O SO conversa com controladores e oferece abstrações reutilizáveis às aplicações, em vez de exigir que cada programa conheça cada dispositivo.</p></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="tipos-dispositivos" data-title="Tipos de dispositivos de E/S">
+      <h2>Tipos de dispositivos de E/S</h2>
+      <div class="slide-content"><div class="three-column"><div class="info-box"><strong>Bloco</strong><p>Armazena e acessa unidades de tamanho fixo com endereços próprios. Exemplos: HDD e SSD.</p></div><div class="info-box"><strong>Caractere</strong><p>Entrega ou aceita um fluxo de caracteres/eventos, sem estrutura de blocos. Exemplos: teclado, mouse e porta serial.</p></div><div class="info-box"><strong>Rede</strong><p>Troca dados por interfaces de comunicação; a unidade observada pela aplicação costuma ser um pacote ou fluxo.</p></div></div><p>A classificação orienta as operações e o driver, mas não elimina a necessidade de uma interface uniforme.</p></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="controlador-portas" data-title="Controlador, registradores e portas de E/S">
+      <h2>Controlador, registradores e portas de E/S</h2>
+      <div class="slide-content"><p>O <strong>controlador</strong> é a eletrônica entre o barramento e o periférico. Ele mantém registradores de dados e controle e pode possuir buffer próprio. O SO interage com o controlador, não diretamente com o dispositivo.</p><div class="diagram-flow"><div class="diagram-node">CPU / SO</div><div class="diagram-node">Barramento</div><div class="diagram-node">Controlador<br><small>dados • status • controle • buffer</small></div><div class="diagram-node">Dispositivo</div></div><p><strong>Endereçamento:</strong> port-mapped I/O usa espaço separado e instruções como <code>IN</code>/<code>OUT</code>; MMIO (E/S mapeada em memória) mapeia registradores no espaço de memória e usa instruções comuns.</p></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="polling-interrupcao" data-title="Polling e interrupções">
+      <h2>Polling e interrupções</h2>
+      <div class="slide-content"><div class="comparison-grid"><div><strong>Polling (sondagem)</strong><p>A CPU verifica repetidamente o bit de status até o controlador ficar pronto. É simples, mas desperdiça ciclos enquanto nada mudou.</p></div><div><strong>Interrupção</strong><p>O controlador sinaliza quando precisa de atenção ou conclui uma operação. A CPU salva o estado e executa a ISR (rotina de tratamento de interrupção).</p></div></div><div class="warning-box"><strong>Trade-off:</strong> interrupções reduzem espera ativa, mas também têm custo de troca de contexto e tratamento. A escolha depende do padrão e do volume de E/S.</div></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="dma" data-title="DMA: transferir sem ocupar a CPU o tempo todo">
+      <h2>DMA: transferir sem ocupar a CPU o tempo todo</h2>
+      <div class="slide-content"><p>DMA (<em>Direct Memory Access</em>, acesso direto à memória) é adequado a transferências grandes. A CPU configura origem, destino e quantidade; o controlador/DMA move os dados entre dispositivo e memória; ao terminar, uma interrupção notifica a CPU.</p><div class="sequence-flow"><div>1. CPU configura endereço e contagem</div><div>2. DMA transfere o bloco para/de memória</div><div>3. DMA sinaliza conclusão</div><div>4. SO trata resultado e acorda o processo</div></div><p>Assim, a CPU fica disponível para outras tarefas durante a maior parte da transferência.</p></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="objetivos-software" data-title="Objetivos do software de E/S">
+      <h2>Objetivos do software de E/S</h2>
+      <div class="slide-content"><div class="two-column"><ul><li><strong>Independência de dispositivo:</strong> a mesma operação de arquivo pode servir a HDD, SSD ou pen drive.</li><li><strong>Nomenclatura uniforme:</strong> nomes são strings ou inteiros, não detalhes físicos do dispositivo.</li></ul><ul><li><strong>Tratamento de erros:</strong> o nível mais próximo tenta corrigir ou reporta ao nível superior.</li><li><strong>Coordenação:</strong> proteção, bloqueio, buffers e alocação evitam conflitos e melhoram o uso.</li></ul></div><div class="highlight">A abstração não significa que todos os dispositivos têm o mesmo comportamento: ela oferece operações comuns e preserva diferenças relevantes nos níveis apropriados.</div></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="sync-async" data-title="E/S síncrona e assíncrona">
+      <h2>E/S síncrona e assíncrona</h2>
+      <div class="slide-content"><div class="comparison-grid"><div><strong>Síncrona (bloqueante)</strong><p>O processo solicita a operação e fica bloqueado até a conclusão. É simples de raciocinar, mas pode deixar o processo esperando.</p></div><div><strong>Assíncrona (não bloqueante)</strong><p>O processo continua enquanto a E/S ocorre. O SO avisa a conclusão por sinal, callback ou mecanismo equivalente.</p></div></div><p>Em ambos os casos, o kernel precisa registrar a requisição, proteger os dados e tratar sucesso ou erro. “Não bloqueante” não significa que a operação terminou imediatamente.</p></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="buffer-cache-spool" data-title="Buffering, caching e spooling">
+      <h2>Buffering, caching e spooling</h2>
+      <div class="slide-content"><div class="three-column"><div class="info-box"><strong>Buffer</strong><p>Área temporária durante a transferência, absorvendo diferenças de velocidade entre produtor e consumidor.</p></div><div class="info-box"><strong>Cache</strong><p>Cópia em memória mais rápida de dados de armazenamento lento; pode evitar uma nova leitura física.</p></div><div class="info-box"><strong>Spooling</strong><p>Trabalhos são enfileirados, frequentemente em disco, para um dispositivo como impressora processar depois.</p></div></div><p>Essas técnicas desacoplam componentes e aumentam a utilização, mas exigem políticas de consistência, ordenação e espaço.</p></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="camadas" data-title="Camadas do software de E/S">
+      <h2>Camadas do software de E/S</h2>
+      <div class="slide-content"><div class="diagram-flow"><div class="diagram-node">Aplicação<br><small>printf, scanf</small></div><div class="diagram-node">Biblioteca / espaço do usuário</div><div class="diagram-node">E/S independente de dispositivo<br><small>nomes, proteção, buffers</small></div><div class="diagram-node">Driver específico</div><div class="diagram-node">Controlador + hardware</div></div><p>As camadas reduzem complexidade: a biblioteca oferece conveniência; o kernel uniforme coordena; o driver conhece o controlador; a rotina de interrupção reage ao hardware.</p></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="interrupcao-driver" data-title="O caminho de uma requisição">
+      <h2>O caminho de uma requisição</h2>
+      <div class="slide-content"><ol class="step-list"><li>A aplicação chama uma biblioteca e uma chamada de sistema de leitura/escrita.</li><li>O software independente de dispositivo valida acesso, nomeia o dispositivo e prepara a requisição.</li><li>O driver traduz a operação para o controlador e pode iniciar DMA.</li><li>O dispositivo conclui; o controlador gera interrupção.</li><li>A rotina de interrupção identifica a causa, o driver finaliza e o SO entrega dados ou erro ao processo.</li></ol><p>O processo pode permanecer bloqueado ou continuar, conforme o modelo síncrono/assíncrono.</p></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="atividade-camadas" data-title="Atividade 1 — identifique a camada">
+      <h2>Atividade 1 — identifique a camada</h2>
+      <div class="slide-content"><p>Uma aplicação chama <code>read</code>; o sistema precisa programar registradores de um controlador de armazenamento; depois uma interrupção informa que o bloco chegou à memória. Associe cada ação à camada mais adequada.</p><details class="answer"><summary>Ver resposta</summary><p><strong>read</strong> é exposto pela biblioteca/chamada de sistema; a validação, proteção e fila pertencem ao software independente de dispositivo; a programação do controlador pertence ao driver; salvar o estado, identificar a interrupção e encaminhar o evento pertence à rotina de tratamento de interrupção.</p></details></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="hdd" data-title="HDD: estrutura e tempo de acesso">
+      <h2>HDD: estrutura e tempo de acesso</h2>
+      <div class="slide-content"><p>Um HDD (Hard Disk Drive) usa pratos magnéticos giratórios e cabeças de leitura/escrita móveis. Cada superfície é organizada em trilhas concêntricas, divididas em setores.</p><div class="highlight"><strong>Tempo de acesso ≈</strong> busca (<em>seek</em>, mover o braço) + latência rotacional (esperar o setor girar) + transferência dos dados.</div><p>Como busca e rotação custam tempo, a ordem das requisições pode alterar bastante o desempenho percebido.</p></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="escalonamento-disco" data-title="Escalonamento de disco magnético">
+      <h2>Escalonamento de disco magnético</h2>
+      <div class="slide-content"><p>O escalonador escolhe a ordem de atendimento para reduzir movimentos e tempos de espera, sem perder critérios de justiça.</p><table><thead><tr><th>Algoritmo</th><th>Ideia</th></tr></thead><tbody><tr><td>FCFS</td><td>Atende na ordem de chegada; simples, mas pode mover muito o braço.</td></tr><tr><td>SSTF</td><td>Escolhe a requisição mais próxima; pode deixar outras esperando.</td></tr><tr><td>SCAN / C-SCAN</td><td>Varre como elevador; C-SCAN retorna para dar serviço mais uniforme.</td></tr><tr><td>LOOK / C-LOOK</td><td>Varrem apenas até a última requisição naquela direção.</td></tr></tbody></table></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="ssd" data-title="SSD: características e gerenciamento">
+      <h2>SSD: características e gerenciamento</h2>
+      <div class="slide-content"><p>SSD (<em>Solid State Drive</em>) usa memória flash, geralmente NAND, e não possui partes móveis. Por isso não há busca mecânica nem latência rotacional.</p><div class="two-column"><div class="success-box"><strong>Vantagens</strong><ul><li>acesso e transferência rápidos;</li><li>menor consumo e maior resistência a choques.</li></ul></div><div class="warning-box"><strong>Limitações</strong><ul><li>custo por gigabyte geralmente maior;</li><li>células têm ciclos limitados de escrita.</li></ul></div></div><p><strong>Wear leveling</strong> distribui escritas para mitigar desgaste. O TRIM informa ao SSD quais blocos não estão mais em uso, auxiliando seu gerenciamento interno.</p></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="atividade-armazenamento" data-title="Atividade 2 — escolha a estratégia">
+      <h2>Atividade 2 — escolha a estratégia</h2>
+      <div class="slide-content"><p>Uma fila de requisições atende um HDD com muitas posições espalhadas. Por que um algoritmo que considera a distância até a próxima requisição pode ajudar mais que FCFS? E por que essa justificativa é menos central em um SSD?</p><details class="answer"><summary>Ver resposta</summary><p>No HDD, reduzir deslocamentos do braço reduz o componente de busca do acesso; SSTF, SCAN ou variantes podem explorar isso, respeitando o trade-off de justiça. No SSD não há braço nem rotação, então a busca mecânica desaparece; ainda existem custos de fila, transferência, paralelismo e escrita, mas a mesma justificativa mecânica não se aplica.</p></details></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="clock" data-title="Relógio e temporizador do sistema">
+      <h2>Relógio e temporizador do sistema</h2>
+      <div class="slide-content"><p>O relógio/temporizador gera interrupções regulares que o SO usa como referência temporal.</p><ul><li>mantém a hora do dia;</li><li>impede que um processo monopolize a CPU, sustentando o quantum em escalonamento preemptivo como Round Robin;</li><li>agenda eventos futuros, como acordar um processo que dorme;</li><li>coleta estatísticas de uso.</li></ul><div class="info-box">O temporizador não é apenas um mostrador de horas: ele cria oportunidades periódicas para o kernel retomar controle e executar decisões de escalonamento.</div></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="interfaces-usuario" data-title="Interfaces com o usuário">
+      <h2>Interfaces com o usuário</h2>
+      <div class="slide-content"><div class="two-column"><div><strong>Teclado e mouse</strong><p>São dispositivos de caractere/evento. Pressionar uma tecla ou mover o mouse pode gerar uma interrupção; o SO transforma o evento em entrada para aplicações.</p></div><div><strong>Monitor</strong><p>O SO gerencia o <em>frame buffer</em>, região de memória de vídeo que representa o que será exibido. Em uma GUI, o gerenciador de janelas participa do software de E/S no espaço do usuário.</p></div></div><p>A interface percebida pelo usuário depende da cooperação entre eventos, buffers, drivers e software de apresentação.</p></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="energia" data-title="Gerenciamento de energia em E/S">
+      <h2>Gerenciamento de energia em E/S</h2>
+      <div class="slide-content"><p>Dispositivos e componentes podem oferecer estados como ativo, ocioso e dormindo. O SO decide quando reduzir consumo e quando reativar o componente.</p><div class="diagram-flow"><div class="diagram-node">Inatividade detectada</div><div class="diagram-node">Estado de baixo consumo</div><div class="diagram-node">Nova requisição</div><div class="diagram-node">Acordar + atender</div></div><div class="warning-box"><strong>Trade-off:</strong> economizar energia pode aumentar a latência de retomada. A política precisa equilibrar autonomia/consumo e responsividade.</div><p>ACPI (<em>Advanced Configuration and Power Interface</em>) é citado na nota como padrão aberto para o SO controlar o gerenciamento de energia do hardware.</p></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="sintese" data-title="Síntese: projetar E/S é gerenciar diferenças">
+      <h2>Síntese: projetar E/S é gerenciar diferenças</h2>
+      <div class="slide-content"><ul><li>O controlador separa o SO da eletrônica específica do dispositivo.</li><li>Interrupções e DMA evitam que a CPU fique ocupada esperando ou copiando cada unidade de dado.</li><li>Camadas e drivers oferecem abstração sem apagar diferenças importantes.</li><li>Buffer, cache e spool desacoplam velocidades; síncrono e assíncrono definem como o processo espera.</li><li>HDD exige atenção à mecânica; SSD muda o perfil de custos e de gerenciamento.</li><li>Relógio, interfaces e energia conectam E/S a escalonamento, experiência do usuário e autonomia.</li></ul></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–6</a>
+    </section><section id="referencias" data-title="Referências e fonte da aula">
+      <h2>Referências e fonte da aula</h2>
+      <div class="slide-content"><p><strong>Fonte principal:</strong> Rettore, Paulo. <em>Gerenciamento de Entrada e Saída</em>, material complementar em PDF, pp. 1–6.</p><ul><li>Silberschatz, Galvin &amp; Gagne. <em>Operating System Concepts</em>, 10ª ed., 2018.</li><li>Tanenbaum &amp; Bos. <em>Modern Operating Systems</em>, 4ª ed., 2015.</li><li>Stallings. <em>Operating Systems: Internals and Design Principles</em>, 9ª ed., 2018.</li><li>Arpaci-Dusseau &amp; Arpaci-Dusseau. <em>Operating Systems: Three Easy Pieces</em>, 2018.</li></ul><p class="compact">Os conteúdos são adaptações didáticas da nota fornecida; não foram realizadas consultas externas.</p></div>
+      <a class="source-note" href="../notas/09_Gerenciamento_Entrada_Saida.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 10</h1><p class="subtitle">Sistemas Multiprocessadores</p><p><a href="../bloco3/aula10.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/so-visualizer.js"></script>
+  <script src="../assets/so-slides.js"></script>
+    </body>
+</html>

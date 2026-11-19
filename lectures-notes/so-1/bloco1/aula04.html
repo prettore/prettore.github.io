@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Como o sistema operacional escolhe processos para compartilhar a CPU e equilibrar desempenho, justiça e responsividade.">
+  <title>Aula 04 — Escalonamento de Processos — Sistemas Operacionais</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/so.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco1/aula03.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/04_Escalonamento_Processos.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 04 — Escalonamento de Processos">
+      <h1>Aula 04</h1>
+      <p class="subtitle">Escalonamento de Processos</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Sistemas Operacionais</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><p>Ao final, você deverá conseguir:</p><ul><li>explicar como a fila de prontos, o escalonador e o dispatcher compartilham uma CPU;</li><li>distinguir escalonamento preemptivo e não preemptivo;</li><li>comparar FCFS, SJF/SRTF, prioridade, Round Robin, múltiplas filas e feedback;</li><li>interpretar critérios de desempenho e reconhecer as ideias centrais de Linux e Windows.</li></ul></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–5</a>
+    </section><section id="problema-compartilhamento" data-title="O problema: muitos processos, uma CPU">
+      <h2>O problema: muitos processos, uma CPU</h2>
+      <div class="slide-content"><p>Em multiprogramação, vários processos podem estar prontos na memória, mas uma CPU executa apenas um por vez. O escalonador de CPU decide qual processo recebe o próximo intervalo de execução.</p><div class="diagram-flow"><div class="diagram-node">Fila de prontos<br><small>P1 · P2 · P3</small></div><div class="diagram-node">Escalonador</div><div class="diagram-node">CPU<br><small>um processo</small></div></div><p>A decisão afeta utilização, vazão, tempo de resposta e sensação de interatividade.</p></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="ciclo-burst" data-title="Ciclo de bursts de CPU e E/S">
+      <h2>Ciclo de bursts de CPU e E/S</h2>
+      <div class="slide-content"><p>Um processo alterna rajadas (bursts) de CPU com rajadas de entrada/saída (E/S). Quando solicita E/S, deixa a CPU e pode voltar à fila de prontos após a conclusão.</p><div class="sequence-flow"><div>CPU burst</div><div>E/S burst</div><div>CPU burst</div><div>Conclusão</div></div><div class="info-box"><strong>Implicação:</strong> um processo bloqueado por E/S não deve ocupar a CPU; o escalonador pode aproveitá-la para outro processo pronto.</div></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="componentes" data-title="Escalonador e dispatcher">
+      <h2>Escalonador e dispatcher</h2>
+      <div class="slide-content"><div class="two-column"><div><h3>Escalonador de CPU</h3><p>Seleciona um processo da fila de prontos quando a CPU fica disponível ou quando uma preempção ocorre.</p></div><div><h3>Dispatcher</h3><p>Entrega a CPU ao selecionado: troca o contexto, muda para modo usuário e salta ao ponto correto do programa.</p></div></div><div class="highlight"><strong>Latência do dispatcher</strong> é o tempo gasto nessa entrega. Ela deve ser pequena, pois cada troca consome tempo que não executa o trabalho do usuário.</div></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="preempcao" data-title="Preemptivo versus não preemptivo">
+      <h2>Preemptivo versus não preemptivo</h2>
+      <div class="slide-content"><div class="comparison-grid"><div><h3>Não preemptivo</h3><p>Depois de receber a CPU, o processo a mantém até terminar ou bloquear, por exemplo ao pedir E/S. Não há interrupção forçada.</p></div><div><h3>Preemptivo</h3><p>O sistema pode interromper o processo e escolher outro, por exemplo quando vence o quantum ou chega um processo de maior prioridade.</p></div></div><p>Preempção melhora responsividade, mas aumenta trocas de contexto e exige cuidado com dados compartilhados.</p></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="criterios" data-title="Como avaliar um escalonador">
+      <h2>Como avaliar um escalonador</h2>
+      <div class="slide-content"><ul><li><strong>Utilização da CPU:</strong> manter o processador ocupado quando há trabalho.</li><li><strong>Vazão (throughput):</strong> processos concluídos por unidade de tempo.</li><li><strong>Turnaround:</strong> submissão até conclusão, incluindo espera, CPU e E/S.</li><li><strong>Tempo de espera:</strong> soma dos períodos na fila de prontos.</li><li><strong>Tempo de resposta:</strong> submissão até a primeira resposta observável.</li></ul><p>Em geral, busca-se maximizar utilização e vazão e minimizar os três tempos — objetivos que podem entrar em conflito.</p></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="exemplo-metricas" data-title="Exemplo: espera, turnaround e resposta">
+      <h2>Exemplo: espera, turnaround e resposta</h2>
+      <div class="slide-content"><p>Considere um processo que chega em <strong>t=0</strong>, espera 3 unidades na fila, executa por 4 e termina em t=7. Seu tempo de espera é 3 e o turnaround é 7.</p><div class="sequence-flow"><div>chegada<br>t=0</div><div>fila<br>0–3</div><div>CPU<br>3–7</div><div>fim<br>t=7</div></div><div class="info-box"><strong>Resposta</strong> não é necessariamente 7: se a primeira saída ocorreu em t=4, o tempo de resposta foi 4. O critério depende do que se quer otimizar.</div></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="fcfs" data-title="FCFS: primeiro a chegar, primeiro servido">
+      <h2>FCFS: primeiro a chegar, primeiro servido</h2>
+      <div class="slide-content"><p><strong>FCFS</strong> (First-Come, First-Served) usa uma fila FIFO: o processo que chega primeiro executa primeiro. É simples e não preemptivo.</p><div class="diagram-flow"><div class="diagram-node">Fila FIFO<br>P1 → P2 → P3</div><div class="diagram-node">CPU<br>P1, depois P2</div></div><p>Se P1 tiver uma rajada longa, P2 e P3 curtos ficam presos atrás dele: é o <strong>efeito comboio</strong>. A simplicidade pode custar tempo médio de espera elevado.</p></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="sjf-srtf" data-title="SJF e SRTF: priorizar o menor trabalho">
+      <h2>SJF e SRTF: priorizar o menor trabalho</h2>
+      <div class="slide-content"><p><strong>SJF</strong> (Shortest-Job First) escolhe o menor próximo burst de CPU. Na versão não preemptiva, o processo mantém a CPU até concluir seu burst.</p><p>Na versão preemptiva, <strong>SRTF</strong> (Shortest-Remaining-Time-First), uma chegada com tempo restante menor pode interromper o processo atual.</p><div class="warning-box"><strong>Limite prático:</strong> o próximo burst precisa ser estimado. Processos longos podem sofrer inanição se trabalhos curtos continuarem chegando.</div></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="prioridade" data-title="Escalonamento por prioridade">
+      <h2>Escalonamento por prioridade</h2>
+      <div class="slide-content"><p>Cada processo recebe uma prioridade; a CPU escolhe a maior (na convenção descrita na nota, menor número significa maior prioridade). Pode ser preemptivo ou não.</p><p>SJF pode ser visto como prioridade inversa do próximo burst previsto. O risco é a <strong>inanição</strong> de baixa prioridade.</p><div class="success-box"><strong>Aging:</strong> aumentar gradualmente a prioridade de quem espera há muito tempo reduz o risco de espera indefinida.</div></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="round-robin" data-title="Round Robin e o quantum">
+      <h2>Round Robin e o quantum</h2>
+      <div class="slide-content"><p><strong>Round Robin (RR)</strong> adapta a fila à divisão de tempo: cada processo recebe no máximo um quantum e, se não terminar, volta ao fim da fila circular.</p><div class="sequence-flow"><div>P1<br>quantum</div><div>P2<br>quantum</div><div>P3<br>quantum</div><div>P1<br>próxima volta</div></div><p>Quantum grande faz RR se aproximar de FCFS. Quantum pequeno melhora alternância, mas pode gerar muitas trocas de contexto. A nota cita, como ordem de grandeza, 10–100 ms.</p></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="atividade-gantt" data-title="Atividade 1 — compare duas políticas">
+      <h2>Atividade 1 — compare duas políticas</h2>
+      <div class="slide-content"><p>Três processos chegam juntos e precisam de CPU por P1=6, P2=2 e P3=1 unidades. Em FCFS na ordem P1, P2, P3, qual é o tempo médio de espera? Em SJF não preemptivo, qual é a ordem e o tempo médio?</p><details class="answer"><summary>Ver resposta</summary><p>FCFS: esperas 0, 6 e 8; média = 14/3 ≈ 4,67. SJF: ordem P3, P2, P1; esperas 0, 1 e 3; média = 4/3 ≈ 1,33. SJF reduz a média neste conjunto, mas depende de conhecer ou estimar os bursts.</p></details></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="multilevel-queue" data-title="Múltiplas filas">
+      <h2>Múltiplas filas</h2>
+      <div class="slide-content"><p>A fila de prontos é particionada por classe de trabalho, por exemplo processos interativos em primeiro plano e processos batch em segundo plano.</p><div class="diagram-flow"><div class="diagram-node">Primeiro plano<br>RR</div><div class="diagram-node">Escalonador entre filas</div><div class="diagram-node">Segundo plano<br>FCFS</div></div><p>As filas podem usar algoritmos próprios; entre elas, pode haver prioridade fixa (servir a de primeiro plano antes) ou divisão de tempo. A pouca flexibilidade decorre de processos não mudarem de fila.</p></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="feedback" data-title="Múltiplas filas com retroalimentação">
+      <h2>Múltiplas filas com retroalimentação</h2>
+      <div class="slide-content"><p>Na <strong>feedback queue</strong>, processos podem mudar de fila. Um processo que usa muita CPU pode ser rebaixado; quem espera muito pode ser promovido (<em>aging</em>).</p><div class="step-list"><div>1. Entra em uma fila de maior prioridade.</div><div>2. Consome seu quantum e, se persistir, desce.</div><div>3. Espera prolongada pode promover o processo.</div></div><p>É geral, mas complexo: define-se número de filas, algoritmo de cada uma, regras de promoção/rebaixamento e fila inicial.</p></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="atividade-rr" data-title="Atividade 2 — escolha o quantum">
+      <h2>Atividade 2 — escolha o quantum</h2>
+      <div class="slide-content"><p>Em um sistema interativo, o que tende a ocorrer se o quantum do Round Robin for muito grande? E se for muito pequeno? Relacione cada caso a responsividade e overhead.</p><details class="answer"><summary>Ver resposta</summary><p>Quantum muito grande: cada processo permanece muito tempo na CPU e o comportamento se aproxima de FCFS, piorando a alternância percebida. Quantum muito pequeno: a resposta pode alternar mais cedo, porém o overhead de trocas de contexto cresce e reduz o tempo útil de CPU.</p></details></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="linux-evolucao" data-title="Linux: evolução e contexto de versão">
+      <h2>Linux: evolução e contexto de versão</h2>
+      <div class="slide-content"><p>A nota descreve uma evolução histórica: escalonadores Linux antigos usavam uma abordagem <strong>O(1)</strong>; a partir do kernel 2.6.23, o <strong>Completely Fair Scheduler (CFS)</strong> passou a atender tarefas normais (não de tempo real).</p><div class="warning-box"><strong>Contexto:</strong> nomes e detalhes de escalonadores dependem da versão do kernel. Aqui, mantenha a distinção didática da nota, sem tratá-la como descrição de todos os kernels atuais.</div></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="linux-cfs" data-title="Linux: ideia do CFS">
+      <h2>Linux: ideia do CFS</h2>
+      <div class="slide-content"><p>O CFS busca repartir a CPU de forma justa. Para cada processo, acompanha um <strong>vruntime</strong> (tempo de execução virtual); escolhe o processo com menor vruntime. Quem executou menos, ou ficou limitado por E/S, tende a permanecer com valor menor e recebe mais chance.</p><div class="diagram-flow"><div class="diagram-node">Prontos ordenados<br>menor vruntime →</div><div class="diagram-node">Escolher menor</div><div class="diagram-node">Executar<br>vruntime aumenta</div></div><p>Na descrição da nota, uma árvore rubro-negra mantém a ordenação para seleção eficiente.</p></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4–5</a>
+    </section><section id="linux-tempo-real" data-title="Linux: políticas de tempo real">
+      <h2>Linux: políticas de tempo real</h2>
+      <div class="slide-content"><p>Para requisitos de tempo real, a nota apresenta <strong>SCHED_FIFO</strong> (FIFO preemptivo baseado em prioridade) e <strong>SCHED_RR</strong> (Round Robin preemptivo baseado em prioridade e quantum).</p><div class="info-box"><strong>Relação com tarefas normais:</strong> na descrição da fonte, tarefas de tempo real têm prioridade sobre as tarefas normais gerenciadas pelo CFS. Isso muda o critério de escolha: prioridade e previsibilidade passam à frente da justiça entre tarefas comuns.</div></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="windows" data-title="Windows: prioridade, quantum e filas">
+      <h2>Windows: prioridade, quantum e filas</h2>
+      <div class="slide-content"><p>A nota descreve um escalonador preemptivo baseado em prioridades, com 32 níveis: classe de tempo real (16–31), classe variável (1–15) e prioridade 0 reservada à thread de página zero.</p><ul><li>Há uma fila de prontos por nível; escolhe-se uma thread da maior prioridade não vazia.</li><li>Na classe variável, a prioridade pode receber <strong>boost</strong>, por exemplo após E/S, favorecendo responsividade.</li><li>Ao expirar o quantum, ocorre troca se houver outra thread da mesma prioridade; caso contrário, a thread pode continuar.</li></ul></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="windows-afinidade" data-title="Windows: quantum e afinidade">
+      <h2>Windows: quantum e afinidade</h2>
+      <div class="slide-content"><div class="two-column"><div><h3>Quantum</h3><p>O valor pode variar conforme configuração (por exemplo, desktop ou servidor) e prioridade. Logo, não é uma constante universal do Windows.</p></div><div><h3>Afinidade</h3><p>Em multiprocessadores, threads podem ser restringidas a um subconjunto de processadores. Isso controla onde podem executar, mas também pode limitar oportunidades de balanceamento.</p></div></div><p>O modelo combina preempção, níveis de prioridade, filas por nível e ajustes dinâmicos.</p></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="sintese" data-title="Síntese: não existe política universal">
+      <h2>Síntese: não existe política universal</h2>
+      <div class="slide-content"><p>Escalonar é escolher um compromisso entre:</p><div class="three-column"><div><strong>Batch</strong><br>vazão e turnaround</div><div><strong>Interativo</strong><br>resposta e alternância</div><div><strong>Tempo real</strong><br>prioridade e previsibilidade</div></div><p>FCFS é simples; SJF favorece espera média; prioridade expressa importância; RR favorece compartilhamento; filas e feedback combinam classes e adaptação. A implementação concreta depende do sistema e da versão.</p></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–6</a>
+    </section><section id="resumo" data-title="Resumo da aula">
+      <h2>Resumo da aula</h2>
+      <div class="slide-content"><ul><li>Processos alternam CPU e E/S; o escalonador escolhe entre os prontos e o dispatcher efetiva a troca.</li><li>Preempção melhora responsividade, mas introduz custo de contexto.</li><li>Utilização, vazão, turnaround, espera e resposta medem dimensões diferentes.</li><li>Algoritmos clássicos expõem trade-offs: comboio, inanição, estimativas, quantum e complexidade.</li><li>Linux (CFS e políticas de tempo real, no recorte da nota) e Windows (prioridades, quantum e afinidade) mostram que o contexto de implementação importa.</li></ul></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–6</a>
+    </section><section id="referencias" data-title="Referências">
+      <h2>Referências</h2>
+      <div class="slide-content"><ul><li>Rettore, P. (adaptação didática). <em>Escalonamento de Processos</em>, material da aula, PDF fornecido.</li><li>Silberschatz, A.; Galvin, P. B.; Gagne, G. <em>Operating System Concepts</em>, 10ª ed., Wiley, 2018.</li><li>Tanenbaum, A. S.; Bos, H. <em>Modern Operating Systems</em>, 4ª ed., Pearson, 2015.</li><li>Love, R. <em>Linux Kernel Development</em>, 3ª ed., Addison-Wesley, 2010.</li><li>Russinovich, M. E.; Solomon, D. A.; Ionescu, A. <em>Windows Internals, Part 1</em>, 6ª ed., Microsoft Press, 2012.</li></ul><p class="compact">O material-base informa que é uma compilação educacional; os detalhes históricos e dependentes de versão foram sinalizados nos slides correspondentes.</p></div>
+      <a class="source-note" href="../notas/04_Escalonamento_Processos.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 05</h1><p class="subtitle">Gerenciamento de Memória</p><p><a href="../bloco2/aula05.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/so-visualizer.js"></script>
+  <script src="../assets/so-slides.js"></script>
+    </body>
+</html>

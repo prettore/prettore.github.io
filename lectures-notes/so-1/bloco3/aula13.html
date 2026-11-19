@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Objetivos, ameaças, mecanismos de proteção, autenticação e recursos de segurança em Linux e Windows.">
+  <title>Aula 13 — Segurança em Sistemas Operacionais — Sistemas Operacionais</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/so.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco3/aula12.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/13_Seguranca_Sistemas_Operacionais.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 13 — Segurança em Sistemas Operacionais">
+      <h1>Aula 13</h1>
+      <p class="subtitle">Segurança em Sistemas Operacionais</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Sistemas Operacionais</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><p>Ao final, você deverá ser capaz de:</p><ul><li>relacionar a segurança do SO à proteção de recursos de hardware e software;</li><li>distinguir confidencialidade, integridade, disponibilidade, autenticidade, não repúdio e responsabilização;</li><li>classificar ameaças e explicar mecanismos de proteção;</li><li>comparar autenticação e recursos de segurança em Linux e Windows.</li></ul></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="papel-so" data-title="Por que o sistema operacional é central?">
+      <h2>Por que o sistema operacional é central?</h2>
+      <div class="slide-content"><p>O sistema operacional controla o acesso a processadores, memória, arquivos, dispositivos e serviços. Por isso, ele funciona como uma fronteira entre usuários, processos e recursos.</p><div class="diagram-flow"><div class="diagram-node"><strong>Usuário/processo</strong><br>solicita uma operação</div><div class="diagram-node"><strong>SO</strong><br>autentica, autoriza e isola</div><div class="diagram-node"><strong>Recurso</strong><br>arquivo, memória, rede ou dispositivo</div></div><p class="highlight">Segurança não é um único programa: é uma política aplicada por várias camadas.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="tr-ade-cia" data-title="Tríade CIA: três objetivos fundamentais">
+      <h2>Tríade CIA: três objetivos fundamentais</h2>
+      <div class="slide-content"><div class="three-column"><div class="info-box"><strong>Confidencialidade</strong><p>Somente entidades autorizadas acessam a informação. Ex.: criptografia e controle de acesso.</p></div><div class="info-box"><strong>Integridade</strong><p>Dados e recursos permanecem corretos, completos e só são alterados com autorização.</p></div><div class="info-box"><strong>Disponibilidade</strong><p>Recursos ficam acessíveis e utilizáveis quando necessários; DoS ameaça esse objetivo.</p></div></div><p>A mesma medida pode ajudar em mais de um objetivo, mas não os torna equivalentes.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="outros-objetivos" data-title="Outros objetivos de segurança">
+      <h2>Outros objetivos de segurança</h2>
+      <div class="slide-content"><div class="two-column"><div><ul><li><strong>Autenticidade:</strong> verificar se usuário, processo ou dispositivo é quem afirma ser.</li><li><strong>Não repúdio:</strong> dificultar que uma entidade negue uma ação realizada, como aprovar uma transação.</li></ul></div><div><ul><li><strong>Responsabilização:</strong> rastrear ações para atribuir responsabilidades.</li><li>Logs de auditoria são um mecanismo típico de responsabilização, não uma prova automática de que todo evento é legítimo.</li></ul></div></div></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="malware" data-title="Ameaças: malware">
+      <h2>Ameaças: malware</h2>
+      <div class="slide-content"><p><strong>Malware</strong> é software malicioso, mas suas formas diferem:</p><div class="three-column compact"><div><strong>Vírus</strong><p>Anexa-se a programa hospedeiro e pode se replicar quando ele é executado.</p></div><div><strong>Worm</strong><p>É autônomo e se espalha pela rede explorando vulnerabilidades.</p></div><div><strong>Trojan</strong><p>Parece útil, mas esconde comportamento malicioso e depende do engano do usuário.</p></div></div><div class="two-column"><p><strong>Spyware:</strong> coleta informações sem conhecimento ou consentimento.</p><p><strong>Ransomware:</strong> criptografa arquivos ou bloqueia o acesso e exige resgate.</p></div></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="rootkit-vulnerabilidades" data-title="Ameaças: persistência e falhas exploráveis">
+      <h2>Ameaças: persistência e falhas exploráveis</h2>
+      <div class="slide-content"><div class="two-column"><div class="warning-box"><strong>Rootkit</strong><p>Busca privilégios de administrador e tenta ocultar presença e atividades de ferramentas de segurança e do SO.</p></div><div class="info-box"><strong>Vulnerabilidade</strong><p>Falha de projeto, implementação ou configuração. Exemplos citados: buffer overflow, SQL injection e cross-site scripting (XSS).</p></div></div><p>Uma vulnerabilidade é uma condição explorável; o impacto depende de privilégios, exposição e controles existentes.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="ataques-rede" data-title="Ameaças de rede">
+      <h2>Ameaças de rede</h2>
+      <div class="slide-content"><ul><li><strong>DoS (Denial of Service):</strong> tenta indisponibilizar um recurso; no DDoS, múltiplas fontes comprometidas formam uma botnet.</li><li><strong>Sniffing:</strong> captura e analisa pacotes, expondo dados não criptografados.</li><li><strong>Spoofing:</strong> falsifica a origem, como endereço IP ou remetente de e-mail.</li><li><strong>Man-in-the-Middle (MitM):</strong> intercepta, e possivelmente altera, uma comunicação que as partes julgam direta.</li></ul></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="engenharia-insider" data-title="Pessoas, privilégios e engenharia social">
+      <h2>Pessoas, privilégios e engenharia social</h2>
+      <div class="slide-content"><div class="two-column"><div><strong>Engenharia social</strong><p>Manipula pessoas para divulgar informações ou executar ações. Phishing usa mensagens fraudulentas para obter credenciais; pretexting cria um contexto falso para persuadir.</p></div><div><strong>Ameaça interna</strong><p>Usuário legítimo, parceiro ou ex-funcionário abusa de privilégios para causar dano ou roubar informação.</p></div></div><p class="highlight">A origem pode ser interna ou externa, e o evento pode ser intencional ou acidental.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="dominios-aneis" data-title="Domínios e anéis de proteção">
+      <h2>Domínios e anéis de proteção</h2>
+      <div class="slide-content"><p>Um <strong>domínio de proteção</strong> é um conjunto de pares (objeto, direitos). Um processo só acessa os objetos e operações previstos no seu domínio.</p><div class="diagram-flow"><div class="diagram-node"><strong>Anel 3</strong><br>aplicação de usuário<br>privilégios limitados</div><div class="diagram-node"><strong>chamada de sistema</strong><br>troca controlada de domínio</div><div class="diagram-node"><strong>Anel 0</strong><br>kernel<br>privilégios elevados</div></div><p>Os anéis são um modelo hierárquico: anéis internos têm mais privilégios. A troca deve ser controlada para não virar escalada indevida.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="matriz-acesso" data-title="Matriz de acesso: quem pode fazer o quê?">
+      <h2>Matriz de acesso: quem pode fazer o quê?</h2>
+      <div class="slide-content"><p>Na matriz, linhas representam domínios ou sujeitos; colunas representam objetos. Cada célula informa operações permitidas.</p><table><thead><tr><th>Domínio</th><th>arquivo-relatorio</th><th>dispositivo-impressora</th></tr></thead><tbody><tr><th>processo A</th><td>ler, escrever</td><td>usar</td></tr><tr><th>processo B</th><td>ler</td><td>—</td></tr></tbody></table><p>A matriz é um modelo abstrato. Sistemas reais usam representações mais compactas, como ACLs ou listas de capacidades.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="acl-capabilities" data-title="ACLs e listas de capacidades">
+      <h2>ACLs e listas de capacidades</h2>
+      <div class="slide-content"><div class="two-column"><div class="info-box"><strong>ACL (Access Control List)</strong><p>Associada a cada objeto. Lista usuários ou grupos e suas permissões. É semelhante a armazenar as colunas da matriz por objeto.</p></div><div class="info-box"><strong>Lista de capacidades</strong><p>Associada a cada domínio ou sujeito. Lista objetos e operações permitidas; uma capacidade funciona como um token de acesso.</p></div></div><p><strong>Comparação:</strong> ACL pergunta “quem pode acessar este objeto?”; capacidade pergunta “quais objetos este sujeito pode acessar?”.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="defesa-camadas" data-title="Defesa em profundidade">
+      <h2>Defesa em profundidade</h2>
+      <div class="slide-content"><div class="diagram-flow"><div class="diagram-node"><strong>Menor privilégio</strong><br>reduz o alcance do processo</div><div class="diagram-node"><strong>Sandbox</strong><br>isola código não confiável</div><div class="diagram-node"><strong>Firewall</strong><br>filtra tráfego</div><div class="diagram-node"><strong>IDS/IPS</strong><br>alerta ou bloqueia sinais de intrusão</div></div><p><strong>Princípio do menor privilégio:</strong> usuário e programa recebem somente o necessário. Sandbox restringe recursos; firewall aplica regras de rede; IDS detecta e alerta, enquanto IPS tenta bloquear.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="atividade-controle" data-title="Atividade 1 — escolha o controle">
+      <h2>Atividade 1 — escolha o controle</h2>
+      <div class="slide-content"><p>Um processo que apenas lê um arquivo de configuração tenta modificá-lo após uma exploração. Qual combinação melhor reduz o impacto?</p><ol><li>Conceder privilégios de administrador a todos os processos.</li><li>Aplicar menor privilégio e, quando adequado, sandbox; controlar o arquivo por ACL ou capacidade.</li><li>Usar apenas um firewall de rede.</li></ol><details class="answer"><summary>Ver resposta</summary><p>A opção 2. O firewall pode ajudar no tráfego, mas não substitui autorização local. Menor privilégio limita a operação; isolamento e controle de acesso reduzem o alcance da exploração.</p></details></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="fatores-autenticacao" data-title="Autenticação: três fatores">
+      <h2>Autenticação: três fatores</h2>
+      <div class="slide-content"><div class="three-column"><div><strong>Algo que sabe</strong><p>Senha ou PIN. A proteção depende da força e do armazenamento adequado, como hash com salt.</p></div><div><strong>Algo que tem</strong><p>Token, smart card, chave USB, celular ou aplicativo que fornece OTP (One-Time Password).</p></div><div><strong>Algo que é</strong><p>Biometria física ou comportamental: impressão digital, face, íris ou voz.</p></div></div><p>Autenticação verifica identidade; autorização decide quais operações a identidade pode realizar.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4–5</a>
+    </section><section id="mfa" data-title="Autenticação multifator (MFA)">
+      <h2>Autenticação multifator (MFA)</h2>
+      <div class="slide-content"><p><strong>MFA (Multi-Factor Authentication)</strong> exige evidências de dois ou mais fatores diferentes.</p><div class="sequence-flow"><div><strong>1</strong><br>senha<br><small>algo que sabe</small></div><div><strong>2</strong><br>código do autenticador<br><small>algo que tem</small></div><div><strong>3</strong><br>acesso liberado<br><small>após validação</small></div></div><p class="success-box">Senha + OTP de aplicativo é MFA; senha + outra senha continua sendo um único fator de conhecimento.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="atividade-autenticacao" data-title="Atividade 2 — autenticação ou autorização?">
+      <h2>Atividade 2 — autenticação ou autorização?</h2>
+      <div class="slide-content"><p>Uma pessoa prova a identidade com senha e código OTP, mas recebe permissão apenas para ler um relatório. Identifique as duas decisões.</p><details class="answer"><summary>Ver resposta</summary><p>Senha e OTP realizam autenticação multifator: verificam quem é a pessoa. A permissão de somente leitura é autorização, aplicada depois, por uma política de acesso ao recurso.</p></details><p>Em uma auditoria, o log pode registrar a autenticação e a operação autorizada, apoiando responsabilização.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4–5</a>
+    </section><section id="linux-permissoes" data-title="Linux: permissões e controle de acesso">
+      <h2>Linux: permissões e controle de acesso</h2>
+      <div class="slide-content"><p>As permissões tradicionais <strong>rwx</strong> são definidas para <strong>proprietário, grupo e outros</strong>. Elas expressam operações básicas de leitura, escrita e execução.</p><p><strong>ACLs POSIX</strong> permitem granularidade maior que o trio tradicional. O princípio é o mesmo: associar sujeitos ou grupos a direitos sobre objetos.</p><div class="info-box"><strong>Exemplo conceitual</strong><p>Um relatório pode ser legível pelo grupo de análise, editável pelo proprietário e inacessível a outros usuários.</p></div></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="linux-mac" data-title="Linux: MAC, capabilities e serviços">
+      <h2>Linux: MAC, capabilities e serviços</h2>
+      <div class="slide-content"><ul><li><strong>SELinux:</strong> MAC (Mandatory Access Control) com políticas detalhadas; pode confinar processos a domínios restritos.</li><li><strong>AppArmor:</strong> MAC orientado a perfis de aplicações, definindo recursos que um programa pode acessar.</li><li><strong>POSIX capabilities:</strong> dividem privilégios de root em unidades menores, concedidas conforme a necessidade.</li><li><strong>iptables/nftables:</strong> configuram regras de firewall no nível do kernel.</li><li><strong>LUKS/dm-crypt:</strong> protege dados em repouso por criptografia de disco; PAM (Pluggable Authentication Modules) organiza módulos de autenticação.</li></ul></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="windows-acesso" data-title="Windows: acesso, elevação e dados em repouso">
+      <h2>Windows: acesso, elevação e dados em repouso</h2>
+      <div class="slide-content"><ul><li><strong>NTFS ACLs:</strong> cada ACE (Access Control Entry) associa um trustee, usuário ou grupo, a permissões sobre o objeto.</li><li><strong>UAC (User Account Control):</strong> solicita confirmação ou credenciais antes de alterações potencialmente perigosas, mesmo quando a sessão é de administrador.</li><li><strong>BitLocker:</strong> criptografia de volume completo para proteger dados em repouso.</li><li><strong>Windows Defender:</strong> reúne ferramentas integradas de antivírus e firewall.</li></ul></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5–6</a>
+    </section><section id="windows-execucao-identidade" data-title="Windows: execução confiável e identidade">
+      <h2>Windows: execução confiável e identidade</h2>
+      <div class="slide-content"><ul><li><strong>AppLocker / Windows Defender Application Control:</strong> controlam quais aplicações podem ser executadas, em uma abordagem de lista permitida.</li><li><strong>Integridade de código:</strong> restringe o carregamento a drivers e componentes assinados e confiáveis.</li><li><strong>Autenticação:</strong> suporta senhas, smart cards, Windows Hello (biometria e PINs) e integração com Active Directory.</li><li><strong>SDL (Security Development Lifecycle):</strong> processo da Microsoft para construir software mais seguro.</li></ul><p class="warning-box">Os nomes e recursos refletem a descrição da nota; detalhes de implementação podem variar conforme edição e versão do Windows.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="comparacao" data-title="Linux e Windows: padrões em comum">
+      <h2>Linux e Windows: padrões em comum</h2>
+      <div class="slide-content"><table><thead><tr><th>Necessidade</th><th>Linux</th><th>Windows</th></tr></thead><tbody><tr><th>Controle de acesso</th><td>rwx, ACLs POSIX, SELinux/AppArmor</td><td>ACLs no NTFS e ACEs</td></tr><tr><th>Privilégios</th><td>capabilities e políticas MAC</td><td>UAC e integridade de código</td></tr><tr><th>Proteção de dados</th><td>LUKS/dm-crypt</td><td>BitLocker</td></tr><tr><th>Rede/autenticação</th><td>iptables/nftables e PAM</td><td>Defender, Windows Hello e Active Directory</td></tr></tbody></table><p>Os mecanismos diferem em nomenclatura e integração, mas ambos combinam controle de acesso, isolamento, autenticação e defesa em camadas.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5–6</a>
+    </section><section id="visualizacao-defesa" data-title="Visualização: uma requisição sob controles">
+      <h2>Visualização: uma requisição sob controles</h2>
+      <div class="slide-content"><div class="so-visualizer" data-title="Caminho de uma requisição"><script type="application/json">{"steps":[{"cells":["Requisição","Autenticando","Autorizando","Recurso"],"active":[0],"caption":"Um usuário ou processo solicita acesso a um recurso."},{"cells":["Requisição","Autenticando","Autorizando","Recurso"],"active":[1],"caption":"O sistema verifica a identidade por um ou mais fatores."},{"cells":["Requisição","Autenticando","Autorizando","Recurso"],"active":[2],"caption":"A política consulta direitos, privilégios, ACL ou outra regra."},{"cells":["Requisição","Autenticando","Autorizando","Recurso"],"active":[3],"caption":"Somente se autorizado, a operação alcança o recurso."}]} </script></div></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–5</a>
+    </section><section id="resumo" data-title="Resumo: segurança como sistema de controles">
+      <h2>Resumo: segurança como sistema de controles</h2>
+      <div class="slide-content"><ul><li>Confidencialidade, integridade e disponibilidade formam a tríade CIA; autenticidade, não repúdio e responsabilização complementam o objetivo.</li><li>Ameaças incluem malware, ataques de rede, engenharia social, insiders e vulnerabilidades.</li><li>Domínios, anéis, matriz, ACLs, capacidades, menor privilégio, sandbox, firewall e IDS/IPS aplicam políticas.</li><li>Autenticação identifica; autorização concede direitos; MFA combina fatores distintos.</li><li>Linux e Windows oferecem mecanismos próprios, mas ambos dependem de configuração correta e defesa em profundidade.</li></ul></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–6</a>
+    </section><section id="referencias" data-title="Referências">
+      <h2>Referências</h2>
+      <div class="slide-content"><ol><li>Silberschatz, A.; Galvin, P. B.; Gagne, G. <em>Operating System Concepts</em>. 10. ed., 2018. Capítulo sobre Segurança.</li><li>Tanenbaum, A. S.; Bos, H. <em>Modern Operating Systems</em>. 4. ed., 2015. Capítulo sobre Segurança.</li><li>Stallings, W. <em>Operating Systems: Internals and Design Principles</em>. 9. ed., 2018.</li><li>Garfinkel, S.; Spafford, G. <em>Practical Unix &amp; Internet Security</em>. 3. ed., 2003.</li><li>Russinovich, M. E.; Solomon, D. A.; Ionescu, A. <em>Windows Internals</em>. 7. ed., 2017.</li><li>NIST. <em>Special Publications on Cybersecurity</em>: <a href="https://csrc.nist.gov/publications/sp">csrc.nist.gov/publications/sp</a>.</li></ol><p>Fonte da aula: <a href="../notas/13_Seguranca_Sistemas_Operacionais.pdf">nota original em PDF</a>.</p></div>
+      <a class="source-note" href="../notas/13_Seguranca_Sistemas_Operacionais.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6–7</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">ENCERRAMENTO</p><h1>Revisite os conceitos</h1><p class="subtitle">Processos, memória, arquivos, sistemas e segurança.</p><p><a href="../index.html">Voltar ao índice da disciplina</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/so-visualizer.js"></script>
+  <script src="../assets/so-slides.js"></script>
+    </body>
+</html>

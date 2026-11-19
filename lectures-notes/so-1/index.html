@@ -1,65 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Operating Systems - Lecture Notes</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background-color: #f9f9f9;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    li {
-      background: #fff;
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 6px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    a {
-      text-decoration: none;
-      color: #0066cc;
-      font-weight: bold;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="13 aulas de Sistemas Operacionais do Prof. Paulo Rettore: slides HTML, notas em PDF, exemplos e atividades. Universidade Federal de Lavras.">
+  <title>Sistemas Operacionais (SO) — Prof. Paulo Rettore</title>
+  <link rel="icon" href="assets/ufla-logo.webp">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/so.css">
 </head>
 <body>
-
-<h1>OS: Lecture Notes</h1>
-<ul>
-  <li><a href="01_Introducao_SO.pdf" download>01 - Introdução ao SO (Pt-Br)</a></li>
-  <li><a href="02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf" download>02 - Processos, Threads e Multiprogramação (Pt-Br)</a></li>
-  <li><a href="03_Sincronizacao_Comunicacao_Processos_IPC.pdf" download>03 - Sincronização e Comunicação (IPC) (Pt-Br)</a></li>
-  <li><a href="04_Escalonamento_Processos.pdf" download>04 - Escalonamento de Processos (Pt-Br)</a></li>
-  <li><a href="05_Gerenciamento_Memoria.pdf" download>05 - Gerenciamento de Memória (Pt-Br)</a></li>
-  <li><a href="06_Gerenciamento_Memoria_Linux_Windows.pdf" download>06 - Memória em Linux vs Windows (Pt-Br)</a></li>
-  <li><a href="07_Sistemas_Arquivos.pdf" download>07 - Sistemas de Arquivos (Pt-Br)</a></li>
-  <li><a href="08_Sistemas_Arquivos_Linux_Windows.pdf" download>08 - Arquivos em Linux vs Windows (Pt-Br)</a></li>
-  <li><a href="09_Gerenciamento_Entrada_Saida.pdf" download>09 - Entrada e Saída (Pt-Br)</a></li>
-  <li><a href="10_Sistemas_Multiprocessadores.pdf" download>10 - Sistemas Multiprocessadores (Pt-Br)</a></li>
-  <li><a href="11_Sistemas_Multicomputadores.pdf" download>11 - Sistemas Multicomputadores (Pt-Br)</a></li>
-  <li><a href="12_Virtualizacao.pdf" download>12 - Virtualizacao.pdf (Pt-Br)</a></li>
-  <li><a href="13_Seguranca_Sistemas_Operacionais.pdf" download>13 - Segurança em Sistemas Operacionais (Pt-Br)</a></li>
-  <!--<li><a href="99-Visao-Geral-UFMG.pdf" download>99 - Visão Geral SO - UFMG (Pt-Br)</a></li>-->
-  <li><a href="Lecture_Notes_OS-SANDEEP.pdf" download>99 - Visão Geral SO - CSE (En-Us)</a></li>
-  <li><a href="Lecture_Notes_OS-UGC.pdf" download>99 - Visão Geral SO - UGC (En-Us)</a></li>
-  <li><a href="Operating_Systems_Book-Stanford.pdf" download>99 - Visão Geral SO - Stanford (En-Us)</a></li>
-  
-</ul>
-
+  <a href="#conteudo" class="skip-link">Ir para o conteúdo</a>
+  <header><div class="container header-content"><div><div class="site-title">Sistemas Operacionais (SO)</div><div class="site-subtitle">Prof. Paulo Rettore</div></div><img src="assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA" class="logo"></div></header>
+  <nav aria-label="Navegação principal"><div class="container"><ul><li><a href="index.html">Início</a></li><li><a href="#bloco1">Bloco 1</a></li><li><a href="#bloco2">Bloco 2</a></li><li><a href="#bloco3">Bloco 3</a></li><li><a href="#materiais">Materiais complementares</a></li><li><a href="#como-usar">Como usar</a></li></ul></div></nav>
+  <main class="container" id="conteudo">
+    <h1>Aulas de Sistemas Operacionais</h1>
+    <p class="course-intro">Compreenda como o sistema operacional coordena o hardware, gerencia recursos e oferece serviços às aplicações. Das abstrações de processos e memória à virtualização e segurança, cada aula combina explicações, exemplos e atividades.</p>
+    <p class="course-note">13 aulas · 319 slides HTML · notas originais em PDF</p>
+    <div class="blocks-container"><section class="block-card" id="bloco1"><h2 class="block-title">Bloco 1: Fundamentos e processos</h2><p>Aulas 01–04: papel do SO, concorrência e uso da CPU.</p><ul class="lecture-list"><li><a class="schedule-item" href="bloco1/aula01.html"><strong>Aula 01</strong><span class="schedule-content">Introdução ao SO</span></a>
+            <div class="lesson-actions"><a href="bloco1/aula01.html">Abrir slides →</a><a class="pdf-link" href="notas/01_Introducao_SO.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">23 slides · 3 páginas na nota original</span></li><li><a class="schedule-item" href="bloco1/aula02.html"><strong>Aula 02</strong><span class="schedule-content">Processos, Threads e Multiprogramação</span></a>
+            <div class="lesson-actions"><a href="bloco1/aula02.html">Abrir slides →</a><a class="pdf-link" href="notas/02_Processos_Threads_SO_Multiprogramacao_Tempo_Compartilhado.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">23 slides · 5 páginas na nota original</span></li><li><a class="schedule-item" href="bloco1/aula03.html"><strong>Aula 03</strong><span class="schedule-content">Sincronização e Comunicação (IPC)</span></a>
+            <div class="lesson-actions"><a href="bloco1/aula03.html">Abrir slides →</a><a class="pdf-link" href="notas/03_Sincronizacao_Comunicacao_Processos_IPC.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">24 slides · 7 páginas na nota original</span></li><li><a class="schedule-item" href="bloco1/aula04.html"><strong>Aula 04</strong><span class="schedule-content">Escalonamento de Processos</span></a>
+            <div class="lesson-actions"><a href="bloco1/aula04.html">Abrir slides →</a><a class="pdf-link" href="notas/04_Escalonamento_Processos.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">25 slides · 6 páginas na nota original</span></li></ul></section><section class="block-card" id="bloco2"><h2 class="block-title">Bloco 2: Memória, arquivos e E/S</h2><p>Aulas 05–09: recursos, armazenamento e dispositivos.</p><ul class="lecture-list"><li><a class="schedule-item" href="bloco2/aula05.html"><strong>Aula 05</strong><span class="schedule-content">Gerenciamento de Memória</span></a>
+            <div class="lesson-actions"><a href="bloco2/aula05.html">Abrir slides →</a><a class="pdf-link" href="notas/05_Gerenciamento_Memoria.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">25 slides · 6 páginas na nota original</span></li><li><a class="schedule-item" href="bloco2/aula06.html"><strong>Aula 06</strong><span class="schedule-content">Memória em Linux vs Windows</span></a>
+            <div class="lesson-actions"><a href="bloco2/aula06.html">Abrir slides →</a><a class="pdf-link" href="notas/06_Gerenciamento_Memoria_Linux_Windows.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">25 slides · 5 páginas na nota original</span></li><li><a class="schedule-item" href="bloco2/aula07.html"><strong>Aula 07</strong><span class="schedule-content">Sistemas de Arquivos</span></a>
+            <div class="lesson-actions"><a href="bloco2/aula07.html">Abrir slides →</a><a class="pdf-link" href="notas/07_Sistemas_Arquivos.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">25 slides · 7 páginas na nota original</span></li><li><a class="schedule-item" href="bloco2/aula08.html"><strong>Aula 08</strong><span class="schedule-content">Arquivos em Linux vs Windows</span></a>
+            <div class="lesson-actions"><a href="bloco2/aula08.html">Abrir slides →</a><a class="pdf-link" href="notas/08_Sistemas_Arquivos_Linux_Windows.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">24 slides · 6 páginas na nota original</span></li><li><a class="schedule-item" href="bloco2/aula09.html"><strong>Aula 09</strong><span class="schedule-content">Gerenciamento de Entrada e Saída</span></a>
+            <div class="lesson-actions"><a href="bloco2/aula09.html">Abrir slides →</a><a class="pdf-link" href="notas/09_Gerenciamento_Entrada_Saida.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">23 slides · 6 páginas na nota original</span></li></ul></section><section class="block-card" id="bloco3"><h2 class="block-title">Bloco 3: Sistemas avançados e segurança</h2><p>Aulas 10–13: paralelismo, distribuição e proteção.</p><ul class="lecture-list"><li><a class="schedule-item" href="bloco3/aula10.html"><strong>Aula 10</strong><span class="schedule-content">Sistemas Multiprocessadores</span></a>
+            <div class="lesson-actions"><a href="bloco3/aula10.html">Abrir slides →</a><a class="pdf-link" href="notas/10_Sistemas_Multiprocessadores.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">25 slides · 5 páginas na nota original</span></li><li><a class="schedule-item" href="bloco3/aula11.html"><strong>Aula 11</strong><span class="schedule-content">Sistemas Multicomputadores</span></a>
+            <div class="lesson-actions"><a href="bloco3/aula11.html">Abrir slides →</a><a class="pdf-link" href="notas/11_Sistemas_Multicomputadores.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">25 slides · 5 páginas na nota original</span></li><li><a class="schedule-item" href="bloco3/aula12.html"><strong>Aula 12</strong><span class="schedule-content">Virtualização</span></a>
+            <div class="lesson-actions"><a href="bloco3/aula12.html">Abrir slides →</a><a class="pdf-link" href="notas/12_Virtualizacao.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">26 slides · 5 páginas na nota original</span></li><li><a class="schedule-item" href="bloco3/aula13.html"><strong>Aula 13</strong><span class="schedule-content">Segurança em Sistemas Operacionais</span></a>
+            <div class="lesson-actions"><a href="bloco3/aula13.html">Abrir slides →</a><a class="pdf-link" href="notas/13_Seguranca_Sistemas_Operacionais.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">26 slides · 7 páginas na nota original</span></li></ul></section></div>
+    <section class="complementary-section" id="materiais"><h2>Materiais complementares</h2><p>As notas e livros de visão geral aprofundam os conceitos tratados nas aulas. Estes documentos não são aulas adicionais.</p><ul class="complementary-links"><li><a href="notas/Lecture_Notes_OS-SANDEEP.pdf" target="_blank" rel="noopener noreferrer">Visão Geral SO - CSE</a><small>Material complementar em inglês · PDF</small></li><li><a href="notas/Lecture_Notes_OS-UGC.pdf" target="_blank" rel="noopener noreferrer">Visão Geral SO - UGC</a><small>Material complementar em inglês · PDF</small></li><li><a href="notas/Operating_Systems_Book-Stanford.pdf" target="_blank" rel="noopener noreferrer">Visão Geral SO - Stanford</a><small>Material complementar em inglês · PDF</small></li></ul><p class="course-note">A organização em blocos é pedagógica e não define calendário de aulas ou avaliações.</p></section>
+    <section class="course-help" id="como-usar"><h2>Como usar as apresentações</h2><p>Navegue com <kbd>←</kbd> <kbd>→</kbd> ou <kbd>Espaço</kbd>. Em telas de toque, deslize horizontalmente. Use <strong>Sumário</strong> para escolher um tópico e <strong>Visão geral</strong> para visualizar o conjunto.</p><p>Os botões <strong>A− / A+</strong> ajustam o tamanho dos códigos. Clique em <strong>Ver resposta</strong> para conferir as atividades e nos controles das visualizações para acompanhar cada passo. <strong>Índice</strong> retorna a esta página.</p><p>As apresentações são adaptações didáticas das notas de aula. O PDF original está disponível no link ao lado de cada aula no índice.</p></section>
+  </main>
+  <footer><div class="container"><p>Prof. Paulo Rettore | Universidade Federal de Lavras (UFLA)</p><p>Disciplina: Sistemas Operacionais</p><p>Baseado nas <a href="https://www.rettore.com.br/lectures-notes/so-1/" target="_blank" rel="noopener noreferrer">notas originais de SO</a> · Padrão visual do <a href="https://www.rettore.com.br/lectures-notes/ialg/" target="_blank" rel="noopener noreferrer">projeto IAlg</a></p></div></footer>
 </body>
 </html>
-

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Arquitetura, comunicação e escalonamento de sistemas formados por computadores autônomos conectados em rede.">
+  <title>Aula 11 — Sistemas Multicomputadores — Sistemas Operacionais</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/so.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco3/aula10.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/11_Sistemas_Multicomputadores.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 11 — Sistemas Multicomputadores">
+      <h1>Aula 11</h1>
+      <p class="subtitle">Sistemas Multicomputadores</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Sistemas Operacionais</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><div class="two-column"><div class="box"><p>Ao final, você deverá:</p><ul><li>distinguir multicomputadores de multiprocessadores;</li><li>relacionar nós, rede, latência e largura de banda;</li><li>comparar passagem de mensagens, RPC e DSM;</li><li>explicar decisões de alocação, migração e balanceamento.</li></ul></div><div class="info-box"><p><strong>Ideia central:</strong> cada nó tem memória própria e um sistema operacional próprio. A rede, e não uma memória compartilhada em hardware, conecta os nós.</p></div></div></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="definicao" data-title="O que é um sistema multicomputador?">
+      <h2>O que é um sistema multicomputador?</h2>
+      <div class="slide-content"><p>É uma coleção de computadores independentes, ou <strong>nós</strong>, interconectados por uma rede. Cada nó possui CPU, memória e, possivelmente, disco; executa seu próprio sistema operacional (ou uma instância dele).</p><div class="comparison-grid"><div><strong>Multiprocessador</strong><p>Várias CPUs em um sistema, compartilhando memória no hardware.</p></div><div><strong>Multicomputador</strong><p>Vários computadores completos, sem memória compartilhada entre nós; a comunicação ocorre por mensagens.</p></div></div></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="arquitetura" data-title="Arquitetura: nós e rede">
+      <h2>Arquitetura: nós e rede</h2>
+      <div class="slide-content"><div class="diagram-flow"><div class="diagram-node"><strong>Nó A</strong><br>CPU + memória local<br>SO + armazenamento opcional</div><div class="diagram-node"><strong>Rede de interconexão</strong><br>troca de mensagens</div><div class="diagram-node"><strong>Nó B</strong><br>CPU + memória local<br>SO + armazenamento opcional</div></div><p>Os nós podem ser <strong>homogêneos</strong> (hardware e SO semelhantes) ou <strong>heterogêneos</strong>. O sistema aparece como um recurso cooperativo, mas a autonomia de cada nó permanece uma restrição de projeto.</p></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="rede-desempenho" data-title="A rede define parte do desempenho">
+      <h2>A rede define parte do desempenho</h2>
+      <div class="slide-content"><div class="two-column"><div class="highlight"><p><strong>Latência</strong></p><p>Tempo para enviar uma mensagem vazia de um nó a outro. Afeta especialmente muitas mensagens pequenas e sincronizações frequentes.</p></div><div class="highlight"><p><strong>Largura de banda</strong></p><p>Taxa máxima de transferência de dados. Afeta o tempo de mover mensagens grandes.</p></div></div><p>Topologia (barramento, anel, malha, hipercubo ou switch) e tecnologia (Ethernet, InfiniBand ou Myrinet) influenciam escalabilidade e comportamento.</p></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="tipos" data-title="Tipos de sistemas multicomputador">
+      <h2>Tipos de sistemas multicomputador</h2>
+      <div class="slide-content"><div class="three-column"><div class="box"><strong>Clusters</strong><p>Computadores, frequentemente commodity, em uma LAN; usados em HPC, balanceamento e alta disponibilidade.</p></div><div class="box"><strong>Grids</strong><p>Recursos geograficamente dispersos e em múltiplos domínios administrativos; heterogeneidade e segurança são centrais.</p></div><div class="box"><strong>Peer-to-peer (P2P)</strong><p>Peers com capacidades e responsabilidades equivalentes, comunicando-se sem servidor central; exemplo: compartilhamento de arquivos.</p></div></div></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="modelo-mensagens" data-title="Passagem de mensagens: o modelo fundamental">
+      <h2>Passagem de mensagens: o modelo fundamental</h2>
+      <div class="slide-content"><p>Processos em nós diferentes comunicam-se explicitamente: um processo envia uma mensagem e outro a recebe. Não há leitura direta da memória remota.</p><pre class="code-box"><code>send(destino, mensagem)
+receive(origem, buffer)</code></pre><p>A aplicação precisa lidar com destinos, formato dos dados, ordem, bloqueio ou não bloqueio e sincronização. A rede torna o custo da comunicação visível.</p></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="mpi" data-title="MPI e operações coletivas">
+      <h2>MPI e operações coletivas</h2>
+      <div class="slide-content"><p><strong>MPI (Message Passing Interface)</strong> é um padrão de biblioteca para programação paralela em C, C++ e Fortran. Ele oferece comunicação ponto a ponto, inicialização, sincronização e topologias virtuais.</p><div class="compact"><p><strong>Coletivas:</strong> <code>broadcast</code> distribui dados; <code>scatter</code> divide; <code>gather</code> reúne; <code>reduce</code> combina resultados, como uma soma.</p></div><p>O padrão favorece portabilidade entre arquiteturas, mas não elimina decisões sobre particionamento e custo de comunicação.</p></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="sockets" data-title="Sockets: ponto final de comunicação">
+      <h2>Sockets: ponto final de comunicação</h2>
+      <div class="slide-content"><p><strong>Socket</strong> é uma interface de programação de rede, originada no Berkeley Unix, que fornece um ponto final para processos na mesma máquina ou em máquinas distintas.</p><div class="two-column"><div class="info-box"><p>Com <strong>TCP/IP</strong>, a aplicação usa um fluxo orientado à conexão, com propriedades de entrega do protocolo.</p></div><div class="info-box"><p>Com <strong>UDP/IP</strong>, usa datagramas e assume mais responsabilidades sobre perdas e ordenação.</p></div></div><p>Comparados a abstrações como RPC, sockets expõem mais detalhes da comunicação.</p></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="rpc-conceito" data-title="RPC: chamada remota de procedimento">
+      <h2>RPC: chamada remota de procedimento</h2>
+      <div class="slide-content"><p><strong>RPC (Remote Procedure Call)</strong> permite que um processo chame uma função executada em outro nó como se fosse local. A abstração esconde parte da rede, mas a chamada remota continua sujeita a latência e falhas.</p><div class="diagram-flow"><div class="diagram-node">Cliente<br>chamada local</div><div class="diagram-node">Rede<br>requisição</div><div class="diagram-node">Servidor<br>procedimento remoto</div></div><p>Essa transparência facilita o desenvolvimento, mas não deve levar a tratar operações remotas como operações de memória local.</p></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="rpc-fluxo" data-title="Fluxo de uma chamada RPC">
+      <h2>Fluxo de uma chamada RPC</h2>
+      <div class="slide-content"><ol class="step-list"><li>O cliente chama o <em>stub</em> local.</li><li>O stub faz <em>marshalling</em>: empacota parâmetros e envia a mensagem.</li><li>O stub do servidor faz <em>unmarshalling</em> e chama o procedimento real.</li><li>O retorno é empacotado e enviado de volta.</li><li>O stub do cliente desempacota o resultado e o devolve ao processo.</li></ol><p>Uma <strong>IDL (Interface Definition Language)</strong> pode descrever a interface e permitir a geração automática dos stubs.</p></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="rpc-falhas" data-title="RPC e semântica diante de falhas">
+      <h2>RPC e semântica diante de falhas</h2>
+      <div class="slide-content"><div class="comparison-grid"><div><strong>At-least-once</strong><p>A requisição pode ser repetida até obter resposta; uma operação não idempotente pode produzir efeitos duplicados.</p></div><div><strong>At-most-once</strong><p>Tenta evitar execução duplicada; uma falha pode deixar o cliente sem saber se o servidor executou.</p></div><div><strong>Exactly-once</strong><p>É difícil de garantir em presença de falhas de rede e reinícios.</p></div></div><p class="warning-box">A semântica escolhida é parte do contrato do serviço. Exemplos de tecnologias citadas na nota: ONC RPC, DCE RPC, gRPC e Apache Thrift.</p></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="dsm-conceito" data-title="DSM: uma ilusão de memória compartilhada">
+      <h2>DSM: uma ilusão de memória compartilhada</h2>
+      <div class="slide-content"><p><strong>DSM (Distributed Shared Memory)</strong> oferece aos programadores a abstração de um espaço de memória compartilhado, embora a memória física continue distribuída entre os nós.</p><p>O sistema DSM gerencia a replicação e a migração de páginas ou objetos. A vantagem é aproximar o modelo de programação conhecido de memória compartilhada; o custo é transformar acessos aparentemente simples em comunicação potencialmente remota.</p><div class="highlight"><p><strong>Regra prática:</strong> uma referência remota pode envolver latência, busca de dados e coordenação de coerência.</p></div></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="dsm-implementacoes" data-title="DSM baseada em páginas ou objetos">
+      <h2>DSM baseada em páginas ou objetos</h2>
+      <div class="slide-content"><div class="two-column"><div class="box"><strong>Baseada em páginas</strong><p>O espaço compartilhado é dividido em páginas. Se um processo acessa uma página ausente localmente, ocorre uma falta de página e o DSM a busca no nó que a possui.</p></div><div class="box"><strong>Baseada em objetos/variáveis</strong><p>Apenas objetos ou variáveis declarados como compartilhados são gerenciados, permitindo granularidade diferente da página inteira.</p></div></div><p>A escolha da granularidade influencia tráfego, custo de coerência e risco de dados não relacionados viajarem juntos.</p></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="dsm-coerencia" data-title="Coerência e falsa compartilhação">
+      <h2>Coerência e falsa compartilhação</h2>
+      <div class="slide-content"><p>Quando dados são replicados, nós precisam observar uma visão consistente. Protocolos podem usar <strong>write-invalidate</strong> (invalidar cópias ao escrever) ou <strong>write-update</strong> (atualizar cópias).</p><p>Modelos como consistência sequencial ou consistência relaxada definem quão forte é a ordem observada pelas operações.</p><p class="warning-box"><strong>Falsa compartilhação:</strong> dados não relacionados na mesma página DSM podem ser acessados por nós diferentes, provocando tráfego e invalidações desnecessários.</p></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="atividade-comunicacao" data-title="Atividade 1 — escolha da abstração">
+      <h2>Atividade 1 — escolha da abstração</h2>
+      <div class="slide-content"><p>Uma aplicação paralela divide uma matriz entre nós, troca blocos explicitamente e combina somas parciais. Outra oferece um serviço remoto de consulta cadastral. Qual abstração é mais diretamente adequada a cada caso: MPI, socket ou RPC? Justifique considerando a interface e o padrão de comunicação.</p><details class="answer"><summary>Ver resposta</summary><p>MPI é adequado à aplicação paralela, pois oferece comunicação ponto a ponto e coletivas como <code>reduce</code>. RPC é adequado ao serviço de consulta, pois expõe uma operação remota como chamada de procedimento. Sockets também poderiam implementar ambos, mas exigiriam tratar mais detalhes de protocolo e serialização.</p></details></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="escalonamento-objetivos" data-title="Escalonamento: mapear trabalho para nós">
+      <h2>Escalonamento: mapear trabalho para nós</h2>
+      <div class="slide-content"><p>Escalonar em um multicomputador é alocar processos ou tarefas aos nós. O objetivo não é apenas ocupar CPUs: é maximizar paralelismo, minimizar comunicação e equilibrar carga.</p><div class="three-column"><div><strong>Carga</strong><p>Preferir nós menos carregados.</p></div><div><strong>Comunicação</strong><p>Aproximar processos que trocam muitas mensagens.</p></div><div><strong>Recursos</strong><p>Escolher nós com GPU, memória ou software necessários.</p></div></div></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="escalonamento-migracao" data-title="Alocação, migração e balanceamento">
+      <h2>Alocação, migração e balanceamento</h2>
+      <div class="slide-content"><p><strong>Alocação estática</strong> usa informações conhecidas no início. <strong>Balanceamento dinâmico</strong> ajusta a distribuição durante a execução, podendo migrar processos.</p><p>Migrar exige transferir espaço de endereçamento, arquivos abertos e estado da CPU pela rede. É especialmente difícil quando o processo se comunica ativamente com outros.</p><div class="diagram-flow"><div class="diagram-node">Nó sobrecarregado<br>tarefas acumuladas</div><div class="diagram-node">migração de estado</div><div class="diagram-node">Nó ocioso<br>mais capacidade</div></div></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="co-escalonamento" data-title="Co-escalonamento e gang scheduling">
+      <h2>Co-escalonamento e gang scheduling</h2>
+      <div class="slide-content"><p>Em uma aplicação paralela, processos de um mesmo <em>gang</em> podem trocar dados intensamente. O <strong>co-escalonamento</strong> tenta executar esses processos simultaneamente, cada um em seu nó.</p><p>Se um processo do grupo executa enquanto outro espera sua vez, o primeiro pode bloquear em comunicação e desperdiçar recursos. A simultaneidade coordenada reduz essa espera, mas torna a política de escalonamento mais rígida.</p><div class="info-box"><p>O ganho depende do padrão de comunicação e da disponibilidade conjunta dos nós.</p></div></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="grid-cloud" data-title="Escalonamento em grids e nuvens">
+      <h2>Escalonamento em grids e nuvens</h2>
+      <div class="slide-content"><p>Em grids e nuvens, os recursos são maiores, heterogêneos e podem pertencer a domínios distintos. O escalonamento, também chamado de agendamento ou <em>brokering</em>, procura recursos compatíveis com a tarefa.</p><ul><li>disponibilidade e capacidade do recurso;</li><li>políticas de acesso e múltiplos domínios;</li><li>custo e possível atendimento a <strong>SLA (Service Level Agreement)</strong>.</li></ul><p>Assim, a melhor alocação pode não ser a mais próxima: pode ser a que atende requisitos e custo dentro da política.</p></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="atividade-escalonamento" data-title="Atividade 2 — raciocínio de alocação">
+      <h2>Atividade 2 — raciocínio de alocação</h2>
+      <div class="slide-content"><p>Há três tarefas: A e B trocam mensagens continuamente; C precisa de uma GPU. O nó 1 tem GPU e está moderadamente carregado; os nós 2 e 3 não têm GPU, e o nó 2 está mais perto na rede do nó 3. Proponha um mapeamento inicial e uma possível ação dinâmica se o nó 3 ficar sobrecarregado.</p><details class="answer"><summary>Ver resposta</summary><p>Alocar C no nó 1 por requisito de recurso. A e B devem ficar no mesmo nó, se houver capacidade, ou em nós próximos para reduzir latência; por exemplo, nós 2 e 3 se a separação for necessária. Se o nó 3 ficar sobrecarregado, o balanceador pode migrar uma tarefa, desde que o custo de transferir estado e o impacto na comunicação não superem o benefício.</p></details></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4–5</a>
+    </section><section id="integracao-desafios" data-title="Trade-offs do projeto">
+      <h2>Trade-offs do projeto</h2>
+      <div class="slide-content"><div class="comparison-grid"><div><strong>Desempenho</strong><p>Paralelismo ajuda, mas latência e largura de banda podem dominar.</p></div><div><strong>Programabilidade</strong><p>RPC e DSM simplificam interfaces, enquanto mensagens expõem controle e custos.</p></div><div><strong>Confiabilidade</strong><p>Falhas, consistência e sincronização distribuída precisam ser consideradas.</p></div><div><strong>Escala</strong><p>Mais nós ampliam capacidade, mas aumentam coordenação, heterogeneidade e segurança.</p></div></div><p>Não existe uma abstração ou política universal: a decisão depende do padrão de trabalho e dos requisitos.</p></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–5</a>
+    </section><section id="resumo" data-title="Resumo">
+      <h2>Resumo</h2>
+      <div class="slide-content"><ul><li>Multicomputadores reúnem nós autônomos sem memória compartilhada em hardware.</li><li>Rede, topologia, latência e largura de banda condicionam a execução.</li><li>Passagem de mensagens é o modelo fundamental; MPI e sockets oferecem interfaces distintas.</li><li>RPC abstrai chamadas remotas, mas semânticas de falha importam.</li><li>DSM fornece uma visão de memória compartilhada, exigindo coerência e podendo sofrer falsa compartilhação.</li><li>Escalonamento combina carga, comunicação, recursos, migração e co-escalonamento.</li></ul></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–5</a>
+    </section><section id="referencias" data-title="Referências">
+      <h2>Referências</h2>
+      <div class="slide-content"><p>Fonte principal desta aula: nota <em>Sistemas para Multicomputadores</em>, de autoria indicada como Prof. Paulo Rettore, adaptação educacional do material fornecido.</p><ul><li>Tanenbaum, A. S.; Van Steen, M. <em>Distributed Systems: Principles and Paradigms</em>, 3ª ed., 2017.</li><li>Silberschatz, A.; Galvin, P. B.; Gagne, G. <em>Operating System Concepts</em>, 10ª ed., 2018.</li><li>Coulouris et al. <em>Distributed Systems: Concepts and Design</em>, 5ª ed., 2011.</li><li>MPI Forum — documentação do padrão MPI.</li><li>Google — documentação do gRPC.</li></ul><p class="compact">Os links abaixo são os indicados na própria nota; não foi necessária pesquisa externa adicional.</p></div>
+      <a class="source-note" href="../notas/11_Sistemas_Multicomputadores.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 12</h1><p class="subtitle">Virtualização</p><p><a href="../bloco3/aula12.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/so-visualizer.js"></script>
+  <script src="../assets/so-slides.js"></script>
+    </body>
+</html>

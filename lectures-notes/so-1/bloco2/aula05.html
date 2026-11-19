@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Como o sistema operacional aloca, protege e traduz memória física e virtual.">
+  <title>Aula 05 — Gerenciamento de Memória — Sistemas Operacionais</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/so.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco1/aula04.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/05_Gerenciamento_Memoria.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 05 — Gerenciamento de Memória">
+      <h1>Aula 05</h1>
+      <p class="subtitle">Gerenciamento de Memória</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Sistemas Operacionais</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><p>Ao final, você deverá ser capaz de:</p><ul><li>distinguir endereço lógico, físico e o papel da <strong>MMU</strong> (Memory Management Unit, unidade de gerenciamento de memória);</li><li>comparar alocação contígua, paginação e segmentação;</li><li>explicar tradução de endereços, falta de página, TLB e tabela invertida;</li><li>analisar substituição de páginas, fragmentação e thrashing.</li></ul></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="papel-gerenciador" data-title="Por que gerenciar memória?">
+      <h2>Por que gerenciar memória?</h2>
+      <div class="slide-content"><p>A RAM é limitada e precisa ser compartilhada pelo sistema operacional e por vários processos. O gerenciador acompanha quais regiões estão ocupadas, aloca e libera espaço e impede interferências entre processos.</p><div class="info-box"><strong>Memória virtual:</strong> oferece a cada processo um espaço de endereçamento conveniente, potencialmente maior que a RAM, mantendo apenas parte dele residente.</div><p>O objetivo é equilibrar proteção, desempenho e uso eficiente do recurso.</p></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="enderecos-mmu" data-title="Endereço lógico, físico e MMU">
+      <h2>Endereço lógico, físico e MMU</h2>
+      <div class="slide-content"><div class="two-column"><div><h3>Lógico (virtual)</h3><p>É gerado pela CPU no espaço de endereçamento do processo. Processos distintos podem usar o mesmo valor lógico sem apontar para a mesma RAM.</p></div><div><h3>Físico</h3><p>É o endereço efetivamente visto pela memória principal. A MMU realiza o mapeamento em tempo de execução.</p></div></div><div class="diagram-flow"><div class="diagram-node">CPU: endereço lógico</div><div class="diagram-node">MMU: traduz e protege</div><div class="diagram-node">RAM: endereço físico</div></div></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="contigua" data-title="Alocação contígua: simples, mas limitada">
+      <h2>Alocação contígua: simples, mas limitada</h2>
+      <div class="slide-content"><p>Na alocação contígua, cada processo ocupa uma única região contínua da memória física. A simplicidade facilita a tradução, mas torna difícil encaixar novos processos quando surgem lacunas.</p><div class="box"><strong>Partições fixas:</strong> a RAM é dividida previamente; uma partição comporta um processo. Espaço não usado dentro dela é <strong>fragmentação interna</strong>.</div><div class="warning-box"><strong>Partições variáveis:</strong> usam buracos sob medida, mas podem deixar <strong>fragmentação externa</strong>: espaço livre total suficiente, porém espalhado.</div></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="alocacao-buracos" data-title="Escolhendo um buraco">
+      <h2>Escolhendo um buraco</h2>
+      <div class="slide-content"><p>Em partições variáveis, o SO mantém uma lista de regiões livres. Dado um processo de tamanho <strong>18 MB</strong> e buracos de 10, 22 e 40 MB:</p><div class="comparison-grid"><div><strong>First-fit</strong><br>usa o primeiro buraco que comporta: 22 MB.</div><div><strong>Best-fit</strong><br>usa o menor que comporta: 22 MB.</div><div><strong>Worst-fit</strong><br>usa o maior: 40 MB.</div></div><p>Os nomes descrevem a política de escolha; o custo futuro depende do padrão de chegadas e liberações.</p></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="memoria-virtual" data-title="Memória virtual paginada">
+      <h2>Memória virtual paginada</h2>
+      <div class="slide-content"><p>Um processo não precisa estar inteiro na RAM para executar. Seu espaço virtual é dividido em <strong>páginas</strong>; a memória física, em <strong>quadros</strong> do mesmo tamanho. Páginas podem residir em quadros fisicamente dispersos.</p><div class="diagram-flow"><div class="diagram-node">Espaço virtual<br>páginas P0, P1, P2</div><div class="diagram-node">Tabela de páginas</div><div class="diagram-node">RAM<br>quadros F7, F2, F5</div></div><p>Isso aumenta a flexibilidade e permite manter mais processos prontos, mas introduz custo de tradução e E/S.</p></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="traducao-paginacao" data-title="Como um endereço paginado é traduzido">
+      <h2>Como um endereço paginado é traduzido</h2>
+      <div class="slide-content"><p>A CPU divide o endereço lógico em <strong>(p, d)</strong>: número da página e deslocamento. A tabela usa <em>p</em> para encontrar o quadro <em>f</em>; o deslocamento permanece igual.</p><div class="sequence-flow"><div><strong>1</strong> lógico: (p, d)</div><div><strong>2</strong> tabela: p → f</div><div><strong>3</strong> físico: (f, d)</div></div><div class="highlight"><strong>Exemplo:</strong> se (p=3, d=120) e a tabela diz 3 → quadro 9, o endereço físico é (9, 120), não uma cópia literal do endereço lógico.</div></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="entrada-pagina" data-title="Tabela de páginas e proteção">
+      <h2>Tabela de páginas e proteção</h2>
+      <div class="slide-content"><p>Cada processo possui uma tabela que associa páginas virtuais a quadros físicos. Além do número do quadro, uma entrada pode registrar:</p><ul><li>presença/validade: a página está residente?</li><li>proteção: leitura, escrita ou execução permitida;</li><li>modificado (dirty): foi alterada desde que carregada?</li><li>referenciado: foi acessada recentemente?</li></ul><div class="info-box">Esses bits permitem validar acessos, escolher vítimas e evitar gravar de volta páginas que não mudaram.</div></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="page-fault" data-title="Falta de página: o caminho completo">
+      <h2>Falta de página: o caminho completo</h2>
+      <div class="slide-content"><p>Se a entrada indica que a página não está na RAM, ocorre <strong>page fault</strong> (falta de página). O acesso pode ser válido; apenas exige trazer dados do armazenamento.</p><div class="step-list"><div>1. Verificar se o endereço e a operação são válidos.</div><div>2. Encontrar um quadro livre (ou escolher uma vítima).</div><div>3. Solicitar E/S para carregar a página.</div><div>4. Atualizar a tabela e bits de presença.</div><div>5. Reiniciar a instrução que falhou.</div></div></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="visualizer-fault" data-title="Visualização: uma página chega à RAM">
+      <h2>Visualização: uma página chega à RAM</h2>
+      <div class="slide-content"><div class="so-visualizer" data-title="Estados de uma falta de página"><script type="application/json">{"steps":[{"cells":["CPU acessa P3","P3 ausente","RAM"],"active":[1],"caption":"A tabela marca P3 como não residente."},{"cells":["CPU pausada","E/S do armazenamento","RAM"],"active":[1],"caption":"O SO agenda a leitura de P3 para um quadro."},{"cells":["CPU retoma","Tabela atualizada","P3 no quadro F2"],"active":[0,1,2],"caption":"A instrução é reiniciada após a tradução ser corrigida."}]}</script></div></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="tlb" data-title="TLB: acelerar traduções frequentes">
+      <h2>TLB: acelerar traduções frequentes</h2>
+      <div class="slide-content"><p>A <strong>TLB</strong> (Translation Lookaside Buffer) é um cache pequeno e associativo dentro do caminho da MMU. Guarda traduções usadas recentemente.</p><div class="two-column"><div class="success-box"><strong>TLB hit:</strong> encontra p, obtém o quadro rapidamente e acessa a RAM.</div><div class="warning-box"><strong>TLB miss:</strong> consulta a tabela de páginas na memória, depois pode inserir a entrada na TLB.</div></div><p>Localidade temporal torna uma alta taxa de acertos importante para reduzir o custo médio de cada referência.</p></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="invertida" data-title="Tabela de páginas invertida">
+      <h2>Tabela de páginas invertida</h2>
+      <div class="slide-content"><p>Uma tabela tradicional tem entradas por página virtual, potencialmente enorme em espaços de 64 bits. A tabela invertida tem uma entrada por <strong>quadro físico</strong>.</p><div class="diagram-flow"><div class="diagram-node">(processo, página virtual)</div><div class="diagram-node">busca/hash</div><div class="diagram-node">quadro físico correspondente</div></div><p><strong>Vantagem:</strong> tamanho proporcional à RAM. <strong>Trade-off:</strong> traduzir exige procurar o par (processo, página), em geral acelerado por hashing.</p></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="substituicao" data-title="Por que substituir páginas?">
+      <h2>Por que substituir páginas?</h2>
+      <div class="slide-content"><p>Quando ocorre uma falta e não há quadro livre, o SO precisa escolher uma página residente para liberar. A vítima é gravada no armazenamento se estiver modificada; então a página solicitada ocupa o quadro.</p><div class="sequence-flow"><div>falta sem quadro livre</div><div>selecionar vítima</div><div>liberar quadro</div><div>carregar página pedida</div></div><p>O objetivo dos algoritmos é escolher algo com baixa probabilidade de uso futuro e minimizar faltas.</p></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="algoritmos" data-title="Algoritmos: OPT, FIFO e LRU">
+      <h2>Algoritmos: OPT, FIFO e LRU</h2>
+      <div class="slide-content"><div class="three-column"><div><strong>OPT/MIN</strong><p>Remove a página cujo próximo uso está mais distante. É referência ideal, mas requer conhecer o futuro.</p></div><div><strong>FIFO</strong><p>Remove a mais antiga. Simples, porém pode sofrer anomalia de Belady: mais quadros podem produzir mais faltas.</p></div><div><strong>LRU</strong><p>Remove a menos recentemente usada, explorando localidade temporal; rastreá-la perfeitamente é caro.</p></div></div></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="aproximacoes" data-title="Aproximações de LRU e contagem">
+      <h2>Aproximações de LRU e contagem</h2>
+      <div class="slide-content"><p>Como registrar cada instante de uso pode ser caro, há aproximações:</p><ul><li><strong>Bits de referência adicionais:</strong> acumulam periodicamente o bit de referência em um contador; menor contador é candidato.</li><li><strong>Segunda chance/Clock:</strong> FIFO circular consulta o bit. Se 1, zera e avança; se 0, substitui.</li><li><strong>LFU:</strong> remove a menos frequentemente usada. <strong>MFU:</strong> remove a mais frequentemente usada, supondo que seu pico de uso já passou.</li></ul></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4–5</a>
+    </section><section id="atividade-algoritmos" data-title="Atividade 1 — raciocine sobre a vítima">
+      <h2>Atividade 1 — raciocine sobre a vítima</h2>
+      <div class="slide-content"><p>Uma fila circular de páginas tem bits de referência: <strong>[A:1, B:0, C:1]</strong>. O ponteiro começa em A. Usando Segunda Chance, qual página é escolhida e como ficam os bits visitados?</p><details class="answer"><summary>Ver resposta</summary><p>A recebe segunda chance: seu bit vira 0 e o ponteiro avança. B tem bit 0, então B é escolhida; o estado observado antes da substituição é A:0, B:0, C:1.</p></details></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="projeto-paginacao" data-title="Decisões de projeto na paginação">
+      <h2>Decisões de projeto na paginação</h2>
+      <div class="slide-content"><p>O desempenho depende de escolhas que não são isoladas:</p><ul><li><strong>Alocação de quadros:</strong> fixa, igual, proporcional ao tamanho ou orientada por prioridade.</li><li><strong>Substituição global:</strong> a vítima pode pertencer a qualquer processo; flexível, mas pode afetar outros.</li><li><strong>Substituição local:</strong> restringe a vítima aos quadros do processo faltoso; oferece mais previsibilidade.</li></ul><p>O tamanho da página também é compromisso: menor reduz fragmentação interna, mas aumenta tabelas e pode elevar E/S; maior faz o oposto.</p></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="thrashing" data-title="Thrashing e conjunto de trabalho">
+      <h2>Thrashing e conjunto de trabalho</h2>
+      <div class="slide-content"><p><strong>Thrashing</strong> ocorre quando o sistema passa mais tempo transferindo páginas entre armazenamento e RAM do que executando processos. Uma causa é dar poucos quadros para o conjunto de páginas ativamente usado: o <strong>working set</strong>.</p><div class="warning-box"><strong>Sinal:</strong> utilização da CPU cai enquanto a taxa de paginação cresce. Adicionar processos pode piorar o problema.</div><p>O diagnóstico relaciona pressão por quadros, faltas e comportamento de acesso; não é simplesmente “RAM lenta”.</p></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="segmentacao" data-title="Memória virtual segmentada">
+      <h2>Memória virtual segmentada</h2>
+      <div class="slide-content"><p>Segmentação representa a visão lógica do programa: segmentos podem ser código, funções, objetos, globais, pilha ou tabela de símbolos. Um endereço lógico é <strong>(número do segmento, deslocamento)</strong>.</p><div class="diagram-flow"><div class="diagram-node">(s, d)</div><div class="diagram-node">tabela: base(s), limite(s)</div><div class="diagram-node">físico = base + d</div></div><p>Se o deslocamento exceder o limite, o acesso é inválido. Bits por segmento também facilitam proteção e compartilhamento.</p></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5–6</a>
+    </section><section id="segmentacao-paginacao" data-title="Segmentação com paginação">
+      <h2>Segmentação com paginação</h2>
+      <div class="slide-content"><p>Os esquemas podem ser combinados: o endereço seleciona um segmento; dentro dele, o espaço é dividido em páginas, que são mapeadas para quadros.</p><div class="two-column"><div><strong>Segmentação</strong><p>oferece unidades lógicas, proteção e compartilhamento coerentes com o programa.</p></div><div><strong>Paginação</strong><p>permite alocação não contígua e reduz a necessidade de encaixar segmentos inteiros na RAM.</p></div></div><div class="info-box">A nota cita a arquitetura Intel x86 como exemplo de combinação; detalhes concretos dependem do modo e da versão da arquitetura.</div></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="atividade-integracao" data-title="Atividade 2 — escolha o mecanismo">
+      <h2>Atividade 2 — escolha o mecanismo</h2>
+      <div class="slide-content"><p>Associe cada situação ao mecanismo mais diretamente relacionado: (a) processo acessa uma página ausente; (b) tradução recente deve ser reutilizada rapidamente; (c) programa precisa separar pilha e código com limites próprios.</p><details class="answer"><summary>Ver resposta</summary><p>(a) falta de página, seguida de carregamento e atualização da tabela; (b) TLB; (c) segmentação, pois segmentos têm base, limite e proteção próprios.</p></details></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3, 5–6</a>
+    </section><section id="resumo" data-title="Resumo: uma visão integrada">
+      <h2>Resumo: uma visão integrada</h2>
+      <div class="slide-content"><ul><li>A MMU traduz endereços lógicos e aplica proteção.</li><li>Alocação contígua é simples, mas sofre fragmentação; paginação separa páginas e quadros.</li><li>Page faults trazem páginas sob demanda; TLB reduz o custo das traduções.</li><li>OPT é ideal teórico; FIFO, LRU e aproximações orientam escolhas práticas.</li><li>Quadros insuficientes podem causar thrashing; segmentação expressa unidades lógicas e pode combinar-se com paginação.</li></ul></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–6</a>
+    </section><section id="referencias" data-title="Referências">
+      <h2>Referências</h2>
+      <div class="slide-content"><p><strong>Fonte principal:</strong> Rettore, P. (adaptação didática). <em>Gerenciamento de Memória</em>, PDF da aula, pp. 1–6.</p><p><strong>Bibliografia indicada na nota:</strong></p><ul><li>Silberschatz, Galvin &amp; Gagne. <em>Operating System Concepts</em>, 10th ed., Wiley, 2018.</li><li>Tanenbaum &amp; Bos. <em>Modern Operating Systems</em>, 4th ed., Pearson, 2015.</li><li>Stallings. <em>Operating Systems: Internals and Design Principles</em>, 9th ed., Pearson, 2018.</li></ul></div>
+      <a class="source-note" href="../notas/05_Gerenciamento_Memoria.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 06</h1><p class="subtitle">Memória em Linux vs Windows</p><p><a href="../bloco2/aula06.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/so-visualizer.js"></script>
+  <script src="../assets/so-slides.js"></script>
+    </body>
+</html>

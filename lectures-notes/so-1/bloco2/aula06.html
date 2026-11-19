@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Compara memória virtual, alocação, paginação, APIs e estruturas internas de Linux e Windows.">
+  <title>Aula 06 — Memória em Linux vs Windows — Sistemas Operacionais</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/so.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco2/aula05.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 06 — Memória em Linux vs Windows">
+      <h1>Aula 06</h1>
+      <p class="subtitle">Memória em Linux vs Windows</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Sistemas Operacionais</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><div class="two-column"><div class="box"><strong>Ao final, você deverá:</strong><ul><li>explicar memória virtual paginada, quadros, tabelas de páginas e TLB;</li><li>descrever como Linux e Windows alocam, mapeiam e substituem páginas;</li><li>relacionar estruturas internas às APIs usadas por aplicações.</li></ul></div><div class="info-box"><strong>Foco da aula</strong><p>Os conceitos fundamentais são compartilhados, mas políticas, estruturas e interfaces diferem. A comparação ajuda a interpretar desempenho, segurança e comportamento de programas em cada plataforma.</p></div></div></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="visao-geral" data-title="O problema que o gerenciador resolve">
+      <h2>O problema que o gerenciador resolve</h2>
+      <div class="slide-content"><p>Processos precisam de um espaço de endereçamento amplo, isolado e conveniente, enquanto a RAM é limitada e compartilhada. O gerenciador de memória traduz endereços virtuais, mantém páginas residentes quando necessário e libera ou substitui páginas sob pressão.</p><div class="highlight"><strong>Ideia central:</strong> memória virtual separa o endereço que o processo usa do local físico onde a página está, sem eliminar o custo de faltas de página e de acesso ao armazenamento.</div></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="memoria-virtual" data-title="Memória virtual paginada">
+      <h2>Memória virtual paginada</h2>
+      <div class="slide-content"><div class="diagram-flow"><div class="diagram-node">Endereço virtual<br><small>processo</small></div><div class="diagram-node">Tabela de páginas<br><small>mapeamento</small></div><div class="diagram-node">Quadro físico<br><small>RAM</small></div><div class="diagram-node">Pagefile/swap<br><small>quando necessário</small></div></div><p>Cada processo possui espaço virtual privado. A memória física é dividida em quadros; o espaço virtual, em páginas. Uma página pode estar na RAM ou precisar ser trazida do armazenamento, gerando uma falta de página.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="paginas-tlb" data-title="Tradução, TLB e paginação sob demanda">
+      <h2>Tradução, TLB e paginação sob demanda</h2>
+      <div class="slide-content"><div class="step-list"><div><strong>1. A CPU</strong> produz um endereço virtual.</div><div><strong>2. A TLB</strong> (Translation Lookaside Buffer, buffer de consulta de traduções) tenta reutilizar um mapeamento recente.</div><div><strong>3. A tabela de páginas</strong> é consultada quando não há entrada na TLB.</div><div><strong>4. Se a página não estiver residente</strong>, ocorre falta de página; o sistema a carrega e atualiza o mapeamento.</div></div><p>Paginação sob demanda evita carregar tudo antecipadamente, mas uma falta envolve trabalho adicional.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="linux-zonas" data-title="Linux: zonas e alocação física">
+      <h2>Linux: zonas e alocação física</h2>
+      <div class="slide-content"><p>O Linux divide a memória física em <strong>zonas</strong> para lidar com restrições de endereçamento e dispositivos. A nota cita <code>ZONE_DMA</code>, <code>ZONE_NORMAL</code> e <code>ZONE_HIGHMEM</code>, especialmente no contexto de arquiteturas de 32 bits.</p><div class="warning-box"><strong>Contexto histórico/arquitetural:</strong> o conjunto e o papel das zonas variam conforme arquitetura e versão do kernel; não trate a lista como um mapa universal de toda máquina Linux moderna.</div></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="linux-buddy" data-title="Linux: Buddy System">
+      <h2>Linux: Buddy System</h2>
+      <div class="slide-content"><p>O <strong>Buddy System Allocator</strong> administra blocos de páginas fisicamente contíguas em tamanhos potência de 2: 1, 2, 4, 8, 16 páginas e assim por diante. Ao liberar blocos compatíveis, eles podem ser combinados; ao alocar, um bloco maior pode ser dividido.</p><div class="diagram-flow"><div class="diagram-node">Bloco 8</div><div class="diagram-node">divide</div><div class="diagram-node">Bloco 4 + bloco 4</div><div class="diagram-node">libera e combina</div></div><p>O mecanismo facilita contiguidade física, embora possa produzir fragmentação interna.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="linux-slab" data-title="Linux: Slab, SLUB e objetos do kernel">
+      <h2>Linux: Slab, SLUB e objetos do kernel</h2>
+      <div class="slide-content"><p>Para objetos de tamanho conhecido e usados com frequência, como estruturas de processos e inodes, o kernel mantém caches de objetos pré-inicializados. O <strong>Slab Allocator</strong> e variantes como <strong>SLUB</strong> e <strong>SLOB</strong> reduzem custo de alocação/desalocação e fragmentação interna.</p><div class="info-box"><strong>Contraste:</strong> buddy lida com blocos de páginas; slab/variantes atendem objetos do kernel construídos sobre essas páginas.</div></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="linux-page-tables" data-title="Linux: tabelas de páginas e page cache">
+      <h2>Linux: tabelas de páginas e page cache</h2>
+      <div class="slide-content"><div class="two-column"><div class="box"><strong>Tabelas multinível</strong><p>Cada processo possui seu conjunto de tabelas para mapear endereços virtuais a físicos. A nota indica, de modo geral, 3 ou 4 níveis em arquiteturas de 32 bits e 4 ou 5 em arquiteturas de 64 bits; isso depende da arquitetura e da configuração.</p></div><div class="box"><strong>Page cache</strong><p>O Linux mantém páginas de arquivos e dispositivos de bloco na RAM. Leituras e escritas de arquivos geralmente passam por esse cache, acelerando acessos repetidos.</p></div></div></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="linux-swap-oom" data-title="Linux: substituição, swap e OOM killer">
+      <h2>Linux: substituição, swap e OOM killer</h2>
+      <div class="slide-content"><p>Sob pressão, páginas inativas podem ir para partição ou arquivo de <strong>swap</strong>. A seleção usa uma variação de LRU (Least Recently Used), com listas ativa/inativa, para priorizar páginas candidatas.</p><div class="sequence-flow"><div>RAM cheia</div><div>tenta liberar/substituir páginas</div><div>swap para páginas inativas</div><div>sem memória recuperável</div><div>OOM killer seleciona processos</div></div><p>O <strong>OOM (Out-of-Memory) killer</strong> encerra um ou mais processos para evitar que a falta de memória leve o sistema a um travamento completo.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="linux-cow-huge" data-title="Linux: COW e páginas enormes">
+      <h2>Linux: COW e páginas enormes</h2>
+      <div class="slide-content"><div class="two-column"><div class="box"><strong>Copy-on-Write (COW)</strong><p>Após <code>fork()</code>, pai e filho compartilham páginas inicialmente. A cópia física só é feita quando um deles tenta modificar uma página compartilhada, evitando cópias imediatas desnecessárias.</p></div><div class="box"><strong>Huge Pages</strong><p>Páginas maiores, como 2 MB ou 1 GB, podem reduzir a quantidade de entradas de tabela e a pressão sobre a TLB em aplicações que manipulam grandes volumes de memória.</p></div></div></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="linux-apis" data-title="Linux: APIs de memória">
+      <h2>Linux: APIs de memória</h2>
+      <div class="slide-content"><pre class="code-box"><code>// POSIX/Linux — exemplos ilustrativos
+void *p = mmap(NULL, tamanho, PROT_READ|PROT_WRITE,
+               MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+mprotect(p, tamanho, PROT_READ);
+munmap(p, tamanho);
+// mlock/munlock: manter/liberar páginas na RAM</code></pre><p><code>brk()</code>/<code>sbrk()</code> ajustam o heap tradicional; <code>mmap()</code> mapeia arquivos, dispositivos ou memória anônima e é uma forma moderna de obter regiões; <code>mprotect()</code> altera permissões.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="linux-observabilidade" data-title="Linux: observar e controlar mapeamentos">
+      <h2>Linux: observar e controlar mapeamentos</h2>
+      <div class="slide-content"><p><code>mlock()</code> e <code>munlock()</code> bloqueiam ou desbloqueiam páginas na memória física, evitando ou permitindo paginação para o disco; isso pode ser útil em aplicações de tempo real.</p><pre class="code-box"><code># Linux — inspeção de um processo
+cat /proc/&lt;pid&gt;/maps
+cat /proc/&lt;pid&gt;/smaps</code></pre><p><code>/proc/[pid]/maps</code> mostra regiões mapeadas; <code>smaps</code> fornece detalhes dessas regiões. São interfaces de observação do processo, não um substituto para compreender suas permissões e residência.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="windows-vads-pfn" data-title="Windows: VADs e banco PFN">
+      <h2>Windows: VADs e banco PFN</h2>
+      <div class="slide-content"><div class="two-column"><div class="box"><strong>VAD</strong><p>Virtual Address Descriptors formam uma árvore auto-balanceada por processo. Ela acompanha regiões de endereços virtuais reservadas ou alocadas.</p></div><div class="box"><strong>PFN Database</strong><p>O banco de Page Frame Numbers descreve o estado de cada página física, como livre, em uso, modificada ou em transição.</p></div></div><p>Assim, uma estrutura acompanha o espaço virtual do processo e outra acompanha o inventário físico de páginas.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="windows-working-set" data-title="Windows: working set e paging">
+      <h2>Windows: working set e paging</h2>
+      <div class="slide-content"><p>O <strong>working set</strong> é o conjunto de páginas físicas atualmente residentes para um processo. O Windows procura mantê-lo na RAM para reduzir faltas de página e define limites mínimo e máximo por processo.</p><div class="diagram-flow"><div class="diagram-node">Páginas residentes</div><div class="diagram-node">standby</div><div class="diagram-node">modified</div><div class="diagram-node">pagefile</div></div><p>A substituição usa envelhecimento e estado das páginas; listas standby, modified e modified no-write participam do ciclo antes da reutilização ou gravação no pagefile.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="windows-sections-heaps" data-title="Windows: sections, heaps e AWE">
+      <h2>Windows: sections, heaps e AWE</h2>
+      <div class="slide-content"><p><strong>Memory Sections</strong> são objetos do kernel que representam blocos mapeáveis para arquivos ou compartilháveis entre processos. O Windows também oferece heaps: cada processo tem um heap padrão e pode criar heaps privados adicionais.</p><p><strong>AWE</strong> (Address Windowing Extensions) permite a aplicações de 32 bits, em sistemas compatíveis, acessar mais de 4 GB de memória física por meio de mapeamentos.</p><div class="warning-box"><strong>Contexto:</strong> AWE é uma capacidade dependente do ambiente e da arquitetura; não significa que um processo de 32 bits tenha um espaço virtual linear acima de 4 GB.</div></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="windows-apis" data-title="Windows: APIs de memória virtual">
+      <h2>Windows: APIs de memória virtual</h2>
+      <div class="slide-content"><pre class="code-box"><code>// Win32 — sequência ilustrativa
+p = VirtualAlloc(NULL, tamanho,
+                 MEM_RESERVE | MEM_COMMIT,
+                 PAGE_READWRITE);
+VirtualProtect(p, tamanho, PAGE_READONLY, &amp;old);
+VirtualFree(p, 0, MEM_RELEASE);</code></pre><p><code>VirtualAlloc()</code> reserva ou comita páginas; <code>VirtualFree()</code> libera ou descomita; <code>VirtualProtect()</code> altera proteção; <code>VirtualQuery()</code> consulta uma região virtual.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="windows-mapped-heaps" data-title="Windows: arquivos mapeados e heaps">
+      <h2>Windows: arquivos mapeados e heaps</h2>
+      <div class="slide-content"><p><code>CreateFileMapping()</code> e <code>MapViewOfFile()</code> criam e mapeiam seções associadas a arquivos ou memória compartilhada. <code>UnmapViewOfFile()</code> remove uma view do processo.</p><p>Para heaps privados, a família <code>HeapCreate()</code>, <code>HeapAlloc()</code>, <code>HeapFree()</code> e <code>HeapDestroy()</code> controla o ciclo do heap. A API escolhida expressa a intenção: reserva/proteção, compartilhamento/mapeamento ou alocação de objetos.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="atividade-linux-windows" data-title="Atividade 1 — escolha a estrutura">
+      <h2>Atividade 1 — escolha a estrutura</h2>
+      <div class="slide-content"><div class="box"><p>Associe cada situação à opção mais diretamente relacionada:</p><ol><li>Alocar objetos de kernel frequentemente reutilizados no Linux.</li><li>Rastrear regiões virtuais reservadas de um processo Windows.</li><li>Compartilhar páginas após <code>fork()</code> até que haja escrita.</li><li>Consultar detalhes do mapa de memória de um processo Linux.</li></ol><p><strong>Opções:</strong> VAD; COW; slab/SLUB; <code>/proc/[pid]/smaps</code>.</p></div><details class="answer"><summary>Ver resposta</summary><p>1 — slab/SLUB; 2 — VAD; 3 — COW; 4 — <code>/proc/[pid]/smaps</code>. Cada item corresponde a uma estrutura ou interface específica da nota.</p></details></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="atividade-api" data-title="Atividade 2 — raciocínio sobre API">
+      <h2>Atividade 2 — raciocínio sobre API</h2>
+      <div class="slide-content"><div class="box"><p>Uma aplicação precisa (a) mapear um arquivo em uma região de memória compartilhada e (b) tornar uma região somente leitura após inicializá-la. Indique uma família de API Linux e uma equivalente Windows para cada objetivo.</p></div><details class="answer"><summary>Ver resposta</summary><p>(a) Linux: <code>mmap()</code>; Windows: <code>CreateFileMapping()</code> + <code>MapViewOfFile()</code>. (b) Linux: <code>mprotect()</code>; Windows: <code>VirtualProtect()</code>. As chamadas são interfaces de plataforma, e os detalhes de flags e tratamento de erros ficam a cargo da implementação completa.</p></details></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="comparativo" data-title="Comparação direta">
+      <h2>Comparação direta</h2>
+      <div class="slide-content"><table><thead><tr><th>Aspecto</th><th>Linux</th><th>Windows</th></tr></thead><tbody><tr><td>Rastreamento/estrutura</td><td>Zonas, buddy, slab/SLUB, tabelas</td><td>VADs, banco PFN, working set</td></tr><tr><td>Armazenamento secundário</td><td>swap; listas ativa/inativa</td><td>pagefile; standby/modified e estados relacionados</td></tr><tr><td>Mapeamento na aplicação</td><td><code>mmap()</code>, <code>mprotect()</code></td><td><code>VirtualAlloc()</code>, <code>VirtualProtect()</code></td></tr><tr><td>Arquivos/memória compartilhada</td><td>mapeamentos via <code>mmap()</code></td><td>sections e <code>MapViewOfFile()</code></td></tr></tbody></table><p>Ambos usam paginação sob demanda, tabelas de páginas, TLB e substituição; a diferença está nas estruturas e políticas concretas.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="transparencia-evolucao" data-title="Transparência, evolução e limites da comparação">
+      <h2>Transparência, evolução e limites da comparação</h2>
+      <div class="slide-content"><p>A nota caracteriza o Linux como mais transparente em suas implementações internas, com código-fonte amplamente disponível e documentação comunitária. No Windows, partes da arquitetura são documentadas, mas muitos detalhes permanecem proprietários.</p><div class="warning-box"><strong>Leitura responsável:</strong> nomes, níveis de tabelas, zonas e políticas podem evoluir entre versões e arquiteturas. A comparação descreve os mecanismos apresentados na nota, não uma promessa de identidade entre todas as versões.</div><p>Ambos evoluíram para arquiteturas de 64 bits, grandes quantidades de RAM e páginas grandes/enormes para aplicações intensivas em memória.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="resumo" data-title="Resumo: o que levar da aula">
+      <h2>Resumo: o que levar da aula</h2>
+      <div class="slide-content"><div class="three-column"><div class="success-box"><strong>Base comum</strong><p>Memória virtual paginada, isolamento por processo, tabelas, TLB e substituição.</p></div><div class="success-box"><strong>Linux</strong><p>Zonas, buddy, slab/SLUB, page cache, swap, OOM killer, COW e <code>mmap()</code>.</p></div><div class="success-box"><strong>Windows</strong><p>VADs, banco PFN, working set, pagefile, sections, heaps e <code>VirtualAlloc()</code>.</p></div></div><p>Desenvolver e ajustar sistemas exige conectar a abstração comum às estruturas, políticas e APIs da plataforma.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–4</a>
+    </section><section id="referencias" data-title="Referências">
+      <h2>Referências</h2>
+      <div class="slide-content"><ul><li><a href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf">Rettore — Gerenciamento de Memória em Linux e Windows (PDF da nota)</a>.</li><li><a href="https://prettore.github.io/lectures.html">Página de materiais de aulas indicada na nota</a>.</li></ul><p>A nota também cita, como bibliografia compilada, Silberschatz, Galvin e Gagne; Tanenbaum e Bos; Love; Russinovich, Solomon e Ionescu; e Bovet e Cesati. Esta aula resume a nota fornecida, sem atribuir falas ao autor original.</p></div>
+      <a class="source-note" href="../notas/06_Gerenciamento_Memoria_Linux_Windows.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1, 5</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 07</h1><p class="subtitle">Sistemas de Arquivos</p><p><a href="../bloco2/aula07.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/so-visualizer.js"></script>
+  <script src="../assets/so-slides.js"></script>
+    </body>
+</html>

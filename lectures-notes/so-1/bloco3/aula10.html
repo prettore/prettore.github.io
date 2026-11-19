@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Hardware, sincronização e escalonamento em sistemas operacionais multiprocessadores.">
+  <title>Aula 10 — Sistemas Multiprocessadores — Sistemas Operacionais</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/so.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco2/aula09.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/10_Sistemas_Multiprocessadores.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 10 — Sistemas Multiprocessadores">
+      <h1>Aula 10</h1>
+      <p class="subtitle">Sistemas Multiprocessadores</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Sistemas Operacionais</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><ul><li>Distinguir SMP, AMP, multicore e NUMA e relacionar cada arquitetura aos desafios do SO.</li><li>Explicar por que coerência de cache e sincronização são necessárias quando CPUs compartilham dados.</li><li>Comparar spinlocks, mutexes, semáforos, barreiras, read-write locks e RCU.</li><li>Analisar afinidade, balanceamento, gang scheduling e SMT em decisões de escalonamento.</li></ul></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–5</a>
+    </section><section id="visao-geral" data-title="O problema: várias CPUs, um sistema">
+      <h2>O problema: várias CPUs, um sistema</h2>
+      <div class="slide-content"><p>Um sistema multiprocessador possui duas ou mais Unidades Centrais de Processamento (CPUs) com acesso compartilhado à memória principal e aos periféricos. O paralelismo pode aumentar desempenho, vazão e confiabilidade, mas introduz acessos concorrentes e decisões adicionais de escalonamento.</p><div class="diagram-flow"><div class="diagram-node">CPUs / núcleos</div><div class="diagram-node">Memória compartilhada</div><div class="diagram-node">SO: sincroniza + escala</div><div class="diagram-node">E/S e processos</div></div></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="smp" data-title="SMP: multiprocessamento simétrico">
+      <h2>SMP: multiprocessamento simétrico</h2>
+      <div class="slide-content"><p>No <strong>SMP</strong> (Symmetric Multiprocessing), todas as CPUs são tratadas como iguais: qualquer uma pode executar código do kernel ou de usuário. Elas compartilham memória e dispositivos de E/S por barramento ou interconexão.</p><div class="info-box"><strong>Consequência:</strong> a liberdade de executar o kernel em qualquer CPU melhora a flexibilidade, mas estruturas compartilhadas precisam ser protegidas contra acessos simultâneos.</div></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="amp-multicore" data-title="AMP e arquiteturas multicore">
+      <h2>AMP e arquiteturas multicore</h2>
+      <div class="slide-content"><div class="two-column"><div><h3>AMP</h3><p>No <strong>AMP</strong> (Asymmetric Multiprocessing), uma CPU mestre controla o sistema e atribui tarefas às demais. A organização é simples, mas o mestre pode virar gargalo e as CPUs não são equivalentes.</p></div><div><h3>Multicore</h3><p>Vários núcleos de processamento integram um único chip. Para o SO, cada núcleo aparece como uma CPU lógica separada, embora compartilhe partes da hierarquia de cache e do chip.</p></div></div></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="numa" data-title="NUMA: memória não uniforme">
+      <h2>NUMA: memória não uniforme</h2>
+      <div class="slide-content"><p>Em <strong>NUMA</strong> (Non-Uniform Memory Access), a memória é distribuída por nós. Uma CPU acessa sua memória local mais rapidamente que a memória remota de outro nó.</p><div class="diagram-flow"><div class="diagram-node">CPU 0<br>nó 0</div><div class="diagram-node">Memória local<br>latência menor</div><div class="diagram-node">Interconexão</div><div class="diagram-node">Memória remota<br>latência maior</div></div><p>O SO deve considerar a topologia ao alocar memória e ao posicionar threads.</p></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="coerencia-cache" data-title="Coerência de cache">
+      <h2>Coerência de cache</h2>
+      <div class="slide-content"><p>Cada CPU pode manter cópias L1/L2 e, em alguns desenhos, existe cache L3 compartilhado. Se duas CPUs armazenam a mesma posição, uma escrita em uma cópia precisa ser refletida ou invalidar as demais para que todas observem uma visão consistente.</p><div class="warning-box"><strong>Coerência não é sincronização de programa:</strong> protocolos de hardware, como MESI (mencionado na nota), tratam cópias de cache; locks e operações atômicas tratam a coordenação lógica entre threads.</div></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="modelos-so" data-title="Modelos de SO para multiprocessadores">
+      <h2>Modelos de SO para multiprocessadores</h2>
+      <div class="slide-content"><p>Há duas estratégias principais descritas na nota:</p><ol><li><strong>Master–slave / assimétrica:</strong> uma CPU executa o SO e gerencia as outras, que ficam restritas a código de usuário.</li><li><strong>SO monolítico simétrico:</strong> o kernel pode executar em qualquer CPU, tratando-as de forma igual.</li></ol><p>A primeira facilita a adaptação de um SO monoprocessador, mas limita o paralelismo; a segunda é mais flexível, porém exige proteção cuidadosa das estruturas internas.</p></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="granularidade-lock" data-title="Granularidade do locking no kernel">
+      <h2>Granularidade do locking no kernel</h2>
+      <div class="slide-content"><div class="comparison-grid"><div><h3>Big Kernel Lock</h3><p>Um lock global protege todo o kernel. Só uma CPU entra no código do kernel por vez: implementação mais simples, mas pouco paralelismo.</p></div><div><h3>Fine-grained locking</h3><p>Locks diferentes protegem estruturas ou partes distintas. Aumenta a concorrência, porém torna implementação, ordenação e depuração mais complexas.</p></div></div><p>O projeto busca equilibrar segurança contra corrida e escalabilidade.</p></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="corrida" data-title="Condição de corrida e seção crítica">
+      <h2>Condição de corrida e seção crítica</h2>
+      <div class="slide-content"><p>Uma condição de corrida ocorre quando o resultado depende da ordem imprevisível de acessos concorrentes. Exemplo: duas CPUs leem <code>contador = 0</code>, ambas calculam 1 e escrevem 1; duas operações de incremento produziram apenas uma atualização observável.</p><div class="sequence-flow"><div>ler contador</div><div>calcular +1</div><div>escrever</div></div><p>Uma seção crítica delimita o trecho que deve ser executado com exclusão mútua ou outra disciplina de sincronização.</p></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="spinlock" data-title="Spinlocks: esperar girando">
+      <h2>Spinlocks: esperar girando</h2>
+      <div class="slide-content"><p>Um <strong>spinlock</strong> faz a thread ocupada testar repetidamente um lock até ele ser liberado. Em multiprocessadores, a CPU que espera pode girar enquanto a CPU proprietária executa e libera o lock.</p><div class="info-box"><strong>Use em:</strong> seções críticas muito curtas, quando o custo de bloquear e reescalonar supera a espera esperada.</div><div class="warning-box"><strong>Cuidado:</strong> em um único processador, a espera ocupada pode impedir que o dono do lock execute e o libere.</div></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="outros-locks" data-title="Outros mecanismos de sincronização">
+      <h2>Outros mecanismos de sincronização</h2>
+      <div class="slide-content"><ul><li><strong>Mutex e semáforo:</strong> bloqueiam ou coordenam acesso; em multiprocessadores, o estado precisa ser manipulado com operações atômicas de hardware.</li><li><strong>Barreira:</strong> todas as threads chegam a um ponto antes que qualquer uma prossiga; comum em aplicações paralelas.</li><li><strong>Read-write lock:</strong> vários leitores podem prosseguir juntos, mas escritores obtêm acesso exclusivo.</li></ul><p>A escolha depende do padrão de acesso e do custo da contenção.</p></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="falsa-compartilhamento" data-title="Falso compartilhamento e escalabilidade">
+      <h2>Falso compartilhamento e escalabilidade</h2>
+      <div class="slide-content"><p><strong>Falso compartilhamento</strong> ocorre quando threads usam variáveis diferentes que caem na mesma linha de cache. A coerência invalida a linha entre CPUs, embora não exista compartilhamento lógico dos dados, degradando o desempenho.</p><p>Com mais CPUs, a disputa por um lock também pode virar gargalo. Alternativas citadas incluem locks por CPU, algoritmos lock-free e <strong>RCU</strong> (Read-Copy-Update).</p></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="rcu" data-title="RCU: leitores sem lock">
+      <h2>RCU: leitores sem lock</h2>
+      <div class="slide-content"><p>No <strong>RCU</strong>, leitores acessam a versão publicada sem adquirir lock. Um atualizador cria uma cópia, modifica-a e publica a nova versão; leitores que já estavam na versão antiga terminam nela.</p><div class="sequence-flow"><div>leitores usam V1</div><div>atualizador copia V1</div><div>modifica e publica V2</div><div>libera V1 após leitores</div></div><p>A memória antiga só é liberada depois que os leitores existentes concluírem.</p></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="afinidade" data-title="Afinidade de processador">
+      <h2>Afinidade de processador</h2>
+      <div class="slide-content"><p>O escalonador decide qual thread executar e em qual CPU. A <strong>afinidade</strong> tenta manter a thread na mesma CPU, preservando dados no cache quente e evitando o custo de formar um cache frio em outra CPU.</p><div class="two-column"><div><h3>Suave</h3><p>O SO tenta manter a thread, mas pode migrá-la.</p></div><div><h3>Rígida</h3><p>O processo restringe o conjunto de CPUs permitido para suas threads.</p></div></div></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="balanceamento" data-title="Balanceamento de carga">
+      <h2>Balanceamento de carga</h2>
+      <div class="slide-content"><p>Balancear carga distribui threads prontas entre CPUs para elevar utilização e paralelismo. Porém, migrar uma thread pode invalidar a vantagem de seu cache quente.</p><div class="comparison-grid"><div><h3>Push migration</h3><p>Uma verificação periódica encontra CPUs sobrecarregadas e empurra threads para CPUs ociosas ou menos carregadas.</p></div><div><h3>Pull migration</h3><p>Uma CPU ociosa procura e puxa uma tarefa de uma CPU ocupada.</p></div></div></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="numa-aware" data-title="Escalonamento consciente de NUMA">
+      <h2>Escalonamento consciente de NUMA</h2>
+      <div class="slide-content"><p>Em NUMA, o escalonador tenta executar a thread no mesmo nó em que seus dados estão alocados. Assim reduz acessos à memória remota e sua latência maior.</p><div class="highlight"><p><strong>Trade-off:</strong> manter afinidade de memória pode deixar uma CPU local sobrecarregada; mover a thread pode aliviar a carga, mas aumentar o custo dos acessos remotos.</p></div></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="gang-scheduling" data-title="Gang scheduling para threads cooperantes">
+      <h2>Gang scheduling para threads cooperantes</h2>
+      <div class="slide-content"><p>Aplicações paralelas podem ter um grupo de threads que coopera intensamente. O <strong>gang scheduling</strong> tenta executar o grupo simultaneamente em CPUs diferentes. Se parte do grupo não puder ser agendada, as demais podem ser bloqueadas para evitar espera ocupada por uma thread ausente.</p><div class="diagram-flow"><div class="diagram-node">Thread A</div><div class="diagram-node">Thread B</div><div class="diagram-node">Thread C</div><div class="diagram-node">executam como um gang</div></div></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="smt" data-title="SMT e Hyper-Threading">
+      <h2>SMT e Hyper-Threading</h2>
+      <div class="slide-content"><p><strong>SMT</strong> (Simultaneous Multithreading) mantém o estado de múltiplas threads lógicas em uma CPU física. Para o SO, cada thread lógica aparece como CPU separada, embora as threads possam disputar unidades de execução e outros recursos do mesmo núcleo.</p><p>Uma política consciente de SMT tende a ocupar primeiro CPUs físicas diferentes e só depois usar múltiplas threads lógicas do mesmo núcleo, quando isso for mais eficiente.</p><div class="warning-box">O nome Hyper-Threading é uma denominação de implementação; a nota apresenta SMT como técnica de hardware.</div></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4–5</a>
+    </section><section id="visualizacao-escalonamento" data-title="Visualização: migração e afinidade">
+      <h2>Visualização: migração e afinidade</h2>
+      <div class="slide-content"><div class="so-visualizer" data-title="Decisão de escalonamento"><script type="application/json">{"steps":[{"cells":["CPU 0: Thread T (cache quente)","CPU 1: ociosa"],"active":[0],"caption":"T executa na CPU 0 e se beneficia da afinidade."},{"cells":["CPU 0: sobrecarregada","CPU 1: ociosa"],"active":[0,1],"caption":"O desequilíbrio cria pressão para balancear a carga."},{"cells":["CPU 0: outra thread","CPU 1: T (cache frio)"],"active":[1],"caption":"A migração alivia a carga, mas T precisa reconstruir seu cache."}]} </script></div></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="atividade-arquitetura" data-title="Atividade 1 — Escolha de arquitetura">
+      <h2>Atividade 1 — Escolha de arquitetura</h2>
+      <div class="slide-content"><p>Um servidor tem várias CPUs iguais, memória distribuída por nós e threads que acessam repetidamente grandes estruturas locais. Qual combinação de arquitetura e política tende a reduzir o custo de memória? Explique também por que simplesmente mover toda thread para a CPU menos ocupada pode ser ruim.</p><details class="answer"><summary>Ver resposta</summary><p>É um cenário SMP com características NUMA. Um escalonamento consciente de NUMA deve aproximar a thread dos dados locais. Mover tudo para a CPU menos ocupada pode aumentar acessos remotos e perder cache/afinidade; balanceamento e localidade precisam ser equilibrados.</p></details></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2, 4</a>
+    </section><section id="atividade-sincronizacao" data-title="Atividade 2 — Escolha de sincronização">
+      <h2>Atividade 2 — Escolha de sincronização</h2>
+      <div class="slide-content"><p>Uma estrutura é lida por muitas threads e atualizada raramente. As leituras precisam ser rápidas; uma atualização deve publicar uma visão consistente sem liberar a versão antiga enquanto houver leitores. Qual mecanismo da aula se encaixa melhor? Quando um spinlock seria inadequado?</p><details class="answer"><summary>Ver resposta</summary><p>RCU se encaixa: leitores acessam sem lock, o atualizador copia e publica uma nova versão, e a antiga só é liberada após os leitores terminarem. Um spinlock é inadequado se a espera puder ser longa ou se a seção crítica não for curta, pois desperdiça CPU em busy-waiting.</p></details></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="sintese" data-title="Síntese: o SO como coordenador">
+      <h2>Síntese: o SO como coordenador</h2>
+      <div class="slide-content"><ul><li>O hardware paralelo combina CPUs/núcleos, caches, interconexões e, em NUMA, nós de memória.</li><li>O kernel simétrico oferece flexibilidade, mas exige locks e operações atômicas escaláveis.</li><li>Sincronização evita corridas; coerência mantém a visão das cópias de cache.</li><li>Escalonamento equilibra carga, afinidade, localidade NUMA, cooperação de gangs e recursos SMT.</li></ul><p>O trade-off recorrente é entre simplicidade, paralelismo, latência e escalabilidade.</p></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–5</a>
+    </section><section id="referencias" data-title="Referências">
+      <h2>Referências</h2>
+      <div class="slide-content"><ul><li>Rettore, Paulo. <em>Sistemas para Multiprocessadores</em>. Material da disciplina; PDF da aula.</li><li>Silberschatz, A.; Galvin, P. B.; Gagne, G. <em>Operating System Concepts</em>. 10. ed., 2018.</li><li>Tanenbaum, A. S.; Bos, H. <em>Modern Operating Systems</em>. 4. ed., 2015.</li><li>Stallings, W. <em>Operating Systems: Internals and Design Principles</em>. 9. ed., 2018.</li><li>McKenney, P. E. <em>Is Parallel Programming Hard, And, If So, What Can You Do About It?</em>; Love, R. <em>Linux Kernel Development</em>, 3. ed., 2010.</li><li>Russinovich, M. E.; Solomon, D. A.; Ionescu, A. <em>Windows Internals</em>, 2012.</li></ul><p>Fonte principal consultada: <a href="../notas/10_Sistemas_Multiprocessadores.pdf">PDF da aula 10</a>.</p></div>
+      <a class="source-note" href="../notas/10_Sistemas_Multiprocessadores.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 11</h1><p class="subtitle">Sistemas Multicomputadores</p><p><a href="../bloco3/aula11.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/so-visualizer.js"></script>
+  <script src="../assets/so-slides.js"></script>
+    </body>
+</html>

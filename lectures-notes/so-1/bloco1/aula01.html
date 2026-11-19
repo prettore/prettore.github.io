@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Apresenta o papel dos sistemas operacionais como máquina estendida e gerenciador de recursos, além do mapa de tópicos da disciplina.">
+  <title>Aula 01 — Introdução ao SO — Sistemas Operacionais</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/so.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/01_Introducao_SO.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 01 — Introdução ao SO">
+      <h1>Aula 01</h1>
+      <p class="subtitle">Introdução ao SO</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Sistemas Operacionais</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><div class="box"><p>Ao final desta aula, você deverá ser capaz de:</p><ul><li>explicar por que um sistema operacional (SO) é a interface entre hardware, aplicativos e usuários;</li><li>distinguir as visões de SO como <strong>máquina estendida</strong> e como <strong>gerenciador de recursos</strong>;</li><li>relacionar o SO a eficiência, responsividade, proteção e equidade;</li><li>reconhecer os principais eixos que serão aprofundados nas próximas aulas.</li></ul></div><p class="highlight">Ideia-guia: o SO transforma componentes complexos em serviços coordenados e utilizáveis.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="problema-sem-so" data-title="O problema que o SO resolve">
+      <h2>O problema que o SO resolve</h2>
+      <div class="slide-content"><p>Sem um sistema operacional, o computador seria uma coleção de componentes eletrônicos sem uma forma consistente de executar as tarefas que esperamos.</p><div class="two-column"><div class="info-box"><h3>Hardware</h3><p>CPU, memória, discos, teclado, rede e outros dispositivos expõem detalhes e conflitos de uso.</p></div><div class="info-box"><h3>Aplicações e pessoas</h3><p>Precisam abrir dados, executar instruções e interagir sem conhecer controladores, endereços e temporizações de cada dispositivo.</p></div></div><p>O SO coordena essa relação por meio de serviços e abstrações.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="papel-interface" data-title="O SO como interface">
+      <h2>O SO como interface</h2>
+      <div class="slide-content"><div class="diagram-flow"><div class="diagram-node"><strong>Usuário</strong><br>ações e objetivos</div><div class="diagram-node"><strong>Aplicações</strong><br>programas e dados</div><div class="diagram-node"><strong>Sistema operacional</strong><br>serviços e políticas</div><div class="diagram-node"><strong>Hardware</strong><br>CPU, memória e E/S</div></div><p>O SO fica entre as necessidades do software e os recursos físicos. Ele oferece uma interface mais estável que os detalhes de cada máquina, sem eliminar a necessidade de políticas: é preciso decidir quem usa a CPU, onde os dados ficam e como os dispositivos são compartilhados.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="duas-visoes" data-title="Duas visões complementares">
+      <h2>Duas visões complementares</h2>
+      <div class="slide-content"><div class="two-column"><div class="box"><h3>Máquina estendida</h3><p>Oculta a complexidade do hardware e apresenta operações mais simples. O programador trabalha com arquivos e diretórios, em vez de controlar diretamente um disco.</p></div><div class="box"><h3>Gerenciador de recursos</h3><p>Aloca e desaloca CPU, memória e dispositivos de entrada e saída (E/S) entre programas e usuários que competem por eles.</p></div></div><p>As duas perspectivas descrevem o mesmo sistema: uma enfatiza a <strong>abstração</strong>; a outra, a <strong>coordenação</strong>.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1-2</a>
+    </section><section id="abstracao-arquivo" data-title="Exemplo de abstração: arquivos">
+      <h2>Exemplo de abstração: arquivos</h2>
+      <div class="slide-content"><p>Um aplicativo quer salvar um relatório. Em vez de conhecer setores, cabeças, trilhas ou comandos específicos do controlador, ele solicita ao SO uma operação sobre um arquivo.</p><div class="sequence-flow"><div>Aplicação: salvar <code>relatorio.txt</code></div><div>SO: localizar espaço e aplicar regras de acesso</div><div>Driver: conversar com o dispositivo</div><div>Dispositivo: registrar os dados</div></div><p>A abstração torna o código mais portátil e separa a intenção da aplicação da implementação física.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="atividade-abstracao" data-title="Atividade 1 — identificar a perspectiva">
+      <h2>Atividade 1 — identificar a perspectiva</h2>
+      <div class="slide-content"><p>Classifique cada situação principalmente como <strong>máquina estendida</strong> ou <strong>gerenciador de recursos</strong>:</p><ol><li>um programa cria um diretório sem controlar setores do disco;</li><li>dois programas precisam compartilhar a CPU;</li><li>um usuário acessa um arquivo por um caminho, sem saber em qual dispositivo ele está.</li></ol><details class="answer"><summary>Ver resposta</summary><p>1 e 3 evidenciam a máquina estendida, pois usam abstrações simples. 2 evidencia o gerenciador de recursos, pois o SO precisa arbitrar o uso da CPU. Na prática, uma mesma operação pode envolver as duas perspectivas.</p></details></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1-2</a>
+    </section><section id="recursos-gerenciados" data-title="Quais recursos são gerenciados?">
+      <h2>Quais recursos são gerenciados?</h2>
+      <div class="slide-content"><div class="three-column"><div class="info-box"><h3>CPU</h3><p>Distribuição do tempo de processamento entre tarefas.</p></div><div class="info-box"><h3>Memória</h3><p>Espaço para programas e dados, com uso seguro por múltiplos processos.</p></div><div class="info-box"><h3>E/S e arquivos</h3><p>Comunicação com dispositivos e organização do armazenamento.</p></div></div><p>Gerenciar significa acompanhar o estado dos recursos, alocá-los quando solicitados, liberá-los quando deixam de ser usados e evitar conflitos entre consumidores.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1-2</a>
+    </section><section id="eficiencia-equidade" data-title="Eficiência, desempenho e equidade">
+      <h2>Eficiência, desempenho e equidade</h2>
+      <div class="slide-content"><p>Ao coordenar recursos, o SO busca objetivos que podem entrar em tensão:</p><ul><li><strong>throughput:</strong> realizar mais trabalho útil;</li><li><strong>tempo de resposta:</strong> reagir rapidamente às solicitações;</li><li><strong>eficiência:</strong> evitar desperdício de recursos;</li><li><strong>equidade:</strong> distribuir oportunidades de uso de forma justa.</li></ul><p>Em ambientes multitarefa e multiusuário, otimizar apenas uma tarefa pode prejudicar as demais. As políticas do SO tornam esses compromissos explícitos.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="multitarefa-multiusuario" data-title="Por que multitarefa e multiusuário importam">
+      <h2>Por que multitarefa e multiusuário importam</h2>
+      <div class="slide-content"><p>Em um sistema <strong>multitarefa</strong>, várias atividades avançam de forma concorrente. Em um sistema <strong>multiusuário</strong>, diferentes usuários podem disputar recursos e dados.</p><div class="diagram-flow"><div class="diagram-node">Tarefa A<br>CPU e memória</div><div class="diagram-node">SO<br>coordena e protege</div><div class="diagram-node">Tarefa B<br>CPU e E/S</div></div><p>O SO precisa preservar estabilidade, proteger dados e manter o sistema responsivo mesmo quando as demandas se sobrepõem.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="visualizacao-processos" data-title="Visualização: estados de uma tarefa">
+      <h2>Visualização: estados de uma tarefa</h2>
+      <div class="slide-content"><p>Uma forma inicial de pensar na coordenação é observar que uma tarefa pode alternar entre usar a CPU e esperar por E/S. A sequência abaixo é conceitual; os detalhes serão estudados no tópico de processos.</p><div class="so-visualizer" data-title="Ciclo conceitual de execução"><script type="application/json">{"steps":[{"cells":["Pronta","Executando","Bloqueada"],"active":[0],"caption":"A tarefa aguarda uma oportunidade de usar a CPU."},{"cells":["Pronta","Executando","Bloqueada"],"active":[1],"caption":"O SO seleciona a tarefa para executar na CPU."},{"cells":["Pronta","Executando","Bloqueada"],"active":[2],"caption":"A tarefa espera uma operação de entrada e saída terminar."},{"cells":["Pronta","Executando","Bloqueada"],"active":[0],"caption":"Após a espera, ela pode voltar à fila de tarefas prontas."}]}</script></div></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2-3</a>
+    </section><section id="protecao-estabilidade" data-title="Proteção e estabilidade">
+      <h2>Proteção e estabilidade</h2>
+      <div class="slide-content"><p>Coordenar recursos não é apenas acelerar o computador. Em ambientes compartilhados, o SO também deve:</p><ul><li>impedir que uma tarefa corrompa dados de outra;</li><li>organizar o acesso concorrente a recursos;</li><li>manter serviços disponíveis quando há várias atividades;</li><li>oferecer regras previsíveis de uso.</li></ul><div class="warning-box"><p><strong>Atenção:</strong> proteção, desempenho e conveniência são responsabilidades relacionadas, mas não são sinônimos. Uma política pode favorecer um objetivo e exigir compromissos em outro.</p></div></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="mapa-processos" data-title="Próximos eixos: processos e concorrência">
+      <h2>Próximos eixos: processos e concorrência</h2>
+      <div class="slide-content"><p>A unidade de execução será estudada em diferentes níveis:</p><ul><li><strong>processos e threads:</strong> tarefas e unidades de execução em multiprogramação e tempo compartilhado;</li><li><strong>sincronização:</strong> coordenação para evitar condições de corrida e deadlocks;</li><li><strong>comunicação entre processos (IPC):</strong> troca de informações entre processos que cooperam ou competem;</li><li><strong>escalonamento:</strong> política para escolher quem usa a CPU.</li></ul><p>Esses assuntos explicam como o SO sustenta concorrência sem perder controle.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="mapa-memoria" data-title="Próximo eixo: gerenciamento de memória">
+      <h2>Próximo eixo: gerenciamento de memória</h2>
+      <div class="slide-content"><p>A memória principal precisa acomodar múltiplos processos com segurança e eficiência. O estudo inclui:</p><div class="three-column"><div class="box"><h3>Alocação</h3><p>Distribuir espaço e recuperá-lo quando necessário.</p></div><div class="box"><h3>Paginação e segmentação</h3><p>Organizar o espaço de endereçamento em unidades com funções diferentes.</p></div><div class="box"><h3>Memória virtual</h3><p>Prover uma visão de memória que não se limita a um bloco físico simples.</p></div></div><p>A nota também prevê comparar aspectos de gerenciamento em Linux e Windows; detalhes concretos dependem da implementação e da versão analisada.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="mapa-arquivos" data-title="Próximo eixo: sistemas de arquivos">
+      <h2>Próximo eixo: sistemas de arquivos</h2>
+      <div class="slide-content"><p>Um sistema de arquivos organiza dados persistentes e oferece formas de localizá-los e acessá-los.</p><ul><li>arquivos representam dados e operações sobre esses dados;</li><li>diretórios organizam nomes e relações;</li><li>metadados descrevem propriedades e informações de controle;</li><li>o SO intermedeia o armazenamento em dispositivos secundários.</li></ul><p>A nota cita, como exemplos de estudo, <strong>ext4</strong> e <strong>XFS</strong> em Linux e <strong>NTFS</strong> e <strong>FAT32</strong> em Windows. A escolha e os recursos variam conforme o ambiente.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2-3</a>
+    </section><section id="mapa-entrada-saida" data-title="Próximo eixo: entrada e saída">
+      <h2>Próximo eixo: entrada e saída</h2>
+      <div class="slide-content"><p>Teclados, mouses, discos, impressoras e redes têm comportamentos distintos. O SO os integra por meio de:</p><ul><li><strong>drivers:</strong> componentes que traduzem operações do SO para um dispositivo;</li><li><strong>buffering:</strong> uso de áreas intermediárias para acomodar ritmos diferentes;</li><li><strong>spooling:</strong> enfileiramento de trabalhos, como impressões, para execução posterior.</li></ul><p>O objetivo é oferecer uma interface organizada sem exigir que cada aplicativo conheça os detalhes de cada dispositivo.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2-3</a>
+    </section><section id="mapa-paralelo-distribuido" data-title="Próximos eixos: paralelismo e distribuição">
+      <h2>Próximos eixos: paralelismo e distribuição</h2>
+      <div class="slide-content"><div class="two-column"><div class="box"><h3>Multiprocessadores</h3><p>Várias CPUs no mesmo sistema exigem sincronização, escalonamento e atenção à coerência de cache.</p></div><div class="box"><h3>Multicomputadores</h3><p>Computadores independentes cooperam por comunicação; entram em cena tolerância a falhas e consistência de dados.</p></div></div><p>A diferença central é o grau de compartilhamento: processadores podem compartilhar um sistema de memória, enquanto nós distribuídos dependem de comunicação entre máquinas.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="mapa-virtualizacao" data-title="Próximo eixo: virtualização">
+      <h2>Próximo eixo: virtualização</h2>
+      <div class="slide-content"><p>Virtualização permite criar ambientes isolados sobre um mesmo hardware físico. A nota inclui:</p><ul><li>múltiplas máquinas virtuais em um único computador;</li><li>aplicações executadas em ambientes isolados, como containers;</li><li>o papel do SO em prover, controlar ou hospedar esses ambientes.</li></ul><div class="info-box"><p><strong>Contexto:</strong> a fronteira entre recursos do SO, hipervisores e plataformas de containers depende da arquitetura adotada; a aula introdutória apresenta o eixo, não uma implementação específica.</p></div></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="atividade-mapa" data-title="Atividade 2 — escolher o eixo">
+      <h2>Atividade 2 — escolher o eixo</h2>
+      <div class="slide-content"><p>Associe cada situação ao eixo mais diretamente relacionado:</p><ol><li>duas tarefas atualizam o mesmo dado e podem produzir resultado inconsistente;</li><li>um trabalho de impressão aguarda sua vez sem bloquear o aplicativo que o criou;</li><li>um sistema distribui espaço da RAM entre vários programas;</li><li>duas máquinas cooperam e precisam lidar com falhas de comunicação.</li></ol><details class="answer"><summary>Ver resposta</summary><p>1: sincronização e comunicação entre processos. 2: gerenciamento de E/S, especialmente spooling. 3: gerenciamento de memória. 4: sistemas para multicomputadores. Mais de um eixo pode participar de cada caso, mas esses são os focos principais.</p></details></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2-3</a>
+    </section><section id="integracao-eixos" data-title="Como os eixos se conectam">
+      <h2>Como os eixos se conectam</h2>
+      <div class="slide-content"><div class="diagram-flow"><div class="diagram-node">Processo<br>pede serviço</div><div class="diagram-node">CPU<br>é escalonada</div><div class="diagram-node">Memória<br>é mapeada</div><div class="diagram-node">E/S e arquivos<br>persistem dados</div></div><p>Os tópicos não são compartimentos isolados. Uma aplicação pode executar como processo, ocupar memória, disputar CPU, ler um arquivo e esperar um dispositivo. O SO coordena essas partes para oferecer uma experiência coerente.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1-3</a>
+    </section><section id="resumo" data-title="Resumo da aula">
+      <h2>Resumo da aula</h2>
+      <div class="slide-content"><div class="success-box"><ul><li>O SO é a interface entre hardware, aplicações e usuários.</li><li>Como máquina estendida, oferece abstrações mais simples que o hardware.</li><li>Como gerenciador de recursos, aloca, desaloca e coordena CPU, memória e E/S.</li><li>Em cenários multitarefa e multiusuário, busca desempenho, responsividade, proteção e equidade.</li><li>Processos, memória, arquivos, E/S, paralelismo, distribuição e virtualização formam o mapa do estudo.</li></ul></div><p>Nas próximas aulas, cada eixo será detalhado com mecanismos, políticas e exemplos.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1-3</a>
+    </section><section id="referencias" data-title="Referências">
+      <h2>Referências</h2>
+      <div class="slide-content"><p><strong>Fonte principal da aula:</strong></p><ul><li>Rettore, Paulo. <em>Introdução a Sistemas Operacionais</em>. Nota em PDF, páginas 1–3. <a href="../notas/01_Introducao_SO.pdf">Acessar o PDF</a>.</li></ul><p><strong>Referências bibliográficas indicadas na nota:</strong></p><ul><li>Silberschatz, A.; Galvin, P. B.; Gagne, G. <em>Operating System Concepts</em>. 10. ed., Wiley, 2018.</li><li>Tanenbaum, A. S.; Bos, H. <em>Modern Operating Systems</em>. 4. ed., Pearson Education, 2015.</li></ul><p class="compact">Os conteúdos desta aula são adaptações didáticas da nota original; não são falas ou transcrições do autor.</p></div>
+      <a class="source-note" href="../notas/01_Introducao_SO.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 02</h1><p class="subtitle">Processos, Threads e Multiprogramação</p><p><a href="../bloco1/aula02.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/so-visualizer.js"></script>
+  <script src="../assets/so-slides.js"></script>
+    </body>
+</html>
