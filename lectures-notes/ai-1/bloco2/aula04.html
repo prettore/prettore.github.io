@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Camadas, pesos, perceptrons, retropropagação, redes convolucionais e recorrentes.">
+  <title>Aula 04 — Redes Neurais e Aprendizado Profundo — Inteligência Artificial</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../assets/reveal/fonts.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/ia.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco1/aula03.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/04-Redes Neurais e Aprendizado Profundo (Pt-Br).pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 04 — Redes Neurais e Aprendizado Profundo">
+      <h1>Aula 04</h1>
+      <p class="subtitle">Redes Neurais e Aprendizado Profundo</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Inteligência Artificial</p></div>
+    </section><section id="objetivos" data-title="Objetivos da aula">
+      <h2>Objetivos da aula</h2>
+      <div class="slide-content"><div class="box"><ul><li>Relacionar Inteligência Artificial, aprendizado de máquina e aprendizado profundo.</li><li>Explicar camadas, neurônios, pesos, perceptron e redes multicamadas.</li><li>Descrever a retropropagação do erro e o ajuste de pesos.</li><li>Comparar CNNs, RNNs e suas aplicações clássicas por tipo de dado.</li></ul></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–5</a>
+    </section><section id="ia_ml_deep_learning" data-title="IA, Machine Learning e Deep Learning">
+      <h2>IA, Machine Learning e Deep Learning</h2>
+      <div class="slide-content"><div class="box"><ul><li>IA é apresentada como simulação de processos de inteligência humana por máquinas, incluindo aprendizado, raciocínio e autocorreção.</li><li>Machine Learning é descrito como subcampo da IA que aprende iterativamente com dados, sem programação explícita para cada tarefa.</li><li>Deep Learning é descrito como subcampo de Machine Learning baseado em redes neurais artificiais com múltiplas camadas.</li><li>A relação visual do PDF é de inclusão: IA contém Machine Learning, que contém Deep Learning.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>O próprio material associa chatbots e carros autônomos à IA; recomendação de produtos e detecção de fraude a Machine Learning; reconhecimento facial e tradução automática a Deep Learning.</p></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="ia_ml_deep_learning_atividade" data-title="Prática — IA, Machine Learning e Deep Learning">
+      <h2>Prática — IA, Machine Learning e Deep Learning</h2>
+      <div class="slide-content"><div class="warning-box"><p>Classifique cada caso no nível mais específico apresentado: (a) recomendação de produtos em uma loja on-line; (b) reconhecimento facial em um smartphone; (c) chatbot.</p></div><details class="answer"><summary>Ver resposta</summary><p>(a) Machine Learning; (b) Deep Learning; (c) Inteligência Artificial. A classificação segue os exemplos do PDF e a relação de subconjuntos: um caso de Deep Learning também pertence a Machine Learning e IA, mas o rótulo mais específico é Deep Learning.</p></details></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="o_que_e_uma_rna" data-title="O que é uma rede neural artificial">
+      <h2>O que é uma rede neural artificial</h2>
+      <div class="slide-content"><div class="box"><ul><li>Rede Neural Artificial (RNA) é um modelo computacional inspirado em conexões entre neurônios biológicos.</li><li>A rede é formada por “neurônios” interconectados que processam informações.</li><li>O PDF cita reconhecimento de padrões, classificação de dados e previsão como usos.</li><li>A inspiração biológica é uma referência de projeto, não uma descrição de equivalência com o cérebro.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em uma tarefa de classificação, entradas são processadas por neurônios conectados para produzir uma classe ou previsão; o PDF não fornece uma fórmula específica para esse cálculo.</p></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="o_que_e_uma_rna_atividade" data-title="Prática — O que é uma rede neural artificial">
+      <h2>Prática — O que é uma rede neural artificial</h2>
+      <div class="slide-content"><div class="warning-box"><p>Escolha a tarefa mais diretamente alinhada ao uso de uma RNA segundo o PDF: (a) reconhecer padrões em dados; (b) apenas armazenar arquivos; (c) formatar um documento.</p></div><details class="answer"><summary>Ver resposta</summary><p>A alternativa (a). O texto cita explicitamente reconhecimento de padrões, classificação de dados e previsão como aplicações de RNAs; as alternativas (b) e (c) não são apresentadas como aplicações da rede.</p></details></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="camadas_e_pesos" data-title="Estrutura básica: camadas e pesos">
+      <h2>Estrutura básica: camadas e pesos</h2>
+      <div class="slide-content"><div class="box"><ul><li>A camada de entrada recebe os dados.</li><li>As camadas ocultas realizam o processamento intermediário.</li><li>A camada de saída gera o resultado.</li><li>Os neurônios são conectados por pesos, que determinam a importância de cada entrada.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Para uma previsão, diferentes características entram pela camada de entrada; as camadas ocultas transformam essas informações e a camada de saída produz o resultado. O PDF não especifica quantidade de camadas ou valores de pesos.</p></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="rede_fluxo" data-title="O percurso da informação">
+      <h2>O percurso da informação</h2>
+      <div class="slide-content"><div class="diagram-flow"><div class="diagram-node">Características de entrada</div><span class="diagram-arrow" aria-hidden="true">→</span><div class="diagram-node">Camadas ocultas</div><span class="diagram-arrow" aria-hidden="true">→</span><div class="diagram-node">Saída</div></div><div class="two-column"><div><h4>Propagação direta</h4><p>A rede transforma características em representações e produz uma saída.</p></div><div><h4>Treinamento</h4><p>O erro orienta o ajuste dos pesos; não é uma nova camada de entrada.</p></div></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="camadas_e_pesos_atividade" data-title="Prática — Estrutura básica: camadas e pesos">
+      <h2>Prática — Estrutura básica: camadas e pesos</h2>
+      <div class="slide-content"><div class="warning-box"><p>Em uma rede descrita pelo material, onde ocorre o recebimento dos dados e onde é gerado o resultado? Explique também para que servem os pesos.</p></div><details class="answer"><summary>Ver resposta</summary><p>Os dados são recebidos na camada de entrada e o resultado é gerado na camada de saída. Os pesos representam a importância relativa das entradas nas conexões entre neurônios.</p></details></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="perceptron_e_mlp" data-title="Perceptron e MLP">
+      <h2>Perceptron e MLP</h2>
+      <div class="slide-content"><div class="box"><ul><li>O perceptron é apresentado como o modelo mais simples de neurônio artificial.</li><li>Ele recebe um conjunto de entradas e produz uma saída binária.</li><li>Um perceptron de camada única resolve problemas simples.</li><li>Uma MLP (Multilayer Perceptron, perceptron multicamadas) inclui camadas ocultas para aprender relações mais complexas.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>A distinção didática é arquitetural: camada única corresponde ao perceptron simples; várias camadas formam uma MLP capaz de tratar problemas mais complexos, conforme o resumo do PDF.</p></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="perceptron_e_mlp_atividade" data-title="Prática — Perceptron e MLP">
+      <h2>Prática — Perceptron e MLP</h2>
+      <div class="slide-content"><div class="warning-box"><p>Uma tarefa é descrita como complexa demais para uma única camada. Qual arquitetura o material sugere considerar: perceptron de camada única ou MLP? Justifique.</p></div><details class="answer"><summary>Ver resposta</summary><p>A MLP. O PDF contrapõe o perceptron de camada única, associado a problemas simples, à rede multicamadas, associada a problemas mais complexos.</p></details></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="backpropagation" data-title="Backpropagation: ajustar os pesos">
+      <h2>Backpropagation: ajustar os pesos</h2>
+      <div class="slide-content"><div class="box"><ul><li>Backpropagation, ou retropropagação, é descrito como fundamental para o aprendizado das RNAs.</li><li>O algoritmo ajusta os pesos das conexões entre neurônios.</li><li>O objetivo é minimizar o erro da saída.</li><li>O erro é retroalimentado através das camadas e os ajustes são repetidos iterativamente.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>O ciclo apresentado pelo texto pode ser lido como: produzir uma saída, observar o erro, retropropagar esse erro pelas camadas e ajustar pesos; o PDF não apresenta equações nem um exemplo numérico.</p></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="treinamento_passos" data-title="Um ciclo de treinamento da rede">
+      <h2>Um ciclo de treinamento da rede</h2>
+      <div class="slide-content"><div class="ia-visualizer" data-title="Propagação, erro e atualização"><script type="application/json">{"steps": [{"cells": ["Entrada", "Predição", "Erro", "Gradientes", "Pesos"], "active": [0, 1], "caption": "As entradas percorrem a rede e produzem uma predição."}, {"cells": ["Entrada", "Predição", "Erro", "Gradientes", "Pesos"], "active": [2], "caption": "No treinamento supervisionado, compare a predição à resposta-alvo por uma função de perda."}, {"cells": ["Entrada", "Predição", "Erro", "Gradientes", "Pesos"], "active": [3], "caption": "A retropropagação calcula como a perda depende dos pesos das camadas."}, {"cells": ["Entrada", "Predição", "Erro", "Gradientes", "Pesos"], "active": [4], "caption": "O algoritmo de otimização atualiza pesos usando os gradientes; repita o ciclo."}]}</script></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="backpropagation_atividade" data-title="Prática — Backpropagation: ajustar os pesos">
+      <h2>Prática — Backpropagation: ajustar os pesos</h2>
+      <div class="slide-content"><div class="warning-box"><p>Ordene as etapas: (1) ajustar pesos; (2) obter uma saída e seu erro; (3) retroalimentar o erro pelas camadas; (4) repetir iterativamente.</p></div><details class="answer"><summary>Ver resposta</summary><p>A ordem é 2 → 3 → 1 → 4. Primeiro se observa o erro da saída; depois ele é retroalimentado, os pesos são ajustados e o ciclo é repetido para reduzir o erro.</p></details></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="rbf_e_svm" data-title="RBF e SVM: duas abordagens de classificação">
+      <h2>RBF e SVM: duas abordagens de classificação</h2>
+      <div class="slide-content"><div class="box"><ul><li>RBF (Radial Basis Function, função de base radial) é uma arquitetura neural com ativações radiais.</li><li>RBF pode ser usada em classificação e aproximação de funções.</li><li>SVM (Support Vector Machine, máquina de vetores de suporte) é uma técnica de classificação por margens.</li><li>SVM não é uma rede neural; são técnicas distintas que podem ser comparadas ou combinadas.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em dados com duas classes, a ideia didática é separar os grupos: a RBF usa suas funções de ativação; a SVM procura uma margem de separação entre classes. O documento não detalha a função radial nem a formulação matemática da margem.</p></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="rbf_e_svm_atividade" data-title="Prática — RBF e SVM: duas abordagens de classificação">
+      <h2>Prática — RBF e SVM: duas abordagens de classificação</h2>
+      <div class="slide-content"><div class="warning-box"><p>Associe cada descrição: (a) usa funções de ativação específicas em uma RNA; (b) busca margens de separação entre classes. Escolha entre RBF e SVM.</p></div><details class="answer"><summary>Ver resposta</summary><p>(a) RBF; (b) SVM. Essa distinção reproduz as funções atribuídas a cada técnica no PDF.</p></details></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="deep_learning_representacoes" data-title="O que caracteriza o Deep Learning">
+      <h2>O que caracteriza o Deep Learning</h2>
+      <div class="slide-content"><div class="box"><ul><li>Deep Learning é apresentado como subárea de Machine Learning.</li><li>Envolve redes neurais com várias camadas, chamadas redes profundas.</li><li>Essas redes aprendem automaticamente representações complexas dos dados.</li><li>O PDF relaciona essa capacidade a visão computacional, reconhecimento de fala e processamento de linguagem natural.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em vez de depender apenas de características especificadas manualmente, a rede profunda é descrita como capaz de aprender representações dos dados automaticamente; o PDF não detalha o treinamento de uma aplicação concreta.</p></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="deep_learning_representacoes_atividade" data-title="Prática — O que caracteriza o Deep Learning">
+      <h2>Prática — O que caracteriza o Deep Learning</h2>
+      <div class="slide-content"><div class="warning-box"><p>Por que a expressão “profundo” é usada no sentido adotado pelo PDF? Responda relacionando arquitetura e representações.</p></div><details class="answer"><summary>Ver resposta</summary><p>Porque o material associa Deep Learning a redes com várias camadas, capazes de aprender automaticamente representações complexas dos dados. O termo se refere à profundidade da rede e à hierarquia de processamento apresentada.</p></details></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="cnns_imagens" data-title="CNNs: padrões locais em imagens">
+      <h2>CNNs: padrões locais em imagens</h2>
+      <div class="slide-content"><div class="box"><ul><li>CNNs (Convolutional Neural Networks, redes neurais convolucionais) exploram estrutura espacial, como em imagens.</li><li>Operações de convolução capturam padrões locais.</li><li>O PDF cita bordas e texturas como exemplos de padrões.</li><li>A detecção de características pode ocorrer em diferentes escalas e localizações.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em uma imagem de estrada, uma CNN pode detectar características visuais locais; o PDF aplica essa ideia ao exemplo de veículos autônomos, nos quais CNNs identificam objetos na estrada.</p></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="cnns_imagens_atividade" data-title="Prática — CNNs: padrões locais em imagens">
+      <h2>Prática — CNNs: padrões locais em imagens</h2>
+      <div class="slide-content"><div class="warning-box"><p>Para cada tarefa, escolha CNN ou RNN como a arquitetura mais diretamente associada no PDF: (a) identificar objetos em uma imagem de estrada; (b) trabalhar com uma sequência de texto.</p></div><details class="answer"><summary>Ver resposta</summary><p>(a) CNN, porque o material relaciona CNNs a imagens e ao exemplo de veículos autônomos; (b) RNN, porque o texto é tratado como dado sequencial no resumo das RNNs.</p></details></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="rnns_sequencias" data-title="RNNs: sequência e estado anterior">
+      <h2>RNNs: sequência e estado anterior</h2>
+      <div class="slide-content"><div class="box"><ul><li>RNNs (Recurrent Neural Networks, redes neurais recorrentes) são arquiteturas clássicas para dados sequenciais.</li><li>Sua estrutura contém conexões cíclicas.</li><li>Essas conexões permitem armazenar informações de estados anteriores.</li><li>O uso citado é prever eventos futuros com base em dados passados.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em uma sequência de texto, informações anteriores podem influenciar a interpretação do próximo elemento; o PDF usa também séries temporais como exemplo, sem especificar uma arquitetura recorrente particular.</p></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="rnns_sequencias_atividade" data-title="Prática — RNNs: sequência e estado anterior">
+      <h2>Prática — RNNs: sequência e estado anterior</h2>
+      <div class="slide-content"><div class="warning-box"><p>Explique por que uma série temporal é um exemplo adequado para RNNs no material.</p></div><details class="answer"><summary>Ver resposta</summary><p>Porque a série temporal é uma sequência em que dados passados podem ajudar a prever eventos futuros. As conexões cíclicas das RNNs permitem manter informação de estados anteriores, segundo o PDF.</p></details></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="aplicacoes_deep_learning" data-title="Aplicações e adequação ao tipo de dado">
+      <h2>Aplicações e adequação ao tipo de dado</h2>
+      <div class="slide-content"><div class="box"><ul><li>O PDF cita veículos autônomos, com CNNs identificando objetos na estrada.</li><li>Assistentes virtuais ilustram processamento de texto; RNNs são um exemplo clássico, não a única arquitetura possível.</li><li>O material resume que Deep Learning é eficaz em tarefas com grandes volumes de dados e padrões complexos.</li><li>A escolha da arquitetura é relacionada ao tipo de dado: imagem para CNN; sequência para RNN.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Um sistema de veículo autônomo ilustra o eixo imagem→CNN→objetos; um assistente virtual ilustra texto→RNN→compreensão e geração de texto.</p></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="aplicacoes_deep_learning_atividade" data-title="Prática — Aplicações e adequação ao tipo de dado">
+      <h2>Prática — Aplicações e adequação ao tipo de dado</h2>
+      <div class="slide-content"><div class="warning-box"><p>Proponha a arquitetura mais alinhada a cada cenário do PDF: câmera de um veículo autônomo ou histórico sequencial de mensagens de um assistente virtual.</p></div><details class="answer"><summary>Ver resposta</summary><p>Para a câmera do veículo autônomo, CNN, porque o cenário envolve imagens e identificação de objetos. Para o histórico sequencial de mensagens, RNN, porque envolve texto e informação de estados anteriores.</p></details></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="algoritmos_listados" data-title="Algoritmos de Machine Learning no quadro do PDF">
+      <h2>Algoritmos de Machine Learning no quadro do PDF</h2>
+      <div class="slide-content"><div class="box"><ul><li>A página 4 reproduz um quadro intitulado “Most Used Machine Learning Algorithms”, com exemplos de uso.</li><li>Entre os itens aparecem regressão linear, árvore de decisão, mean shift, regressão logística, random forest e autoencoders.</li><li>Também aparecem reinforcement learning, Naive Bayes, K-means, clustering hierárquico, redução de dimensionalidade e Q learning.</li><li>O quadro ainda lista neural networks, convolutional neural network, principal component analysis e Apriori algorithm; a página não explica os métodos em profundidade.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Os exemplos visuais do quadro incluem previsão de temperatura e estimativa de consumo de gás para regressão linear; filtro de spam para Naive Bayes; segmentação de clientes para K-means; filtros de imagem para redes convolucionais.</p></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="algoritmos_listados_atividade" data-title="Prática — Algoritmos de Machine Learning no quadro do PDF">
+      <h2>Prática — Algoritmos de Machine Learning no quadro do PDF</h2>
+      <div class="slide-content"><div class="warning-box"><p>A partir dos exemplos do quadro, associe: (a) filtro de spam em e-mail; (b) segmentação de clientes para marketing; (c) filtros de imagem em redes sociais. Use Naive Bayes, K-means ou CNN.</p></div><details class="answer"><summary>Ver resposta</summary><p>(a) Naive Bayes; (b) K-means clustering; (c) convolutional neural network (CNN). Essas associações são as que aparecem no quadro visual da página 4.</p></details></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="resumo" data-title="Resumo — dados, arquitetura e aprendizado">
+      <h2>Resumo — dados, arquitetura e aprendizado</h2>
+      <div class="slide-content"><div class="box"><ul><li>IA contém aprendizado de máquina, que contém aprendizado profundo.</li><li>Camadas processam entradas; pesos são ajustados durante o aprendizado.</li><li>Retropropagação calcula como o erro depende dos pesos; a atualização busca reduzir esse erro.</li><li>CNNs exploram padrões espaciais; RNNs mantêm informação de uma sequência.</li></ul></div></div>
+      <a class="source-note" href="../notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–4</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 05</h1><p class="subtitle">Aprendizados</p><p><a href="../bloco2/aula05.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/ia-visualizer.js"></script>
+  <script src="../assets/ia-slides.js"></script>
+</body>
+</html>

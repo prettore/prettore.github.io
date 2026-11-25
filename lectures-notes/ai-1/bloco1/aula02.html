@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Regras heurísticas e estratégias de otimização: algoritmos genéticos, recozimento simulado e enxame de partículas.">
+  <title>Aula 02 — Heurísticas e Metaheurísticas — Inteligência Artificial</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../assets/reveal/fonts.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/ia.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco1/aula01.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/02-Heuristicas e Metaheuristicas (Pt-Br).pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 02 — Heurísticas e Metaheurísticas">
+      <h1>Aula 02</h1>
+      <p class="subtitle">Heurísticas e Metaheurísticas</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Inteligência Artificial</p></div>
+    </section><section id="objetivos" data-title="Objetivos da aula">
+      <h2>Objetivos da aula</h2>
+      <div class="slide-content"><div class="box"><ul><li>Distinguir uma regra heurística de uma estratégia metaheurística.</li><li>Explicar seleção, cruzamento e mutação em algoritmos genéticos.</li><li>Descrever a aceitação temporária de pioras e a exploração em enxame.</li><li>Relacionar qualidade da solução e tempo de busca, sem assumir garantia do ótimo.</li></ul></div></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="problema_busca_complexa" data-title="Por que buscar soluções aproximadas?">
+      <h2>Por que buscar soluções aproximadas?</h2>
+      <div class="slide-content"><div class="box"><ul><li>Problemas complexos podem tornar difícil ou impossível encontrar uma solução exata.</li><li>A busca precisa usar as informações disponíveis para orientar decisões.</li><li>O objetivo prático é obter uma solução satisfatória em tempo razoável.</li><li>A aula apresenta heurísticas e metaheurísticas como abordagens para esse cenário.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Escolher uma jogada em um jogo de estratégia quando não é viável analisar todas as sequências possíveis.</p></div></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="problema_busca_complexa_atividade" data-title="Prática — Por que buscar soluções aproximadas?">
+      <h2>Prática — Por que buscar soluções aproximadas?</h2>
+      <div class="slide-content"><div class="warning-box"><p>Pense em uma decisão complexa do cotidiano ou da computação em que testar todas as alternativas seria inviável. Indique o que poderia ser usado como uma pista prática para reduzir a busca.</p></div><details class="answer"><summary>Ver resposta</summary><p>Uma resposta válida é usar uma regra baseada no estado atual e na experiência disponível, como priorizar a alternativa que parece mais promissora. Isso caracteriza a ideia de uma heurística; não implica que a alternativa escolhida seja a melhor possível.</p></details></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="definicao_heuristica" data-title="Heurísticas: regras que orientam a busca">
+      <h2>Heurísticas: regras que orientam a busca</h2>
+      <div class="slide-content"><div class="box"><ul><li>São métodos baseados em regras práticas ou estimativas.</li><li>Direcionam a busca de soluções em problemas complexos.</li><li>Permitem decidir com base em informações disponíveis e experiências anteriores.</li><li>A regra ajuda a escolher um caminho promissor, mas não é apresentada como garantia de exatidão.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>No tabuleiro de um jogo, uma regra pode sugerir a melhor jogada com base na situação atual, sem enumerar todas as jogadas futuras.</p></div></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="definicao_heuristica_atividade" data-title="Prática — Heurísticas: regras que orientam a busca">
+      <h2>Prática — Heurísticas: regras que orientam a busca</h2>
+      <div class="slide-content"><div class="warning-box"><p>Classifique a seguinte estratégia: em cada turno, escolher a jogada que parece mais vantajosa olhando apenas para a configuração atual do tabuleiro. É uma heurística? Justifique.</p></div><details class="answer"><summary>Ver resposta</summary><p>Sim. A estratégia usa uma regra prática aplicada ao estado atual para orientar a decisão. Ela é heurística porque reduz a complexidade da escolha; o PDF não afirma que essa regra sempre produz a jogada ótima.</p></details></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="heuristica_versus_metaheuristica" data-title="Da regra local à busca de alto nível">
+      <h2>Da regra local à busca de alto nível</h2>
+      <div class="slide-content"><div class="box"><ul><li>Heurísticas orientam decisões por regras práticas ou estimativas.</li><li>Metaheurísticas são algoritmos de busca de alto nível.</li><li>Elas exploram o espaço de soluções de modo mais abrangente e adaptativo.</li><li>O documento as relaciona a problemas de otimização que não são resolvidos por heurísticas simples.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Uma regra única para escolher jogadas é uma heurística; um procedimento que organiza e adapta a exploração de várias soluções é apresentado como metaheurística.</p></div></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="heuristica_versus_metaheuristica_atividade" data-title="Prática — Da regra local à busca de alto nível">
+      <h2>Prática — Da regra local à busca de alto nível</h2>
+      <div class="slide-content"><div class="warning-box"><p>Complete a comparação: regra prática aplicada diretamente a uma situação = ______; estratégia de busca de alto nível que explora soluções de forma abrangente e adaptativa = ______.</p></div><details class="answer"><summary>Ver resposta</summary><p>Os termos são, respectivamente, heurística e metaheurística. A diferença central enfatizada pelo PDF é o nível de coordenação da busca, não a promessa de encontrar sempre a solução exata.</p></details></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="metaheuristicas_visao_geral" data-title="Três exemplos citados na aula">
+      <h2>Três exemplos citados na aula</h2>
+      <div class="slide-content"><div class="box"><ul><li>Algoritmos Genéticos: inspiração na teoria da evolução.</li><li>Simulated Annealing: analogia com o resfriamento de metais.</li><li>Particle Swarm Optimization: inspiração no comportamento social de pássaros e peixes.</li><li>Os três são apresentados como métodos de exploração do espaço de soluções.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>A mesma tarefa de otimização pode ser explorada por uma população de soluções, por um refinamento com aceitação ocasional de pioras ou por um grupo de partículas que atualiza posições.</p></div></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="metaheuristicas_visao_geral_atividade" data-title="Prática — Três exemplos citados na aula">
+      <h2>Prática — Três exemplos citados na aula</h2>
+      <div class="slide-content"><div class="warning-box"><p>Associe cada inspiração ao método: evolução; resfriamento de metais; comportamento coletivo de pássaros e peixes.</p></div><details class="answer"><summary>Ver resposta</summary><p>Evolução corresponde a Algoritmos Genéticos; resfriamento de metais corresponde a Simulated Annealing; comportamento coletivo corresponde a Particle Swarm Optimization.</p></details></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="algoritmos_geneticos" data-title="Algoritmos Genéticos">
+      <h2>Algoritmos Genéticos</h2>
+      <div class="slide-content"><div class="box"><ul><li>Partem de um conjunto inicial de soluções.</li><li>Usam seleção para favorecer soluções escolhidas.</li><li>Usam cruzamento para gerar novas soluções a partir das existentes.</li><li>Usam mutação como outra forma de gerar variação.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Imagine várias propostas para uma rota: algumas são selecionadas, partes de propostas podem ser combinadas e pequenas alterações podem gerar novas propostas para a próxima exploração.</p></div></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="genetico_passos" data-title="Evolução de uma população de soluções">
+      <h2>Evolução de uma população de soluções</h2>
+      <div class="slide-content"><div class="ia-visualizer" data-title="Ciclo conceitual — algoritmos genéticos"><script type="application/json">{"steps": [{"cells": ["População", "Avaliação", "Seleção", "Variação"], "active": [0], "caption": "Partimos de várias soluções candidatas, preservando alternativas para a busca."}, {"cells": ["População", "Avaliação", "Seleção", "Variação"], "active": [1], "caption": "Uma função de avaliação compara as candidatas conforme o objetivo de otimização."}, {"cells": ["População", "Avaliação", "Seleção", "Variação"], "active": [2], "caption": "A seleção escolhe candidatas para participar da geração seguinte."}, {"cells": ["População", "Avaliação", "Seleção", "Variação"], "active": [3], "caption": "Cruzamento combina características; mutação introduz variação. O ciclo continua com novas candidatas."}]}</script></div></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="algoritmos_geneticos_atividade" data-title="Prática — Algoritmos Genéticos">
+      <h2>Prática — Algoritmos Genéticos</h2>
+      <div class="slide-content"><div class="warning-box"><p>Em um conjunto de soluções, uma etapa escolhe algumas candidatas, outra combina características de duas candidatas e uma terceira introduz uma pequena alteração. Identifique as três etapas.</p></div><details class="answer"><summary>Ver resposta</summary><p>As etapas são seleção, cruzamento e mutação. A resposta segue exatamente os três conceitos associados pelo PDF aos Algoritmos Genéticos; a aula não especifica uma codificação ou regra numérica para executá-los.</p></details></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="simulated_annealing" data-title="Simulated Annealing: refinar sem ficar preso">
+      <h2>Simulated Annealing: refinar sem ficar preso</h2>
+      <div class="slide-content"><div class="box"><ul><li>Simula o processo de resfriamento de metais.</li><li>Refina gradualmente uma solução inicial.</li><li>Pode aceitar uma solução pior em momentos específicos.</li><li>Essa aceitação ajuda a evitar ficar preso em mínimos locais.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Durante a busca, uma alternativa temporariamente pior pode ser aceita para permitir que a exploração saia de uma região limitada e continue procurando.</p></div></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="annealing_passos" data-title="Aceitar uma piora pode ampliar a busca">
+      <h2>Aceitar uma piora pode ampliar a busca</h2>
+      <div class="slide-content"><div class="ia-visualizer" data-title="Recozimento simulado — ideia conceitual"><script type="application/json">{"steps": [{"cells": ["Solução atual", "Vizinha pior", "Outra região"], "active": [0], "caption": "A busca pode se concentrar em uma região que parece boa localmente."}, {"cells": ["Solução atual", "Vizinha pior", "Outra região"], "active": [1], "caption": "Aceitar ocasionalmente uma vizinha pior pode ajudar a sair dessa região."}, {"cells": ["Solução atual", "Vizinha pior", "Outra região"], "active": [2], "caption": "A exploração continua e pode encontrar uma região melhor. Isso não garante melhora em toda execução."}]}</script></div></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="simulated_annealing_atividade" data-title="Prática — Simulated Annealing: refinar sem ficar preso">
+      <h2>Prática — Simulated Annealing: refinar sem ficar preso</h2>
+      <div class="slide-content"><div class="warning-box"><p>A solução atual é boa, mas todas as alternativas vizinhas parecem piores. Segundo a descrição da aula, qual atitude pode ser permitida em um momento específico e por quê?</p></div><details class="answer"><summary>Ver resposta</summary><p>Pode-se aceitar uma solução pior temporariamente. A finalidade indicada é evitar ficar preso em um mínimo local e permitir que a busca continue explorando outras regiões; isso não significa aceitar qualquer piora sem critério.</p></details></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="particle_swarm_optimization" data-title="Particle Swarm Optimization">
+      <h2>Particle Swarm Optimization</h2>
+      <div class="slide-content"><div class="box"><ul><li>É inspirado no comportamento social de pássaros e peixes.</li><li>Usa um grupo de partículas para explorar o espaço de soluções.</li><li>As partículas atualizam suas posições durante a exploração.</li><li>A atualização considera as melhores soluções conhecidas.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Cada partícula representa uma candidata; o grupo explora regiões diferentes e ajusta suas posições usando a informação sobre os melhores resultados já encontrados.</p></div></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="particle_swarm_optimization_atividade" data-title="Prática — Particle Swarm Optimization">
+      <h2>Prática — Particle Swarm Optimization</h2>
+      <div class="slide-content"><div class="warning-box"><p>Se três partículas exploram regiões distintas e uma delas encontra a melhor solução conhecida, o que a descrição do PDF sugere que o grupo faça a seguir?</p></div><details class="answer"><summary>Ver resposta</summary><p>O grupo deve atualizar as posições das partículas com base nas melhores soluções conhecidas. O PDF não fornece uma fórmula de atualização; portanto, a resposta deve permanecer nesse nível conceitual.</p></details></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="comparar_mecanismos" data-title="Como os mecanismos diferem?">
+      <h2>Como os mecanismos diferem?</h2>
+      <div class="slide-content"><div class="box"><ul><li>Algoritmos Genéticos geram soluções por seleção, cruzamento e mutação.</li><li>Simulated Annealing refina uma solução e pode aceitar pioras em momentos específicos.</li><li>Particle Swarm Optimization coordena partículas a partir das melhores soluções conhecidas.</li><li>As inspirações são diferentes, mas todos exploram espaços de soluções de problemas de otimização.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Para o mesmo problema, pode-se pensar em uma população que evolui, em uma trajetória que escapa de mínimos locais ou em um enxame que se reposiciona.</p></div></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="comparar_mecanismos_atividade" data-title="Prática — Como os mecanismos diferem?">
+      <h2>Prática — Como os mecanismos diferem?</h2>
+      <div class="slide-content"><div class="warning-box"><p>Uma equipe quer preservar diversidade combinando propostas; outra quer escapar de um mínimo local; uma terceira quer mover candidatas usando a melhor posição conhecida. Associe cada equipe ao método apropriado.</p></div><details class="answer"><summary>Ver resposta</summary><p>Preservar diversidade por combinação corresponde à ideia de Algoritmos Genéticos; escapar de um mínimo local corresponde ao Simulated Annealing; usar a melhor posição conhecida para atualizar candidatas corresponde ao Particle Swarm Optimization.</p></details></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="qualidade_e_tempo" data-title="Soluções satisfatórias em tempo razoável">
+      <h2>Soluções satisfatórias em tempo razoável</h2>
+      <div class="slide-content"><div class="box"><ul><li>O documento valoriza a utilidade prática em cenários de alta complexidade.</li><li>Heurísticas e metaheurísticas podem levar a soluções satisfatórias.</li><li>A vantagem destacada é obter resultados em tempo razoável.</li><li>‘Satisfatória’ não deve ser interpretada como prova de solução exata ou ótima.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Quando a análise exaustiva é inviável, uma solução suficientemente boa obtida rapidamente pode ser mais útil do que esperar por uma solução exata.</p></div></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="qualidade_e_tempo_atividade" data-title="Prática — Soluções satisfatórias em tempo razoável">
+      <h2>Prática — Soluções satisfatórias em tempo razoável</h2>
+      <div class="slide-content"><div class="warning-box"><p>Escolha a interpretação mais fiel à aula: (A) o método sempre encontra o ótimo; (B) o método busca uma solução satisfatória em tempo razoável; (C) o método elimina a necessidade de avaliar soluções. Justifique.</p></div><details class="answer"><summary>Ver resposta</summary><p>A alternativa correta é B. A página 1 afirma que ambas as abordagens permitem chegar a soluções satisfatórias em tempo razoável, especialmente em alta complexidade. Ela não afirma garantia de ótimo nem ausência de avaliação.</p></details></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="resumo" data-title="Resumo — explorar e melhorar soluções">
+      <h2>Resumo — explorar e melhorar soluções</h2>
+      <div class="slide-content"><div class="box"><ul><li>Heurísticas orientam decisões com regras práticas; metaheurísticas coordenam a exploração.</li><li>Algoritmos genéticos combinam seleção, cruzamento e mutação.</li><li>Recozimento simulado pode aceitar pioras; enxames aproveitam melhores posições conhecidas.</li><li>Compare tempo e qualidade: solução satisfatória não significa ótimo comprovado.</li></ul></div></div>
+      <a class="source-note" href="../notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 03</h1><p class="subtitle">Representação de Conhecimento e Incerteza</p><p><a href="../bloco1/aula03.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/ia-visualizer.js"></script>
+  <script src="../assets/ia-slides.js"></script>
+</body>
+</html>

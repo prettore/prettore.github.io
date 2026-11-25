@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dependências funcionais e formas normais para reduzir redundâncias e anomalias em esquemas relacionais.">
+  <title>Aula 04 — Normalização — Banco de Dados</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/db.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco1/aula03.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/04-Normalizacao_Pt-Br_.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 04 — Normalização">
+      <h1>Aula 04</h1>
+      <p class="subtitle">Normalização</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Banco de Dados</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><ul><li>Explicar como dependências funcionais (DFs) expressam restrições entre atributos.</li><li>Usar axiomas e fechamento de atributos para inferir dependências e reconhecer chaves.</li><li>Distinguir 1FN, 2FN, 3FN e forma normal de Boyce–Codd (FNBC).</li><li>Avaliar decomposições por redundância, junção sem perda, preservação das dependências e custo de consulta.</li></ul></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–12</a>
+    </section><section id="motivacao" data-title="Por que normalizar?">
+      <h2>Por que normalizar?</h2>
+      <div class="slide-content"><p>Normalização analisa esquemas relacionais à luz de suas dependências funcionais e chaves. O objetivo é reduzir redundância e anomalias de inserção, atualização e exclusão.</p><div class="info-box"><strong>Ideia central:</strong> cada fato deve ser registrado em um lugar apropriado, sem tornar o esquema desnecessariamente fragmentado.</div><p>As formas normais oferecem critérios para identificar problemas de projeto; não substituem a avaliação de requisitos e desempenho.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="anomalias" data-title="Redundância e anomalias">
+      <h2>Redundância e anomalias</h2>
+      <div class="slide-content"><div class="three-column"><div class="box"><h4>Atualização</h4><p>Uma mesma informação aparece em várias linhas; alterar só algumas cria inconsistência.</p></div><div class="box"><h4>Inserção</h4><p>Não se consegue registrar um fato sem incluir outro fato não relacionado.</p></div><div class="box"><h4>Exclusão</h4><p>Remover um registro apaga também uma informação que deveria permanecer.</p></div></div><p class="compact">Repetir valores também consome armazenamento. Valores nulos não são uma solução geral para essas anomalias.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1, 5</a>
+    </section><section id="decomposicao" data-title="Decompor uma relação">
+      <h2>Decompor uma relação</h2>
+      <div class="slide-content"><p>Decomposição substitui um esquema por esquemas menores: cada um usa atributos do original e, em conjunto, eles cobrem todos os atributos.</p><p><strong>Exemplo didático.</strong> A relação de funcionários repete a remuneração associada à avaliação. Separar dados funcionais do funcionário e a tabela <code>Salários(avaliação, salário_hora)</code> permite registrar a tarifa uma vez.</p><div class="diagram-flow"><div class="diagram-node">Funcionário + avaliação</div><div class="diagram-arrow">→</div><div class="diagram-node">Funcionário</div><div class="diagram-node">Avaliação + salário/hora</div></div><p class="compact warning-box">Na p. 2, o rótulo impresso do segundo atributo de Salários diverge dos valores e da explicação da p. 5; aqui se usa salário/hora, coerente com o exemplo.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2, 5</a>
+    </section><section id="propriedades-decomposicao" data-title="Duas propriedades desejáveis">
+      <h2>Duas propriedades desejáveis</h2>
+      <div class="slide-content"><div class="two-column"><div class="success-box"><h4>Junção sem perda</h4><p>As relações menores permitem recuperar exatamente a instância original, sem perder fatos nem produzir combinações espúrias.</p></div><div class="info-box"><h4>Preservação das dependências</h4><p>As restrições originais podem ser impostas verificando as relações menores, sem precisar juntá-las.</p></div></div><p>São propriedades diferentes: uma decomposição pode permitir recuperar os dados, mas dificultar a verificação direta de algumas dependências.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="custo-decomposicao" data-title="Benefícios e custo da decomposição">
+      <h2>Benefícios e custo da decomposição</h2>
+      <div class="slide-content"><p>Consultas que precisam reconstruir a relação original podem exigir junções. Se elas forem frequentes, o custo de desempenho pode ser relevante.</p><p>Por outro lado, consultas e atualizações concentradas em uma relação menor podem se tornar mais eficientes. Portanto, não se decompõe automaticamente: avaliam-se problemas do esquema, propriedades da decomposição e perfil de uso.</p><div class="highlight">Pergunta de projeto: a redução de redundância compensa o custo de recompor dados?</div></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="definicao-df" data-title="O que é uma DF?">
+      <h2>O que é uma DF?</h2>
+      <div class="slide-content"><p>Uma dependência funcional (DF) <strong>X → Y</strong> afirma que, em toda instância válida, quaisquer duas tuplas com os mesmos valores em X também têm os mesmos valores em Y.</p><pre class="code-box"><code>t₁[X] = t₂[X]  implica  t₁[Y] = t₂[Y]</code></pre><p>X determina funcionalmente Y. A afirmação é sobre todos os estados legais possíveis da relação, não apenas sobre as linhas observadas hoje. Uma DF é uma restrição de integridade que generaliza a noção de chave.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="exemplo-df" data-title="Reconhecer e refutar DFs">
+      <h2>Reconhecer e refutar DFs</h2>
+      <div class="slide-content"><p><strong>Exemplo didático.</strong> Em <code>Funcionários(cpf, nome, vaga, id_depto, desde)</code>, se <code>cpf → id_depto</code> e <code>id_depto → vaga</code>, então <code>cpf → vaga</code> por transitividade.</p><p>Uma instância pode sugerir uma dependência, mas não prová-la. Para refutar <code>Professor → Disciplina</code>, basta um contraexemplo: o mesmo professor Silva leciona duas disciplinas.</p><div class="warning-box">Uma DF decorre das regras do domínio; coincidências nos dados atuais não bastam.</div></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="salario-redundante" data-title="Uma DF que causa repetição">
+      <h2>Uma DF que causa repetição</h2>
+      <div class="slide-content"><p><strong>Exemplo didático.</strong> Na relação de funcionários, suponha <code>avaliação → salário_hora</code>. Se três funcionários têm avaliação 8 e tarifa 10, o mesmo fato fica repetido.</p><table><thead><tr><th>avaliação</th><th>salário/hora</th><th>ocorrências</th></tr></thead><tbody><tr><td>8</td><td>10</td><td>3</td></tr><tr><td>5</td><td>7</td><td>2</td></tr></tbody></table><p>Alterar uma tarifa exige atualizar todas as ocorrências; a exclusão dos funcionários com uma avaliação pode apagar a associação entre avaliação e tarifa.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4–5</a>
+    </section><section id="fechamento-dfs" data-title="Fechamento de dependências">
+      <h2>Fechamento de dependências</h2>
+      <div class="slide-content"><p><strong>F⁺</strong> é o conjunto de todas as DFs implicadas por um conjunto F. Os axiomas de Armstrong permitem derivá-las:</p><ul class="compact"><li><strong>Reflexividade:</strong> se Y ⊆ X, então X → Y.</li><li><strong>Aumento:</strong> se X → Y, então XZ → YZ.</li><li><strong>Transitividade:</strong> se X → Y e Y → Z, então X → Z.</li></ul><p>União e decomposição são regras úteis derivadas: de X → Y e X → Z, obtemos X → YZ; de X → YZ, obtemos X → Y e X → Z.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="contratos-dfs" data-title="Inferências em Contratos">
+      <h2>Inferências em Contratos</h2>
+      <div class="slide-content"><p><strong>Exemplo didático.</strong> Para <code>Contratos(C,S,J,D,P,Q,V)</code>, suponha <code>C → CSJDPQV</code>, <code>JP → C</code> e <code>SD → P</code>.</p><ul><li>De <code>JP → C</code> e <code>C → CSJDPQV</code>, segue <code>JP → CSJDPQV</code>.</li><li>De <code>SD → P</code>, por aumento, <code>SDJ → PJ</code>; logo <code>SDJ → JP</code>.</li><li>Por transitividade, <code>SDJ → CSJDPQV</code>.</li></ul><div class="warning-box">Não se pode “cancelar” J para inferir <code>SD → C</code>.</div></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="fechamento-atributo" data-title="Fechamento de atributos X⁺">
+      <h2>Fechamento de atributos X⁺</h2>
+      <div class="slide-content"><p>O fechamento <strong>X⁺</strong> em relação a F contém os atributos que X determina. É suficiente para testar uma DF: <code>X → A</code> é implicada por F se A ∈ X⁺.</p><pre class="code-box"><code>X⁺ := X
+repita para cada U → V em F:
+  se U ⊆ X⁺, então X⁺ := X⁺ ∪ V
+até não haver mudança</code></pre><p>O processo termina quando uma varredura completa não acrescenta atributos.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="fechamento-contratos" data-title="Calculando um fechamento">
+      <h2>Calculando um fechamento</h2>
+      <div class="slide-content"><p><strong>Exemplo didático.</strong> Com as DFs do exemplo Contratos, inicie em <code>(JP)⁺ = {J,P}</code>.</p><ol><li><code>JP → C</code> acrescenta C.</li><li><code>C → CSJDPQV</code> acrescenta os demais atributos.</li><li>Logo, <code>(JP)⁺ = {C,S,J,D,P,Q,V}</code>.</li></ol><p>Como o fechamento contém todos os atributos do esquema, <code>JP</code> é uma superchave. Nenhum dos subconjuntos próprios J ou P determina todos os atributos; portanto, JP é chave candidata sob essas DFs.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="hierarquia-formas" data-title="Uma hierarquia de requisitos">
+      <h2>Uma hierarquia de requisitos</h2>
+      <div class="slide-content"><p>As formas normais baseadas em DFs impõem requisitos progressivamente mais restritivos:</p><div class="sequence-flow"><div class="diagram-node">1FN</div><div class="diagram-arrow">→</div><div class="diagram-node">2FN</div><div class="diagram-arrow">→</div><div class="diagram-node">3FN</div><div class="diagram-arrow">→</div><div class="diagram-node">FNBC</div></div><p>Estar em FNBC implica estar em 3FN; 3FN implica 2FN; 2FN implica 1FN. A forma normal ajuda a localizar certas anomalias, mas a decisão de decompor também considera as propriedades e o uso esperado.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7</a>
+    </section><section id="primeira-forma-normal" data-title="1FN: valores atômicos">
+      <h2>1FN: valores atômicos</h2>
+      <div class="slide-content"><p>Uma relação está na primeira forma normal (1FN) se cada campo contém um valor atômico, não uma lista ou conjunto. Grupos repetidos como <code>Class1</code>, <code>Class2</code> e <code>Class3</code> sinalizam que há múltiplos valores da mesma categoria em colunas paralelas.</p><p><strong>Exemplo didático.</strong> Evite colunas <code>Fornecedor1</code> e <code>Fornecedor2</code>: um terceiro fornecedor exigiria alterar esquema e aplicação. Registre relações de fornecimento em linhas próprias, ligadas por identificadores.</p><div class="info-box">1FN remove grupos repetidos; não significa, por si só, que toda redundância foi removida.</div></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7</a>
+    </section><section id="1fn-classes" data-title="Do grupo repetido às linhas">
+      <h2>Do grupo repetido às linhas</h2>
+      <div class="slide-content"><p><strong>Exemplo didático.</strong> Em vez de armazenar várias classes em campos numerados, represente cada matrícula como uma linha:</p><table><thead><tr><th>Student#</th><th>Class#</th></tr></thead><tbody><tr><td>1022</td><td>101-07</td></tr><tr><td>1022</td><td>143-01</td></tr><tr><td>1022</td><td>159-02</td></tr><tr><td>4123</td><td>101-07</td></tr><tr><td>4123</td><td>143-01</td></tr><tr><td>4123</td><td>179-04</td></tr></tbody></table><p>O número variável de classes é representado por linhas, não por novas colunas. A chave de matrícula pode ser composta por aluno e classe.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7–8</a>
+    </section><section id="segunda-forma-normal" data-title="2FN: dependência completa">
+      <h2>2FN: dependência completa</h2>
+      <div class="slide-content"><p>A segunda forma normal (2FN) exige 1FN e elimina dependências parciais: um atributo não-chave deve depender da chave candidata completa, não apenas de parte dela.</p><p><strong>Exemplo didático.</strong> Em uma relação de matrícula cuja chave é <code>(Student#, Class#)</code>, <code>Student# → Advisor</code> depende só de parte da chave. Repetir o orientador em cada classe do aluno cria redundância.</p><div class="highlight">Dependências parciais só podem ocorrer quando há uma chave composta.</div></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8–9</a>
+    </section><section id="decompor-2fn" data-title="Decomposição para 2FN">
+      <h2>Decomposição para 2FN</h2>
+      <div class="slide-content"><p><strong>Exemplo didático.</strong> Separe o fato sobre o aluno do fato sobre a matrícula:</p><div class="two-column"><div class="box"><h4>Alunos</h4><p><code>Student# → Advisor</code></p><p>Uma linha por aluno.</p></div><div class="box"><h4>Registro</h4><p><code>(Student#, Class#)</code></p><p>Uma linha por matrícula.</p></div></div><p>Assim, o orientador deixa de ser repetido para cada classe. O atributo de classe continua associado ao par aluno–classe.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8–9</a>
+    </section><section id="terceira-forma-normal" data-title="3FN: condição formal">
+      <h2>3FN: condição formal</h2>
+      <div class="slide-content"><p>Para cada DF não trivial <code>X → A</code>, a relação está na terceira forma normal (3FN) se ao menos uma condição vale:</p><ul><li><code>X</code> é superchave; ou</li><li><code>A</code> é atributo primo, isto é, pertence a alguma chave candidata.</li></ul><p>Uma DF trivial, com <code>A ∈ X</code>, também satisfaz a condição. Considerar qualquer chave candidata importa: ser parte de uma superchave não basta para tornar um atributo primo.</p><div class="info-box">A 3FN permite algumas dependências não-chave para preservar decomposições úteis.</div></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=9" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 9–10</a>
+    </section><section id="parcial-transitiva" data-title="Dependência parcial ou transitiva?">
+      <h2>Dependência parcial ou transitiva?</h2>
+      <div class="slide-content"><div class="two-column"><div class="box"><h4>Parcial</h4><p>X é subconjunto de uma chave composta K e determina A, que não é primo: parte da chave determina um atributo não-chave.</p><p><code>K → X → A</code></p></div><div class="box"><h4>Transitiva</h4><p>X não é subconjunto de nenhuma chave e determina A; há um encadeamento a partir da chave.</p><p><code>K → X → A</code></p></div></div><p>São dependências associadas a violações da 3FN quando A não é primo e X não é superchave.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=9" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 9–10</a>
+    </section><section id="universidades" data-title="3FN: fatos sobre universidades">
+      <h2>3FN: fatos sobre universidades</h2>
+      <div class="slide-content"><p><strong>Exemplo didático.</strong> Em uma tabela de candidatos, o identificador do candidato determina a universidade; a universidade determina seu endereço:</p><pre class="code-box"><code>Candidato → Universidade → Endereço</code></pre><p>Se endereço e dados da universidade forem repetidos em cada candidato, mudar um endereço exige atualizar várias linhas. Também não se pode cadastrar uma universidade sem candidato associado, e excluir seu último candidato pode apagar seus dados.</p><p>Uma relação <code>Universidades(código, nome, endereço)</code> mantém o fato da universidade separado e pode ser referenciada por candidatos.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=10" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 10</a>
+    </section><section id="orientador-sala" data-title="Separar orientador e sala">
+      <h2>Separar orientador e sala</h2>
+      <div class="slide-content"><p><strong>Exemplo didático.</strong> Se <code>Student# → Advisor</code> e <code>Advisor → Adv-Room</code>, então a sala depende transitivamente do aluno. Repeti-la na tabela de alunos gera redundância.</p><div class="diagram-flow"><div class="diagram-node">Alunos(Student#, Advisor)</div><div class="diagram-arrow">→</div><div class="diagram-node">Docentes(Advisor, Room)</div></div><p>A decomposição registra a sala junto ao docente e conserva o vínculo entre aluno e orientador. Uma chave de docente pode identificar a entidade no esquema implementado.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=10" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 10–11</a>
+    </section><section id="tradeoff-3fn" data-title="Normalização e desempenho">
+      <h2>Normalização e desempenho</h2>
+      <div class="slide-content"><p>Aplicar 3FN pode demandar várias tabelas e junções. A nota ressalta que, em certos sistemas, muitas tabelas pequenas podem afetar desempenho ou exceder limites operacionais.</p><p>Se alguns campos dependentes forem mantidos por razões práticas, alterações relacionadas precisam ser controladas para evitar inconsistências. A decisão deve ser deliberada: reconhecer a redundância, considerar sua frequência de mudança e proteger atualizações.</p><div class="warning-box">Desnormalizar é uma escolha de projeto consciente, não uma correção das dependências.</div></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=10" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 10–11</a>
+    </section><section id="bcnf-regra" data-title="FNBC: determinantes são chaves">
+      <h2>FNBC: determinantes são chaves</h2>
+      <div class="slide-content"><p>Uma relação está na forma normal de Boyce–Codd (FNBC) se, para toda DF não trivial <code>X → Y</code>, X é superchave.</p><p>A condição é mais restritiva que a da 3FN: a exceção da 3FN para atributo primo não se aplica. Sob as dependências funcionais, FNBC impede redundâncias detectáveis por essas dependências.</p><div class="highlight">Teste: encontre uma DF não trivial cujo lado esquerdo não seja superchave. Se existir, a relação viola FNBC.</div></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=11" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 11–12</a>
+    </section><section id="prova-bcnf" data-title="Por que a FNBC reduz repetição?">
+      <h2>Por que a FNBC reduz repetição?</h2>
+      <div class="slide-content"><p><strong>Exemplo didático.</strong> Considere duas tuplas com o mesmo X e uma DF <code>X → A</code>. A DF obriga que ambas tenham o mesmo A, aparentemente repetindo o valor.</p><p>Em FNBC, como a DF é não trivial, X precisa ser superchave. Duas tuplas com o mesmo X teriam de coincidir em todos os atributos; seriam duplicatas, impossíveis em uma relação entendida como conjunto de tuplas.</p><p>Logo, esse padrão de repetição não pode ocorrer em uma relação FNBC, considerando apenas DFs.</p></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=12" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 12</a>
+    </section><section id="atividade-normalizacao" data-title="Atividade: localize o problema">
+      <h2>Atividade: localize o problema</h2>
+      <div class="slide-content"><p><strong>Exemplo didático.</strong> Uma tabela de matrículas guarda <code>Student#</code>, <code>Class#</code> e <code>Advisor</code>. A chave é <code>(Student#, Class#)</code> e cada aluno tem um único orientador. Que dependência causa repetição? Como reorganizar?</p><details class="answer"><summary>Ver resposta</summary><p><code>Student# → Advisor</code>: depende de parte da chave composta, portanto é parcial. Separe <code>Alunos(Student#, Advisor)</code> de <code>Registro(Student#, Class#)</code>. Isso remove a repetição do orientador por matrícula; a decomposição preserva o vínculo do aluno com suas classes.</p></details></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8–9</a>
+    </section><section id="atividade-fechamento" data-title="Atividade: verifique uma DF">
+      <h2>Atividade: verifique uma DF</h2>
+      <div class="slide-content"><p><strong>Exemplo didático.</strong> Para as dependências <code>JP → C</code> e <code>C → CSJDPQV</code>, <code>JP → V</code> é implicada? Mostre a ideia sem listar F⁺ inteiro.</p><details class="answer"><summary>Ver resposta</summary><p>Sim. Pela transitividade, <code>JP → CSJDPQV</code>; por decomposição, <code>JP → V</code>. Alternativamente, no fechamento, C entra em <code>(JP)⁺</code> e a dependência de C acrescenta V.</p></details></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5–6</a>
+    </section><section id="resumo" data-title="Resumo: do diagnóstico ao projeto">
+      <h2>Resumo: do diagnóstico ao projeto</h2>
+      <div class="slide-content"><ul><li>DFs descrevem restrições; seus axiomas sustentam inferências e o fechamento ajuda a testar dependências e chaves.</li><li>Redundância pode causar anomalias de inserção, atualização e exclusão.</li><li>1FN elimina grupos repetidos; 2FN elimina dependências parciais; 3FN controla dependências não-chave segundo seu critério formal.</li><li>FNBC exige que todo determinante de DF não trivial seja superchave.</li><li>Uma decomposição deve ser avaliada por junção sem perda, preservação das dependências e desempenho.</li></ul></div>
+      <a class="source-note" href="../notas/04-Normalizacao_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–12</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 05</h1><p class="subtitle">Álgebra Relacional</p><p><a href="../bloco2/aula05.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/db-visualizer.js"></script>
+  <script src="../assets/db-slides.js"></script>
+</body>
+</html>

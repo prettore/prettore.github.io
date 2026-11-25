@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Relações, integridade, consultas, mapeamento ER e visões em bancos relacionais.">
+  <title>Aula 03 — Modelo de Dados Relacional — Banco de Dados</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/db.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco1/aula02.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 03 — Modelo de Dados Relacional">
+      <h1>Aula 03</h1>
+      <p class="subtitle">Modelo de Dados Relacional</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Banco de Dados</p></div>
+    </section><section id="objetivos-aula" data-title="Objetivos da aula">
+      <h2>Objetivos da aula</h2>
+      <div class="slide-content"><div class='box'><p>Ao final, você deverá ser capaz de:</p><ul><li>Interpretar esquemas e instâncias relacionais e operações SQL básicas.</li><li>Explicar chaves, integridade referencial e restrições em transações.</li><li>Consultar e mapear estruturas do modelo Entidade–Relacionamento (ER) para tabelas.</li><li>Descrever o papel das visões, suas atualizações e comandos de definição de esquema.</li></ul></div></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2, 4–18</a>
+    </section><section id="modelo-relacional" data-title="O modelo relacional">
+      <h2>O modelo relacional</h2>
+      <div class="slide-content"><p>O modelo relacional representa dados por relações (tabelas) identificadas por nomes distintos. Edgar F. Codd propôs o modelo em 1970; SQL tornou-se a linguagem predominante para criar, manipular e consultar bancos relacionais.</p><div class='two-column'><div class='info-box'><strong>Relação</strong><br>Estrutura tabular de dados.</div><div class='info-box'><strong>Banco relacional</strong><br>Coleção de relações com seus esquemas.</div></div><p class='compact'>SGBD significa sistema de gerenciamento de banco de dados.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="esquema-instancia" data-title="Esquema e instância">
+      <h2>Esquema e instância</h2>
+      <div class="slide-content"><p>Uma relação combina um <strong>esquema</strong> (definição dos campos) com uma <strong>instância</strong> (dados presentes em certo momento).</p><pre class='code-box'><code>Alunos(id-aluno: string, nome: string,
+       login: string, idade: integer, média: real)</code></pre><ul><li><strong>Atributo</strong>: coluna; cada atributo tem um domínio, como inteiro ou texto.</li><li><strong>Grau</strong>: número de atributos. <strong>Cardinalidade</strong>: número de tuplas da instância.</li></ul></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="tuplas-unicas" data-title="Tuplas e tabela">
+      <h2>Tuplas e tabela</h2>
+      <div class="slide-content"><p>Na instância abaixo, cada linha é uma tupla (registro); todas seguem os cinco campos definidos no esquema. No modelo relacional teórico, uma relação é um conjunto de tuplas: não contém linhas duplicadas.</p><table><thead><tr><th>id-aluno</th><th>nome</th><th>idade</th><th>média</th></tr></thead><tbody><tr><td>50000</td><td>Dave</td><td>19</td><td>3,3</td></tr><tr><td>53666</td><td>Jones</td><td>18</td><td>3,4</td></tr><tr><td>53688</td><td>Smith</td><td>18</td><td>3,2</td></tr></tbody></table><p class='figure-label'>Exemplo didático — recorte da instância Alunos A1.</p><p class='compact'>Sistemas comerciais podem ter comportamentos de duplicação que não refletem esse requisito teórico.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="ddl-dml-basico" data-title="Criar e modificar tabelas">
+      <h2>Criar e modificar tabelas</h2>
+      <div class="slide-content"><p>SQL chama relações de tabelas. <code>CREATE TABLE</code> define o esquema; <code>INSERT</code> inclui linhas, <code>DELETE</code> remove linhas selecionadas e <code>UPDATE</code> altera valores.</p><pre class='code-box'><code>CREATE TABLE Alunos (
+  id_aluno CHAR(20), nome CHAR(30),
+  idade INTEGER, media REAL
+);
+UPDATE Alunos
+SET idade = idade + 1, media = media - 1
+WHERE id_aluno = '53688';</code></pre><p class='compact warning-box'>Exemplo didático — SQL ilustrativa baseada na nota; tipos e detalhes de sintaxe variam entre SGBDs.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="update-selecao-valores" data-title="Como avaliar um UPDATE">
+      <h2>Como avaliar um UPDATE</h2>
+      <div class="slide-content"><ol class='step-list'><li><code>WHERE</code> determina quais linhas serão afetadas.</li><li><code>SET</code> calcula os novos valores; expressões usam o valor anterior da linha.</li></ol><pre class='code-box'><code>UPDATE Alunos
+SET media = media - 0.1
+WHERE media &gt;= 3.3;</code></pre><p class='figure-label'>Exemplo didático — na instância da nota, 3,3 torna-se 3,2; 3,4 torna-se 3,3. A média 3,2 não satisfaz o filtro e não muda.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="integridade-relacional" data-title="Restrições de integridade">
+      <h2>Restrições de integridade</h2>
+      <div class="slide-content"><p>Uma restrição de integridade (RI) é uma condição sobre o esquema que limita quais instâncias são válidas. Restrições de domínio, chaves, referências e regras gerais protegem a consistência dos dados.</p><div class='sequence-flow'><div class='diagram-node'>Esquema + restrições</div><div class='diagram-arrow'>→</div><div class='diagram-node'>SGBD verifica alterações</div><div class='diagram-arrow'>→</div><div class='diagram-node'>Aceita ou rejeita</div></div><p class='compact'>Exemplo: impedir que dois alunos compartilhem o mesmo identificador.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="chaves-conceitos" data-title="Superchaves e chaves">
+      <h2>Superchaves e chaves</h2>
+      <div class="slide-content"><ul><li><strong>Superchave</strong>: atributo(s) cujo valor identifica univocamente uma tupla.</li><li><strong>Chave candidata</strong>: superchave mínima; nenhum atributo pode ser retirado sem perder a unicidade.</li><li><strong>Chave primária</strong>: chave candidata escolhida para identificar tuplas; não admite <code>NULL</code>.</li></ul><p>Uma relação pode ter outras chaves candidatas além da chave primária.</p><p class='figure-label'>Exemplo didático — em Alunos, id-aluno identifica a linha; a nota também ilustra nome + idade como outra combinação única.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="chaves-sql" data-title="Declarar chaves em SQL">
+      <h2>Declarar chaves em SQL</h2>
+      <div class="slide-content"><p><code>PRIMARY KEY</code> declara a chave primária; <code>UNIQUE</code> restringe outra combinação para que não se repita. Uma restrição pode receber nome para facilitar a identificação de violações.</p><pre class='code-box'><code>CREATE TABLE Alunos (
+  id_aluno CHAR(20), nome CHAR(30), idade INTEGER,
+  PRIMARY KEY (id_aluno),
+  CONSTRAINT uq_nome_idade UNIQUE (nome, idade)
+);</code></pre><p class='compact warning-box'>Exemplo didático — sintaxe SQL ilustrativa; o suporte a nomes, tipos e detalhes depende do SGBD.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="chave-estrangeira" data-title="Chave estrangeira">
+      <h2>Chave estrangeira</h2>
+      <div class="slide-content"><p>Uma chave estrangeira (FK, <em>foreign key</em>) liga uma relação à chave candidata de outra relação. Cada valor não nulo da FK precisa encontrar correspondência na relação referenciada.</p><div class='two-column'><div class='diagram-node'><strong>Matriculado</strong><br>id-aluno (FK)<br>id-curso, nota</div><div class='diagram-node'><strong>Alunos</strong><br>id-aluno (PK)<br>nome, login…</div></div><p class='diagram-flow'>Matriculado.id-aluno → Alunos.id-aluno</p><p class='figure-label'>Exemplo didático — uma matrícula referencia o aluno existente.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="regras-referenciais" data-title="Manter referências válidas">
+      <h2>Manter referências válidas</h2>
+      <div class="slide-content"><p>Uma matrícula com id-aluno inexistente viola a integridade referencial. Apagar uma matrícula não invalida a tabela Alunos; apagar um aluno ainda referenciado pode invalidar Matriculado.</p><table><thead><tr><th>Ação referenciada</th><th>Opções usuais</th></tr></thead><tbody><tr><td>Excluir/alterar aluno</td><td><code>NO ACTION</code>, <code>CASCADE</code>, <code>SET DEFAULT</code>, <code>SET NULL</code></td></tr></tbody></table><p><code>NO ACTION</code> rejeita; <code>CASCADE</code> propaga; SET NULL só funciona se a coluna aceitar nulo e não violar outra restrição.</p><p class='figure-label'>Exemplo didático — se id-aluno também integra a chave primária de Matriculado, não pode ser definido como NULL.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5–7</a>
+    </section><section id="restricoes-gerais" data-title="Restrições gerais">
+      <h2>Restrições gerais</h2>
+      <div class="slide-content"><p>Regras podem ir além de chaves e domínios básicos. Por exemplo, limitar a idade de alunos a valores maiores que 16 restringe os dados permitidos.</p><div class='two-column'><div class='info-box'><strong>Restrição de tabela</strong><br>Relacionada a uma tabela; avaliada quando ela muda.</div><div class='info-box'><strong>Assertiva</strong><br>Pode envolver várias tabelas; alterações em qualquer tabela envolvida podem exigir verificação.</div></div><p class='compact'>Disponibilidade e sintaxe para restrições gerais variam entre SGBDs.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5–6</a>
+    </section><section id="validacao-restricoes" data-title="Quando uma RI é violada">
+      <h2>Quando uma RI é violada</h2>
+      <div class="slide-content"><ul><li>Inserir id-aluno duplicado ou nulo viola a chave primária.</li><li>Atualizar uma chave para valor já existente viola unicidade.</li><li>Inserir matrícula para aluno inexistente viola a FK.</li></ul><p>Em geral, a instrução que introduz a violação é rejeitada. Para exclusões/atualizações referenciadas, escolha explicitamente a política adequada à regra do domínio.</p><p class='figure-label'>Exemplo didático — os casos retomam Alunos e Matriculado da nota.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6–7</a>
+    </section><section id="transacoes-deferred" data-title="Restrições e transações">
+      <h2>Restrições e transações</h2>
+      <div class="slide-content"><p>Uma restrição pode ser verificada no fim de cada instrução ou, quando declarada e suportada como adiável, no <em>commit</em> (efetivação) da transação.</p><div class='sequence-flow'><div class='diagram-node'>Início: referências temporariamente pendentes</div><div class='diagram-arrow'>→</div><div class='diagram-node'>Inserir linhas relacionadas</div><div class='diagram-arrow'>→</div><div class='diagram-node'>Commit valida consistência</div></div><p class='figure-label'>Exemplo didático — Alunos referenciam Cursos e Cursos indicam um monitor Aluno; adiar a validação permite inserir primeiro as linhas mutuamente dependentes.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7–8</a>
+    </section><section id="consulta-selecao" data-title="Consultar: seleção">
+      <h2>Consultar: seleção</h2>
+      <div class="slide-content"><p><code>SELECT</code> expressa quais colunas retornar; <code>FROM</code> indica a relação e <code>WHERE</code> filtra tuplas. O asterisco seleciona todas as colunas.</p><pre class='code-box'><code>SELECT *
+FROM Alunos A
+WHERE A.idade &lt; 18;</code></pre><p class='figure-label'>Exemplo didático — para a instância A1 da nota, o filtro retorna Madayan (11) e Guldu (12).</p><p class='compact'>É um exemplo de seleção: restringe linhas sem alterar a tabela armazenada.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8</a>
+    </section><section id="consulta-juncao" data-title="Consultar: combinar relações">
+      <h2>Consultar: combinar relações</h2>
+      <div class="slide-content"><p>Uma junção relaciona tuplas por uma condição de correspondência. Aqui, o identificador do aluno associa Alunos à matrícula; o filtro mantém somente nota A.</p><pre class='code-box'><code>SELECT A.nome, M.id_curso
+FROM Alunos A, Matriculado M
+WHERE A.id_aluno = M.id_aluno
+  AND M.nota = 'A';</code></pre><p class='figure-label'>Exemplo didático — o resultado ilustrado na nota contém Smith e Topology112.</p><p class='compact warning-box'>Forma SQL ilustrativa; a notação explícita de JOIN também é comum.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=9" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 9</a>
+    </section><section id="mapeamento-entidades" data-title="Entidades tornam-se tabelas">
+      <h2>Entidades tornam-se tabelas</h2>
+      <div class="slide-content"><p>Para mapear um conjunto de entidades ER, crie uma tabela com seus atributos e domínios; a chave da entidade vira chave primária.</p><pre class='code-box'><code>Funcionários(cpf, nome, vaga)
+PK: cpf</code></pre><table><thead><tr><th>cpf</th><th>nome</th><th>vaga</th></tr></thead><tbody><tr><td>123-22-3666</td><td>Atishoo</td><td>48</td></tr><tr><td>231-31-5368</td><td>Smith</td><td>22</td></tr></tbody></table><p class='figure-label'>Exemplo didático — atributos e instância correspondem ao conjunto de entidades Funcionários.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=9" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 9–10</a>
+    </section><section id="mapeamento-relacionamentos" data-title="Relacionamentos em tabelas">
+      <h2>Relacionamentos em tabelas</h2>
+      <div class="slide-content"><p>Para um relacionamento sem restrições de cardinalidade, crie uma tabela contendo:</p><ul><li>As chaves primárias das entidades participantes, como chaves estrangeiras.</li><li>Os atributos descritivos do relacionamento.</li></ul><div class='diagram-flow'><div class='diagram-node'>Funcionários</div><div class='diagram-arrow'>+</div><div class='diagram-node'>Departamentos</div><div class='diagram-arrow'>+</div><div class='diagram-node'>Localidades</div><div class='diagram-arrow'>→</div><div class='diagram-node'>Trabalha_em(cpf, id-depto, endereço, desde)</div></div><p class='compact'>Em relacionamento ternário, mantenha a chave de cada participante e as restrições correspondentes.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=10" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 10</a>
+    </section><section id="relacionamento-recursivo" data-title="Relacionamento recursivo">
+      <h2>Relacionamento recursivo</h2>
+      <div class="slide-content"><p>Uma entidade pode se relacionar consigo mesma. Os papéis dão significado distinto às participações e orientam nomes de atributos e FKs.</p><pre class='code-box'><code>Reporta_a(
+  supervisor_cpf, subordinado_cpf,
+  PK(supervisor_cpf, subordinado_cpf),
+  FK supervisor_cpf → Funcionários(cpf),
+  FK subordinado_cpf → Funcionários(cpf)
+)</code></pre><p class='figure-label'>Exemplo didático — as duas referências apontam para Funcionários, mas representam papéis diferentes.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=10" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 10–11</a>
+    </section><section id="mapeamento-chave-er" data-title="Cardinalidade e chave do relacionamento">
+      <h2>Cardinalidade e chave do relacionamento</h2>
+      <div class="slide-content"><p>Uma seta de restrição de chave no diagrama ER indica que, para cada ocorrência no lado oposto, há no máximo uma entidade associada naquele lado. A chave desse lado pode identificar a linha do relacionamento.</p><div class='diagram-flow'><div class='diagram-node'>Funcionário</div><div class='diagram-arrow'>— Gerencia — →</div><div class='diagram-node'>Departamento (no máximo um gerente)</div></div><p>Assim, <code>id-depto</code> é chave de <code>Gerencia(cpf, id-depto, desde)</code>. Alternativamente, os dados do gerente podem ser incorporados à tabela Departamento; campos opcionais podem ficar nulos.</p><p class='figure-label'>Exemplo didático — mapeamento do relacionamento Gerencia.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=11" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 11–12</a>
+    </section><section id="participacao-er" data-title="Participação total no ER">
+      <h2>Participação total no ER</h2>
+      <div class="slide-content"><p>Participação total exige que toda entidade de um conjunto participe do relacionamento. Se cada departamento precisa de um gerente e pode ter no máximo um, incluir <code>cpf</code> não nulo em Departamento (com FK) expressa a regra localmente.</p><p>Já exigir que todo departamento apareça em <code>Trabalha_em</code> não se resolve com uma FK simples no sentido inverso: <code>id-depto</code> não é chave da relação Trabalha_em. Pode exigir assertiva ou mecanismo equivalente.</p><p class='figure-label'>Exemplo didático — distinção entre a regra de Gerencia e a participação total em Trabalha_em.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=12" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 12–13</a>
+    </section><section id="entidade-fraca" data-title="Mapear entidade fraca">
+      <h2>Mapear entidade fraca</h2>
+      <div class="slide-content"><p>Uma entidade fraca depende da chave da entidade proprietária e tem uma chave parcial própria. Sua chave relacional combina a chave parcial com a chave do proprietário.</p><pre class='code-box'><code>Apólice_Dep(nomed, idade, custo, cpf)
+PK: (nomed, cpf)
+FK: cpf → Funcionários(cpf)
+ON DELETE CASCADE</code></pre><p>A chave composta identifica cada dependente e impede CPF nulo; excluir o proprietário pode remover seus dependentes associados.</p><p class='figure-label'>Exemplo didático — Dependentes identificados por (nomed, cpf).</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=13" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 13–14</a>
+    </section><section id="hierarquia-isa" data-title="Hierarquia de classes (ISA)">
+      <h2>Hierarquia de classes (ISA)</h2>
+      <div class="slide-content"><p>O diagrama apresenta uma hierarquia ISA: Funcionários (cpf, nome, vaga) especializa-se em Funcion_Horistas (salário_hora, horas_trabalhadas) e Funcion_Contratados (id-contrato).</p><div class='diagram-flow'><div class='diagram-node'>Funcionários</div><div class='diagram-arrow'>ISA ↓</div><div class='two-column'><div class='diagram-node'>Funcion_Horistas</div><div class='diagram-node'>Funcion_Contratados</div></div></div><p class='compact warning-box'>A nota mostra o diagrama, mas não descreve estratégias para mapear essa hierarquia em tabelas; não extrapolamos esse conteúdo aqui.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=15" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 15</a>
+    </section><section id="agregacao-er" data-title="Agregação no modelo ER">
+      <h2>Agregação no modelo ER</h2>
+      <div class="slide-content"><p>Agregação permite que um relacionamento participe de outro. No exemplo, Monitora relaciona Funcionários a uma ocorrência do relacionamento Financia entre Projetos e Departamentos.</p><div class='diagram-flow'><div class='diagram-node'>Projetos — Financia — Departamentos</div><div class='diagram-arrow'>↑ agregado em Monitora</div><div class='diagram-node'>Funcionários — Monitora (até)</div></div><p>A tabela Monitora inclui a chave de Funcionários, as chaves de Financia e seu atributo descritivo. Financia só pode ser eliminada se não tiver atributos próprios e toda ocorrência aparecer em Monitora.</p><p class='figure-label'>Exemplo didático — condições para preservar ou reconstruir Financia.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=15" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 15–16</a>
+    </section><section id="visoes-introducao" data-title="Visões: relações derivadas">
+      <h2>Visões: relações derivadas</h2>
+      <div class="slide-content"><p>Uma visão é uma tabela lógica derivada de uma consulta; suas linhas não precisam ser armazenadas como as de uma tabela base. Ela pode ser consultada como uma relação.</p><pre class='code-box'><code>CREATE VIEW Estudantes_B AS
+SELECT A.nome, A.id_aluno, M.id_curso
+FROM Alunos A, Matriculado M
+WHERE A.id_aluno = M.id_aluno
+  AND M.nota = 'B';</code></pre><p class='figure-label'>Exemplo didático — estudantes e cursos em que obtiveram B.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=16" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 16</a>
+    </section><section id="visoes-abstracao-seguranca" data-title="Visões: abstração e acesso">
+      <h2>Visões: abstração e acesso</h2>
+      <div class="slide-content"><ul><li><strong>Independência lógica:</strong> uma visão pode oferecer uma interface externa estável mesmo quando a organização conceitual muda.</li><li><strong>Segurança:</strong> conceda acesso à visão com apenas as colunas apropriadas, em vez de expor toda a tabela base.</li></ul><div class='diagram-flow'><div class='diagram-node'>Tabela base Alunos (inclui média)</div><div class='diagram-arrow'>→</div><div class='diagram-node'>Visão autorizada (nome, idade)</div><div class='diagram-arrow'>→</div><div class='diagram-node'>Usuário</div></div><p class='figure-label'>Exemplo didático — a visão pode ocultar a média dos alunos.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=16" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 16</a>
+    </section><section id="visoes-atualizaveis" data-title="Atualizar uma visão">
+      <h2>Atualizar uma visão</h2>
+      <div class="slide-content"><p>Uma atualização em visão é mais simples quando sua origem é uma única tabela-base, com seleção e projeção, sem agregação: a alteração pode ser traduzida sem ambiguidade.</p><pre class='code-box'><code>CREATE VIEW Estudantes_Bons AS
+SELECT id_aluno, media
+FROM Alunos
+WHERE media &gt; 3.0;</code></pre><p><code>WITH CHECK OPTION</code> impede inserir ou atualizar pela visão uma linha que, após a alteração, não satisfaz seu filtro.</p><p class='figure-label'>Exemplo didático — sem essa opção, inserir média 2,8 poderia alterar a tabela base sem a linha aparecer na visão.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=17" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 17</a>
+    </section><section id="visoes-ambiguidade" data-title="Por que restringir atualizações">
+      <h2>Por que restringir atualizações</h2>
+      <div class="slide-content"><p>Uma visão que combina Alunos e Clubes pode conter a linha Smith–Hiking. Excluí-la da visão deixa duas alterações possíveis na base:</p><ul><li>Excluir Smith de Alunos — remove também outras linhas associadas a Smith.</li><li>Excluir só sua associação Hiking de Clubes.</li></ul><p>Como a intenção não é determinada univocamente pela linha da visão, permitir a operação poderia causar efeitos colaterais. Algumas atualizações devem ser proibidas.</p><p class='figure-label'>Exemplo didático — ambiguidade de exclusão na visão EstudantesAtivos.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=17" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 17–18</a>
+    </section><section id="alterar-destruir-esquema" data-title="Alterar ou remover objetos">
+      <h2>Alterar ou remover objetos</h2>
+      <div class="slide-content"><ul><li><code>DROP TABLE</code> remove tabela e definição; <code>RESTRICT</code> impede a remoção se objetos dependem dela.</li><li><code>CASCADE</code> também remove objetos dependentes; use com cautela.</li><li><code>DROP VIEW</code> remove uma visão.</li><li><code>ALTER TABLE</code> muda a estrutura, por exemplo adicionando coluna.</li></ul><pre class='code-box'><code>ALTER TABLE Alunos
+ADD COLUMN nome_familia CHAR(10);</code></pre><p class='compact'>Na nota, linhas existentes recebem NULL na coluna nova; restrições e regras do SGBD podem afetar a operação.</p></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=18" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 18–19</a>
+    </section><section id="atividade-integridade" data-title="Atividade: matrícula consistente">
+      <h2>Atividade: matrícula consistente</h2>
+      <div class="slide-content"><p class='figure-label'>Exemplo didático — Alunos(id_aluno) é referenciada por Matriculado(id_aluno).</p><ol><li>Alunos não contém 99999. A matrícula com id_aluno 99999 pode ser inserida?</li><li>O aluno 53688 tem matrícula. O que ocorre ao excluí-lo sob <code>NO ACTION</code>? E sob <code>CASCADE</code>?</li><li>Se id_aluno participa da chave primária de Matriculado, pode receber NULL?</li></ol><details class='answer'><summary>Ver resposta</summary><p>1. Não: a FK ficaria sem correspondência. 2. <code>NO ACTION</code> rejeita a exclusão enquanto houver referência; <code>CASCADE</code> remove as matrículas dependentes. 3. Não: componentes da chave primária não podem ser NULL. Escolha a ação referencial de acordo com a regra de negócio.</p></details></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5–7</a>
+    </section><section id="resumo-aula" data-title="Resumo">
+      <h2>Resumo</h2>
+      <div class="slide-content"><div class='success-box'><ul><li>Relações têm esquema e instância; tuplas respeitam atributos, domínios e unicidade teórica.</li><li>Chaves e restrições de integridade controlam identidade e referências.</li><li>Consultas selecionam e combinam dados; mapeamentos ER levam entidades, relacionamentos e dependências a tabelas.</li><li>Visões oferecem interfaces derivadas, úteis para abstração e segurança; atualizações podem ser restritas quando ambíguas.</li><li>Transações e comandos DDL completam a gestão da consistência e do esquema.</li></ul></div></div>
+      <a class="source-note" href="../notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–19</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 04</h1><p class="subtitle">Normalização</p><p><a href="../bloco2/aula04.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/db-visualizer.js"></script>
+  <script src="../assets/db-slides.js"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Preparação de textos, representações, embeddings e transformers; compreensão contextual e geração de linguagem.">
+  <title>Aula 06 — NLP &amp; LLMs — Inteligência Artificial</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../assets/reveal/fonts.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/ia.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco2/aula05.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/06-NLP_LLMs.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 06 — NLP &amp; LLMs">
+      <h1>Aula 06</h1>
+      <p class="subtitle">NLP &amp; LLMs</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Inteligência Artificial</p></div>
+    </section><section id="objetivos" data-title="Objetivos da aula">
+      <h2>Objetivos da aula</h2>
+      <div class="slide-content"><div class="box"><ul><li>Descrever corpus, tokenização, normalização e técnicas de pré-processamento.</li><li>Comparar contagem de palavras, TF-IDF e embeddings.</li><li>Identificar entidades, categorias gramaticais e contexto linguístico.</li><li>Distinguir compreensão bidirecional de geração autoregressiva em exemplos clássicos.</li></ul></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–5</a>
+    </section><section id="pln_objetivo_e_fluxo" data-title="O que é PLN?">
+      <h2>O que é PLN?</h2>
+      <div class="slide-content"><div class="box"><ul><li>Processamento de Linguagem Natural é uma área de IA voltada à interação entre computadores e linguagem humana.</li><li>O objetivo descrito é permitir que máquinas compreendam, interpretem e respondam a texto ou fala de modo semelhante ao uso humano.</li><li>O fluxo geral parte de dados textuais e aplica conceitos e técnicas para lidar com grandes volumes de linguagem.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Um sistema recebe uma avaliação escrita e precisa interpretar seu conteúdo antes de responder ou classificá-la.</p></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="pln_objetivo_e_fluxo_atividade" data-title="Prática — O que é PLN?">
+      <h2>Prática — O que é PLN?</h2>
+      <div class="slide-content"><div class="warning-box"><p>Em uma frase, identifique qual é o objeto do PLN: (a) apenas imagens; (b) texto e fala humanos; (c) somente números tabulares.</p></div><details class="answer"><summary>Ver resposta</summary><p>A resposta é (b). O PDF define PLN como a área que busca a interação entre computadores e linguagem humana, incluindo texto ou fala.</p></details></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="fundamentos_corpus_tokens" data-title="Corpus, tokens e normalização">
+      <h2>Corpus, tokens e normalização</h2>
+      <div class="slide-content"><div class="box"><ul><li>Corpus é o conjunto de dados textuais usado no treinamento e na análise dos modelos.</li><li>Tokenização divide o texto em unidades menores, como palavras ou subpalavras, chamadas tokens.</li><li>Normalização padroniza o texto, por exemplo convertendo para minúsculas ou removendo pontuação e acentuação para reduzir variações.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>A frase &quot;Bom dia, Ana!&quot; pode ser separada em tokens correspondentes às palavras e sinais; a normalização pode uniformizar maiúsculas e pontuação conforme o objetivo.</p></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="tokenizacao_passos" data-title="Do texto bruto às unidades de análise">
+      <h2>Do texto bruto às unidades de análise</h2>
+      <div class="slide-content"><div class="ia-visualizer" data-title="Tokenização e normalização — regra didática"><script type="application/json">{"steps": [{"cells": ["Bom dia, Ana!"], "active": [0], "caption": "Entrada textual original. Primeiro decida quais unidades e sinais são relevantes para a tarefa."}, {"cells": ["Bom", "dia", ",", "Ana", "!"], "active": [0, 1, 2, 3, 4], "caption": "Nesta regra simples, separamos palavras e pontuação. Um tokenizer real pode usar subpalavras."}, {"cells": ["bom", "dia", "ana"], "active": [0, 1, 2], "caption": "Se a tarefa permitir, normalizamos para minúsculas e retiramos a pontuação."}, {"cells": ["bom", "dia", "ana"], "active": [], "caption": "A normalização é uma escolha: nomes, negações e pontuação podem carregar informação importante."}]}</script></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="fundamentos_corpus_tokens_atividade" data-title="Prática — Corpus, tokens e normalização">
+      <h2>Prática — Corpus, tokens e normalização</h2>
+      <div class="slide-content"><div class="warning-box"><p>Para a frase &quot;Olá, Mundo!&quot;, proponha uma tokenização simples e uma normalização possível.</p></div><details class="answer"><summary>Ver resposta</summary><p>Uma tokenização simples pode resultar em [&quot;Olá&quot;, &quot;,&quot;, &quot;Mundo&quot;, &quot;!&quot;] ou em unidades sem pontuação, conforme a regra adotada. Uma normalização possível é converter palavras para minúsculas: &quot;olá mundo&quot;. O ponto central é explicitar a regra usada.</p></details></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="n_grams_lexicons_limpeza" data-title="Padrões e limpeza dos dados">
+      <h2>Padrões e limpeza dos dados</h2>
+      <div class="slide-content"><div class="box"><ul><li>n-grams são sequências de n palavras ou caracteres que aparecem juntas e ajudam a identificar padrões frequentes.</li><li>Lexicons reúnem palavras e informações associadas, como significado ou sentimento.</li><li>Pré-processamento e limpeza removem ruído, como pontuação ou números, e podem tratar erros gramaticais para preparar o texto para análise.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em &quot;gostei muito do produto&quot;, um bigrama pode ser &quot;gostei muito&quot;; um lexicon de sentimentos pode associar &quot;gostei&quot; a uma polaridade positiva.</p></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1-2</a>
+    </section><section id="n_grams_lexicons_limpeza_atividade" data-title="Prática — Padrões e limpeza dos dados">
+      <h2>Prática — Padrões e limpeza dos dados</h2>
+      <div class="slide-content"><div class="warning-box"><p>Qual recurso é mais diretamente adequado para localizar sequências frequentes de duas palavras: lexicon, bigrama ou limpeza? Explique.</p></div><details class="answer"><summary>Ver resposta</summary><p>Bigrama. Ele é um n-gram de tamanho 2 e representa duas unidades consecutivas. Um lexicon associa informações a palavras, enquanto limpeza prepara o texto, mas não define a sequência observada.</p></details></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1-2</a>
+    </section><section id="tecnicas_reducao_vocabulario" data-title="Stop words, stemming e lemmatization">
+      <h2>Stop words, stemming e lemmatization</h2>
+      <div class="slide-content"><div class="box"><ul><li>Stop words são palavras frequentes que podem ser removidas conforme a tarefa. Em sentimentos, retirar “não” pode inverter o significado.</li><li>Stemming corta palavras para uma raiz aproximada; o exemplo do PDF reduz &quot;correr&quot; a &quot;corr&quot;.</li><li>Lemmatization busca a forma canônica: &quot;corri&quot; e &quot;correndo&quot; podem ser reduzidas a &quot;correr&quot;.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em uma busca por temas, remover artigos pode simplificar a representação; em uma análise linguística, a lemmatization preserva uma forma lexical interpretável.</p></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="tecnicas_reducao_vocabulario_atividade" data-title="Prática — Stop words, stemming e lemmatization">
+      <h2>Prática — Stop words, stemming e lemmatization</h2>
+      <div class="slide-content"><div class="warning-box"><p>Compare o resultado esperado para &quot;corri&quot; e &quot;correndo&quot; sob stemming e lemmatization, usando os exemplos e definições da aula.</p></div><details class="answer"><summary>Ver resposta</summary><p>A lemmatization deve levar ambas à forma canônica &quot;correr&quot;. O stemming não promete uma palavra válida; ele corta para uma raiz aproximada, como &quot;corr&quot; no exemplo do PDF.</p></details></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="representacoes_bow_tfidf" data-title="Da contagem à importância">
+      <h2>Da contagem à importância</h2>
+      <div class="slide-content"><div class="box"><ul><li>Bag of Words trata o texto como uma coleção de palavras e conta frequências, sem considerar a ordem.</li><li>TF-IDF (frequência do termo × inverso da frequência documental) valoriza termos frequentes no documento e raros na coleção.</li><li>As duas abordagens transformam texto em sinais quantitativos, mas TF-IDF tenta destacar termos mais característicos do documento.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em &quot;gato gato casa&quot;, Bag of Words registra duas ocorrências de &quot;gato&quot; e uma de &quot;casa&quot;; o peso TF-IDF de cada termo também dependeria dos demais documentos da coleção.</p></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="representacoes_bow_tfidf_atividade" data-title="Prática — Da contagem à importância">
+      <h2>Prática — Da contagem à importância</h2>
+      <div class="slide-content"><div class="warning-box"><p>Se uma palavra aparece muitas vezes em um documento, mas em quase todos os documentos da coleção, ela necessariamente terá alto TF-IDF? Justifique.</p></div><details class="answer"><summary>Ver resposta</summary><p>Não. A frequência no documento contribui para o termo, mas a presença em muitos documentos reduz seu caráter distintivo. O PDF define TF-IDF justamente pela combinação entre frequência local e frequência na coleção.</p></details></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="embeddings_e_anotacao" data-title="Embeddings e tarefas linguísticas">
+      <h2>Embeddings e tarefas linguísticas</h2>
+      <div class="slide-content"><div class="box"><ul><li>Word embeddings, como Word2Vec e GloVe, representam palavras como vetores.</li><li>A representação procura capturar relações semânticas, aproximando no espaço vetorial palavras com significados semelhantes.</li><li>NER (Named Entity Recognition) identifica entidades; POS tagging (Part-of-Speech tagging) atribui categorias gramaticais.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em &quot;Marina viajou para Recife&quot;, NER pode marcar Marina como pessoa e Recife como lugar; POS tagging pode classificar &quot;viajou&quot; como verbo.</p></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="embeddings_e_anotacao_atividade" data-title="Prática — Embeddings e tarefas linguísticas">
+      <h2>Prática — Embeddings e tarefas linguísticas</h2>
+      <div class="slide-content"><div class="warning-box"><p>Na frase &quot;A empresa Aurora abriu uma filial em Recife&quot;, indique duas entidades possíveis para NER e uma categoria POS para &quot;abriu&quot;.</p></div><details class="answer"><summary>Ver resposta</summary><p>&quot;Aurora&quot; pode ser marcada como organização e &quot;Recife&quot; como lugar. &quot;Abriu&quot; pode receber a categoria verbo. As marcações exemplificam as tarefas descritas, não uma anotação exaustiva.</p></details></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="transformers_contexto" data-title="Transformers: contexto e geração">
+      <h2>Transformers: contexto e geração</h2>
+      <div class="slide-content"><div class="box"><ul><li>O PDF apresenta transformers, com BERT e GPT, como modelos avançados que transformaram o PLN.</li><li>BERT é descrito como bidirecional: considera termos antes e depois para entender o contexto.</li><li>GPT é descrito como gerador: produz texto coerente a partir do contexto anterior.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Na frase &quot;O banco abriu cedo&quot;, compreender &quot;banco&quot; depende do contexto; em uma tarefa de geração, o modelo pode prever a continuação de uma sequência.</p></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="contexto_comparacao" data-title="Compreender uma lacuna ou continuar o texto?">
+      <h2>Compreender uma lacuna ou continuar o texto?</h2>
+      <div class="slide-content"><div class="two-column"><div><h4>BERT: contexto dos dois lados</h4><p>“O [MASK] abriu cedo.”</p><p>As palavras antes e depois da lacuna ajudam a interpretar ou prever o elemento oculto.</p></div><div><h4>GPT: próximo token</h4><p>“O banco abriu…”</p><p>Na geração, a continuação depende dos tokens anteriores e é acrescentada à sequência.</p></div></div><p class="figure-label">Ilustração conceitual: não é a saída medida de um modelo em execução.</p></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="transformers_contexto_atividade" data-title="Prática — Transformers: contexto e geração">
+      <h2>Prática — Transformers: contexto e geração</h2>
+      <div class="slide-content"><div class="warning-box"><p>Associe cada foco à descrição: BERT—compreensão bidirecional; GPT—geração baseada no contexto anterior. Por que não são a mesma tarefa principal?</p></div><details class="answer"><summary>Ver resposta</summary><p>A associação está correta porque o PDF diferencia compreensão de linguagem, enfatizada pelo BERT, e geração de texto, enfatizada pelo GPT. Ambos usam transformers, mas têm objetivos operacionais distintos na apresentação.</p></details></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="lamda_dialogo" data-title="LaMDA: diálogo interativo">
+      <h2>LaMDA: diálogo interativo</h2>
+      <div class="slide-content"><div class="box"><ul><li>LaMDA (Language Model for Dialogue Applications) é um exemplo histórico de modelo do Google voltado a diálogos.</li><li>Seu foco é compreender o contexto das interações e gerar respostas naturais e relevantes em diálogos longos.</li><li>A aula o diferencia por acompanhar a intenção do usuário ao longo de múltiplos turnos, com aplicações em chatbots e assistentes virtuais.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em uma conversa sobre viagem, o sistema precisa relacionar a pergunta atual às preferências mencionadas nos turnos anteriores.</p></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="lamda_dialogo_atividade" data-title="Prática — LaMDA: diálogo interativo">
+      <h2>Prática — LaMDA: diálogo interativo</h2>
+      <div class="slide-content"><div class="warning-box"><p>Por que uma conversa com vários turnos exige mais do que responder isoladamente à última frase?</p></div><details class="answer"><summary>Ver resposta</summary><p>Porque, conforme a descrição do PDF, o LaMDA deve manter contexto, captar nuances e acompanhar a intenção do usuário ao longo da interação, em vez de tratar cada turno como independente.</p></details></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="bert_compreensao" data-title="BERT: contexto bidirecional">
+      <h2>BERT: contexto bidirecional</h2>
+      <div class="slide-content"><div class="box"><ul><li>BERT é apresentado como modelo da Google introduzido em 2018 e bidirecional.</li><li>Ele olha para termos anteriores e posteriores para interpretar o contexto de uma palavra.</li><li>Seu foco é compreensão: resposta a perguntas, classificação de textos e preenchimento de lacunas; o PDF cita mecanismos de busca como aplicação.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Para preencher uma lacuna ou classificar uma consulta, o modelo pode usar palavras de ambos os lados para inferir o sentido contextual.</p></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="bert_compreensao_atividade" data-title="Prática — BERT: contexto bidirecional">
+      <h2>Prática — BERT: contexto bidirecional</h2>
+      <div class="slide-content"><div class="warning-box"><p>Escolha a finalidade mais alinhada ao BERT: (a) escrever uma história longa a partir de um início; (b) classificar uma consulta considerando seu contexto; (c) remover pontuação.</p></div><details class="answer"><summary>Ver resposta</summary><p>A resposta é (b). O PDF associa BERT à compreensão contextual e à classificação. A alternativa (a) representa melhor geração; (c) é limpeza de dados.</p></details></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="bum_aprendizado_nao_supervisionado" data-title="Bidirecionalidade e pré-treinamento: nota sobre “BUM”">
+      <h2>Bidirecionalidade e pré-treinamento: nota sobre “BUM”</h2>
+      <div class="slide-content"><div class="box"><ul><li>A nota utiliza “BUM” para Bidirectional Unsupervised Model; o termo é preservado como nomenclatura daquela fonte.</li><li>Não foi localizada uma especificação primária inequívoca de um modelo independente padronizado com esse nome.</li><li>BERT já é um exemplo documentado de representação bidirecional pré-treinada a partir de texto sem rótulos humanos.</li><li>Bidirecionalidade e pré-treinamento não supervisionado/autossupervisionado são propriedades, não uma garantia de família distinta.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em BERT, palavras ocultadas são previstas com contexto à esquerda e à direita. O pré-treinamento usa tarefas construídas automaticamente a partir do próprio texto.</p></div><p class="figure-label">Contexto complementar: <a href="https://research.google/blog/open-sourcing-bert-state-of-the-art-pre-training-for-natural-language-processing/" target="_blank" rel="noopener noreferrer">BERT — publicação primária do Google (2018)</a>.</p></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="bum_aprendizado_nao_supervisionado_atividade" data-title="Prática — Bidirecionalidade e pré-treinamento: nota sobre “BUM”">
+      <h2>Prática — Bidirecionalidade e pré-treinamento: nota sobre “BUM”</h2>
+      <div class="slide-content"><div class="warning-box"><p>Um modelo usa contexto à esquerda e à direita e é pré-treinado com texto sem rótulos humanos. Essas duas propriedades bastam para afirmar que ele é um modelo independente chamado “BUM”?</p></div><details class="answer"><summary>Ver resposta</summary><p>Não. As propriedades descrevem uma estratégia de representação e treinamento. BERT já apresenta essas características; identificar um modelo independente exige uma especificação ou publicação primária.</p></details></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="gpt_geracao" data-title="GPT: prever e gerar">
+      <h2>GPT: prever e gerar</h2>
+      <div class="slide-content"><div class="box"><ul><li>GPT é apresentado como série de modelos da OpenAI, incluindo GPT, GPT-2, GPT-3 e GPT-4.</li><li>Na geração autoregressiva, cada próximo token (palavra, parte de palavra ou outro símbolo) depende do contexto anterior.</li><li>O foco é geração de texto coerente, com aplicações em escrita assistida, chatbots, automação de conteúdo, tradução e resumo.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Dado o início &quot;A reunião começa às&quot;, um modelo gerador pode produzir uma continuação condicionada ao contexto anterior; a qualidade depende do contexto e do modelo.</p></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="gpt_geracao_atividade" data-title="Prática — GPT: prever e gerar">
+      <h2>Prática — GPT: prever e gerar</h2>
+      <div class="slide-content"><div class="warning-box"><p>Explique em uma frase por que prever a próxima palavra favorece a geração de texto, segundo a aula.</p></div><details class="answer"><summary>Ver resposta</summary><p>Porque cada previsão acrescenta uma continuação condicionada ao que já foi produzido, permitindo construir frases, histórias ou respostas em sequência. Essa é a lógica de geração descrita para GPT.</p></details></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="comparacao_modelos" data-title="Qual modelo para qual finalidade?">
+      <h2>Qual modelo para qual finalidade?</h2>
+      <div class="slide-content"><div class="box"><ul><li>LaMDA é associado a conversas e diálogos fluidos em interações longas.</li><li>BERT é associado à compreensão contextual. “BUM” permanece apenas como termo da nota, sem identificação primária independente.</li><li>GPT é associado à geração de conteúdo fluido e complexo a partir de contexto anterior.</li><li>A escolha depende da tarefa: compreender, dialogar, pré-treinar com pouco rótulo ou gerar texto.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Exemplos clássicos da nota: BERT enfatiza compreensão; LaMDA enfatiza diálogo; GPT enfatiza geração. A arquitetura e o treinamento concretos determinam as capacidades.</p></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="comparacao_modelos_atividade" data-title="Prática — Qual modelo para qual finalidade?">
+      <h2>Prática — Qual modelo para qual finalidade?</h2>
+      <div class="slide-content"><div class="warning-box"><p>Associe: (1) diálogo de múltiplos turnos; (2) compreensão bidirecional; (3) geração autoregressiva. Use os exemplos clássicos LaMDA, BERT e GPT.</p></div><details class="answer"><summary>Ver resposta</summary><p>(1) LaMDA; (2) BERT; (3) GPT. A associação destaca finalidades históricas dos exemplos, não uma exclusividade de tarefa nem um catálogo atual de produtos.</p></details></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="aplicacoes_e_sintese" data-title="Aplicações práticas e síntese">
+      <h2>Aplicações práticas e síntese</h2>
+      <div class="slide-content"><div class="box"><ul><li>A aula cita análise de sentimentos para identificar emoções ou opiniões em avaliações, redes sociais e feedbacks.</li><li>Tradução automática usa modelos de linguagem e transformers para converter textos entre idiomas.</li><li>Chatbots usam PLN para entender perguntas e responder naturalmente; a conclusão retoma tokenização, embeddings e transformers como bases de aplicações simples e complexas.</li><li>A ressalva final é de adequação: modelos e técnicas têm diferenças, portanto a aplicação deve respeitar a finalidade descrita.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Um fluxo de atendimento pode limpar e tokenizar mensagens, identificar sentimento, interpretar a intenção e gerar uma resposta de chatbot.</p></div></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4-5</a>
+    </section><section id="aplicacoes_e_sintese_atividade" data-title="Prática — Aplicações práticas e síntese">
+      <h2>Prática — Aplicações práticas e síntese</h2>
+      <div class="slide-content"><div class="warning-box"><p>Proponha uma cadeia de técnicas para analisar o sentimento de uma avaliação e responder ao cliente. Indique ao menos duas etapas e uma possível aplicação de modelo.</p></div><details class="answer"><summary>Ver resposta</summary><p>Uma resposta coerente é: pré-processar/tokenizar a avaliação; usar representação ou técnica de PLN para identificar a opinião; então usar um chatbot baseado em modelo de linguagem para formular a resposta. A aula cita explicitamente análise de sentimentos e chatbots, mas não prescreve um único pipeline obrigatório.</p></details></div>
+      <a class="source-note" href="../notas/06-NLP_LLMs.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4-5</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 07</h1><p class="subtitle">Inteligência Artificial Explicável</p><p><a href="../bloco3/aula07.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/ia-visualizer.js"></script>
+  <script src="../assets/ia-slides.js"></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Transparência, interpretabilidade e explicabilidade; LIME, SHAP e redes mais compreensíveis.">
+  <title>Aula 07 — Inteligência Artificial Explicável — Inteligência Artificial</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../assets/reveal/fonts.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/ia.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco3/aula06.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/07-Inteligencia Artificial Explicavel.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 07 — Inteligência Artificial Explicável">
+      <h1>Aula 07</h1>
+      <p class="subtitle">Inteligência Artificial Explicável</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Inteligência Artificial</p></div>
+    </section><section id="objetivos" data-title="Objetivos da aula">
+      <h2>Objetivos da aula</h2>
+      <div class="slide-content"><div class="box"><ul><li>Distinguir transparência, interpretabilidade e explicabilidade.</li><li>Explicar o alcance local de LIME e as contribuições calculadas por SHAP.</li><li>Reconhecer a proposta de redes neurais interpretáveis.</li><li>Adaptar explicações ao público sem confundi-las com garantia de correção ou ausência de viés.</li></ul></div></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="o_que_e_xai" data-title="O que é XAI?">
+      <h2>O que é XAI?</h2>
+      <div class="slide-content"><div class="box"><ul><li>Inteligência Artificial Explicável (XAI) busca criar sistemas cujas decisões possam ser compreendidas por humanos.</li><li>O foco não é apenas produzir uma saída, mas tornar compreensível como e por que ela foi obtida.</li><li>O PDF contrasta esse objetivo com modelos de aprendizado profundo e redes neurais percebidos como caixas-pretas.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Exemplo didático: em vez de mostrar apenas “pedido aprovado”, um sistema procura tornar compreensíveis os fatores que levaram a essa decisão.</p></div></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="por_que_explicar" data-title="Por que explicar decisões?">
+      <h2>Por que explicar decisões?</h2>
+      <div class="slide-content"><div class="box"><ul><li>O material associa modelos transparentes e explicáveis à confiança nas tecnologias de IA.</li><li>A explicabilidade também é apresentada como relevante para a ética e para a adoção ampla desses sistemas.</li><li>Uma explicação deve ajudar a pessoa a compreender a decisão, não apenas repetir o resultado.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Exemplo didático: em uma triagem automatizada, a pessoa afetada pode precisar saber quais fatores contribuíram para o resultado, em vez de receber somente uma classificação.</p></div></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="transparencia" data-title="Transparência: como o sistema funciona">
+      <h2>Transparência: como o sistema funciona</h2>
+      <div class="slide-content"><div class="box"><ul><li>Transparência é a clareza sobre o funcionamento de um sistema de IA.</li><li>Um modelo transparente permite inspecionar e compreender suas operações internas.</li><li>A ideia se refere ao funcionamento do modelo, não somente à explicação de uma saída isolada.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Exemplo didático: um modelo simples, cujas operações internas podem ser acompanhadas por uma pessoa, é mais transparente do que uma arquitetura cujos passos internos permanecem inacessíveis.</p></div></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="interpretabilidade" data-title="Interpretabilidade: seguir a lógica">
+      <h2>Interpretabilidade: seguir a lógica</h2>
+      <div class="slide-content"><div class="box"><ul><li>Interpretabilidade é a capacidade de entender a lógica por trás da decisão de um modelo.</li><li>Um modelo interpretável permite acompanhar o raciocínio utilizado pela IA.</li><li>Essa compreensão ajuda a identificar os fatores que levaram a uma saída específica.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Exemplo didático: diante de uma classificação, uma explicação interpretável permite relacionar a saída aos fatores considerados pelo modelo, em vez de tratá-la como um palpite sem justificativa.</p></div></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="explicabilidade_e_publico" data-title="Explicabilidade: explicar para alguém">
+      <h2>Explicabilidade: explicar para alguém</h2>
+      <div class="slide-content"><div class="box"><ul><li>Explicabilidade vai além da simples interpretação do modelo.</li><li>Ela envolve fornecer ao usuário uma explicação compreensível sobre como e por que uma conclusão foi alcançada.</li><li>O PDF destaca que a explicação deve ser adaptada ao nível de entendimento do público, seja especialista técnico ou usuário final.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Exemplo didático: para uma equipe técnica, a explicação pode detalhar variáveis e comportamento do modelo; para um usuário final, pode destacar em linguagem simples os principais motivos da decisão.</p></div></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="lime_explicacao_local" data-title="LIME: uma explicação local">
+      <h2>LIME: uma explicação local</h2>
+      <div class="slide-content"><div class="box"><ul><li>LIME significa Local Interpretable Model-agnostic Explanations.</li><li>A técnica gera explicações locais para modelos complexos.</li><li>Ela aproxima o comportamento do modelo, em uma decisão específica, por um modelo simples, como uma regressão linear.</li><li>A aproximação facilita o entendimento daquela decisão, sem descrever necessariamente todo o modelo complexo.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Exemplo didático: para explicar uma única classificação, o LIME pode construir uma aproximação simples ao redor daquele caso e indicar quais características ajudam a entender a saída localmente.</p></div></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="lime_passos" data-title="LIME — explicar um caso, não todo o modelo">
+      <h2>LIME — explicar um caso, não todo o modelo</h2>
+      <div class="slide-content"><div class="ia-visualizer" data-title="Aproximação local"><script type="application/json">{"steps": [{"cells": ["Caso escolhido", "Vizinhança", "Modelo simples", "Explicação"], "active": [0], "caption": "Escolha a decisão específica que precisa ser compreendida."}, {"cells": ["Caso escolhido", "Vizinhança", "Modelo simples", "Explicação"], "active": [1], "caption": "Observe o comportamento do modelo em entradas próximas ou perturbadas."}, {"cells": ["Caso escolhido", "Vizinhança", "Modelo simples", "Explicação"], "active": [2], "caption": "Ajuste uma aproximação interpretável ao comportamento nessa região."}, {"cells": ["Caso escolhido", "Vizinhança", "Modelo simples", "Explicação"], "active": [3], "caption": "Interprete a aproximação local. Ela não garante fidelidade em todo o espaço de entradas."}]}</script></div></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="shap_contribuicoes" data-title="SHAP: contribuição de cada característica">
+      <h2>SHAP: contribuição de cada característica</h2>
+      <div class="slide-content"><div class="box"><ul><li>SHAP significa SHapley Additive exPlanations.</li><li>A técnica usa valores de Shapley para atribuir contribuições às características de entrada.</li><li>Contribuições indicam como características alteram a previsão em relação a uma referência; não são pesos internos nem causas provadas.</li><li>O objetivo é compreender a importância das variáveis em um modelo complexo.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Exemplo didático: para uma saída do modelo, representar cada característica como uma contribuição positiva, negativa ou pequena, deixando visível como as contribuições se relacionam com a decisão.</p></div></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="redes_neurais_interpretaveis" data-title="Redes neurais interpretáveis">
+      <h2>Redes neurais interpretáveis</h2>
+      <div class="slide-content"><div class="box"><ul><li>São arquiteturas desenvolvidas para que as decisões de redes neurais sejam mais compreensíveis.</li><li>O PDF cita redes neurais modulares ou simplificadas como exemplos dessa direção.</li><li>O objetivo é tornar a estrutura compreensível, avaliando o possível compromisso entre desempenho e interpretabilidade.</li><li>Aqui, a explicabilidade é considerada desde a arquitetura, e não apenas depois da decisão.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Exemplo didático: uma rede modular pode organizar partes do processamento em componentes mais fáceis de inspecionar do que uma única estrutura sem divisão compreensível.</p></div></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="atividade_conceitos" data-title="Atividade 1: distinguir os conceitos">
+      <h2>Atividade 1: distinguir os conceitos</h2>
+      <div class="slide-content"><div class="box"><ul><li>Associe cada situação ao conceito predominante: (A) operações internas fáceis de inspecionar; (B) lógica da decisão pode ser seguida; (C) usuário recebe uma razão compreensível e adequada ao seu nível.</li><li>Escolha entre transparência, interpretabilidade e explicabilidade.</li><li>Observe que os conceitos se relacionam, mas não são sinônimos.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Situação: uma equipe consegue examinar o funcionamento interno do modelo, mas o aplicativo ainda não traduz a decisão para o usuário final.</p></div></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="atividade_conceitos_atividade" data-title="Prática — Atividade 1: distinguir os conceitos">
+      <h2>Prática — Atividade 1: distinguir os conceitos</h2>
+      <div class="slide-content"><div class="warning-box"><p>Enunciado: classifique a situação principal e explique o que ainda falta para atender ao usuário final: “as operações internas do modelo estão abertas para inspeção, porém a pessoa que recebe a decisão não entende por que ela ocorreu”.</p></div><details class="answer"><summary>Ver resposta</summary><p>Resposta explicada: a situação evidencia transparência, porque o funcionamento interno pode ser inspecionado. Também pode apoiar a interpretabilidade, mas ainda falta explicabilidade voltada ao usuário: é preciso converter a lógica em uma justificativa compreensível e adequada ao público final.</p></details></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="atividade_metodo" data-title="Atividade 2: escolher uma abordagem">
+      <h2>Atividade 2: escolher uma abordagem</h2>
+      <div class="slide-content"><div class="box"><ul><li>Considere três necessidades: explicar uma decisão individual de um modelo complexo; estimar a contribuição de cada característica; tornar a própria arquitetura mais compreensível.</li><li>Relacione-as, respectivamente, a LIME, SHAP e redes neurais interpretáveis.</li><li>Justifique a escolha pelo objetivo da explicação, não pelo nome da técnica.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Caso: um modelo complexo produz uma classificação para um único registro, e a equipe quer primeiro uma aproximação simples daquela decisão e depois uma visão dos pesos atribuídos às características.</p></div></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="atividade_metodo_atividade" data-title="Prática — Atividade 2: escolher uma abordagem">
+      <h2>Prática — Atividade 2: escolher uma abordagem</h2>
+      <div class="slide-content"><div class="warning-box"><p>Enunciado: qual abordagem é mais diretamente adequada a cada etapa? (1) aproximar uma decisão específica com um modelo simples; (2) atribuir valores às características; (3) projetar uma rede cuja estrutura seja mais compreensível.</p></div><details class="answer"><summary>Ver resposta</summary><p>Resposta explicada: (1) LIME, pois produz explicações locais por aproximação de um modelo simples; (2) SHAP, pois atribui valores ou pesos às características com base na teoria dos jogos; (3) redes neurais interpretáveis, pois a compreensão é buscada na própria arquitetura, por exemplo em redes modulares ou simplificadas.</p></details></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="sintese_e_ressalvas" data-title="Síntese: explicar sem extrapolar">
+      <h2>Síntese: explicar sem extrapolar</h2>
+      <div class="slide-content"><div class="box"><ul><li>A aula apresenta XAI como busca por decisões compreensíveis, apoiada por transparência, interpretabilidade e explicabilidade.</li><li>LIME e SHAP ajudam a explicar modelos complexos de maneiras diferentes; redes interpretáveis procuram tornar a arquitetura mais compreensível.</li><li>A explicação deve respeitar o público-alvo e não deve ser confundida automaticamente com prova de correção, precisão ou ausência de viés.</li><li>A página 2 registra as referências utilizadas e a isenção de responsabilidade do material compilado; ela não adiciona novos conceitos técnicos.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Exemplo didático de fechamento: uma boa apresentação de resultado pode combinar uma técnica de explicação local ou de contribuições com uma linguagem adequada ao usuário, mantendo claro o alcance da explicação.</p></div></div>
+      <a class="source-note" href="../notas/07-Inteligencia%20Artificial%20Explicavel.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1-2</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">ENCERRAMENTO</p><h1>Revisite os conceitos</h1><p class="subtitle">Busca, otimização, conhecimento, aprendizado, linguagem e explicabilidade.</p><p><a href="../index.html">Voltar ao índice</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/ia-visualizer.js"></script>
+  <script src="../assets/ia-slides.js"></script>
+</body>
+</html>

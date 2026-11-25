@@ -1,56 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>AI-1 Lecture Notes</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background-color: #f9f9f9;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    li {
-      background: #fff;
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 6px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    a {
-      text-decoration: none;
-      color: #0066cc;
-      font-weight: bold;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sete aulas de Inteligência Artificial do Prof. Paulo Rettore: apresentações HTML e notas originais em PDF. Universidade Federal de Lavras.">
+  <title>Inteligência Artificial — Prof. Paulo Rettore</title>
+  <link rel="icon" href="assets/ufla-logo.webp">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/ia.css">
 </head>
 <body>
-
-<h1>AI-1: Lecture Notes</h1>
-<ul>
-  <li><a href="01-Estrategias de Busca Sem Informacao e de Busca Informada (Pt-Br).pdf" download>01 - Estratégias de Busca (Pt-Br)</a></li>
-  <li><a href="02-Heuristicas e Metaheuristicas (Pt-Br).pdf" download>02 - Heurísticas e Metaheurísticas (Pt-Br)</a></li>
-  <li><a href="03-Representacao de Conhecimento e Incerteza(Pt-Br).pdf" download>03 - Representação e Incerteza (Pt-Br)</a></li>
-  <li><a href="04-Redes Neurais e Aprendizado Profundo (Pt-Br).pdf" download>04 - Redes Neurais e Deep Learning (Pt-Br)</a></li>
-  <li><a href="05-Aprendizados (Pt-Br).pdf" download>05 - Aprendizados (Pt-Br)</a></li>
-  <li><a href="06-NLP_LLMs.pdf" download>06 - NLP & LLMs (Pt-Br)</a></li>
-  <li><a href="07-Inteligencia Artificial Explicavel.pdf" download>07 - IA Explicável (Pt-Br)</a></li>
-  <li><a href="https://imcampos195.github.io/MyMumblings/Tutorial-PT-BR.html" download>Extra (Prof. Ivan M. Campos-UFMG): Como Escrever Prompts Bem Estruturados para LLMs (Pt-Br)</a></li>
-  <li><a href="https://imcampos195.github.io/MyMumblings/Tutorial--EN-US.html" download>Extra (Prof. Ivan M. Campos-UFMG): How to Write Well-Structured Prompts for LLMs (En-US)</a></li>
-</ul>
-
+  <a href="#conteudo" class="skip-link">Ir para o conteúdo</a>
+  <header><div class="container header-content"><div><div class="site-title">Inteligência Artificial</div><div class="site-subtitle">Prof. Paulo Rettore</div></div><img src="assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA" class="logo"></div></header>
+  <nav aria-label="Navegação principal"><div class="container"><ul><li><a href="index.html">Início</a></li><li><a href="#bloco1">Bloco 1</a></li><li><a href="#bloco2">Bloco 2</a></li><li><a href="#bloco3">Bloco 3</a></li><li><a href="#materiais">Materiais complementares</a></li><li><a href="#como-usar">Como usar</a></li></ul></div></nav>
+  <main class="container" id="conteudo">
+    <h1>Aulas de Inteligência Artificial</h1>
+    <p class="course-intro">Apresentações didáticas sobre estratégias de busca, otimização, representação do conhecimento, redes neurais, aprendizado, linguagem e explicabilidade. Cada aula tem uma apresentação HTML independente e acesso à nota original em PDF.</p>
+    <p class="course-note">Sete aulas organizadas em três blocos pedagógicos · apresentações HTML · notas originais em PDF</p>
+    <div class="blocks-container"><section class="block-card" id="bloco1"><h2 class="block-title">Bloco 1: Busca, otimização e conhecimento</h2><p>Aulas 01–03: estratégias de busca, otimização e representação do conhecimento.</p><ul class="lecture-list"><li>
+              <a class="schedule-item" href="bloco1/aula01.html"><strong>Aula 01</strong><span class="schedule-content">Estratégias de Busca</span></a>
+              <p class="lesson-description">Exploração de árvores e grafos: busca em largura, profundidade, custo uniforme, busca gulosa e A*.</p>
+              <div class="lesson-actions"><a href="bloco1/aula01.html">Abrir slides</a><a class="pdf-link" href="notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+              <span class="lesson-meta">31 slides · 7 páginas na nota original</span>
+            </li><li>
+              <a class="schedule-item" href="bloco1/aula02.html"><strong>Aula 02</strong><span class="schedule-content">Heurísticas e Metaheurísticas</span></a>
+              <p class="lesson-description">Regras heurísticas e estratégias de otimização: algoritmos genéticos, recozimento simulado e enxame de partículas.</p>
+              <div class="lesson-actions"><a href="bloco1/aula02.html">Abrir slides</a><a class="pdf-link" href="notas/02-Heuristicas%20e%20Metaheuristicas%20%28Pt-Br%29.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+              <span class="lesson-meta">24 slides · 2 páginas na nota original</span>
+            </li><li>
+              <a class="schedule-item" href="bloco1/aula03.html"><strong>Aula 03</strong><span class="schedule-content">Representação de Conhecimento e Incerteza</span></a>
+              <p class="lesson-description">Ontologias, redes semânticas, lógica de primeira ordem, probabilidades, redes Bayesianas e lógica fuzzy.</p>
+              <div class="lesson-actions"><a href="bloco1/aula03.html">Abrir slides</a><a class="pdf-link" href="notas/03-Representacao%20de%20Conhecimento%20e%20Incerteza%28Pt-Br%29.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+              <span class="lesson-meta">23 slides · 5 páginas na nota original</span>
+            </li></ul></section><section class="block-card" id="bloco2"><h2 class="block-title">Bloco 2: Redes neurais e aprendizado</h2><p>Aulas 04–05: redes neurais, aprendizado profundo e aprendizados.</p><ul class="lecture-list"><li>
+              <a class="schedule-item" href="bloco2/aula04.html"><strong>Aula 04</strong><span class="schedule-content">Redes Neurais e Aprendizado Profundo</span></a>
+              <p class="lesson-description">Camadas, pesos, perceptrons, retropropagação, redes convolucionais e recorrentes.</p>
+              <div class="lesson-actions"><a href="bloco2/aula04.html">Abrir slides</a><a class="pdf-link" href="notas/04-Redes%20Neurais%20e%20Aprendizado%20Profundo%20%28Pt-Br%29.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+              <span class="lesson-meta">28 slides · 5 páginas na nota original</span>
+            </li><li>
+              <a class="schedule-item" href="bloco2/aula05.html"><strong>Aula 05</strong><span class="schedule-content">Aprendizados</span></a>
+              <p class="lesson-description">Aprendizado supervisionado, não supervisionado e por reforço; generalização e escolha de técnicas.</p>
+              <div class="lesson-actions"><a href="bloco2/aula05.html">Abrir slides</a><a class="pdf-link" href="notas/05-Aprendizados%20%28Pt-Br%29.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+              <span class="lesson-meta">24 slides · 3 páginas na nota original</span>
+            </li></ul></section><section class="block-card" id="bloco3"><h2 class="block-title">Bloco 3: Linguagem e explicabilidade</h2><p>Aulas 06–07: processamento de linguagem, LLMs e explicabilidade.</p><ul class="lecture-list"><li>
+              <a class="schedule-item" href="bloco3/aula06.html"><strong>Aula 06</strong><span class="schedule-content">NLP &amp; LLMs</span></a>
+              <p class="lesson-description">Preparação de textos, representações, embeddings e transformers; compreensão contextual e geração de linguagem.</p>
+              <div class="lesson-actions"><a href="bloco3/aula06.html">Abrir slides</a><a class="pdf-link" href="notas/06-NLP_LLMs.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+              <span class="lesson-meta">31 slides · 5 páginas na nota original</span>
+            </li><li>
+              <a class="schedule-item" href="bloco3/aula07.html"><strong>Aula 07</strong><span class="schedule-content">Inteligência Artificial Explicável</span></a>
+              <p class="lesson-description">Transparência, interpretabilidade e explicabilidade; LIME, SHAP e redes mais compreensíveis.</p>
+              <div class="lesson-actions"><a href="bloco3/aula07.html">Abrir slides</a><a class="pdf-link" href="notas/07-Inteligencia%20Artificial%20Explicavel.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+              <span class="lesson-meta">17 slides · 2 páginas na nota original</span>
+            </li></ul></section></div>
+    <section class="complementary-section" id="materiais"><h2>Materiais complementares</h2><p>Tutoriais originais de elaboração de prompts por Prof. Ivan Moura Campos, Professor Emérito da UFMG. São materiais complementares, não aulas adicionais.</p><ul class="complementary-links"><li><a href="https://imcampos195.github.io/MyMumblings/Tutorial-PT-BR.html" target="_blank" rel="noopener noreferrer">Tutorial de elaboração de prompts — Português (Brasil)</a><small>Por Prof. Ivan Moura Campos, Professor Emérito da UFMG</small></li><li><a href="https://imcampos195.github.io/MyMumblings/Tutorial--EN-US.html" target="_blank" rel="noopener noreferrer">Tutorial de elaboração de prompts — English (United States)</a><small>Por Prof. Ivan Moura Campos, Professor Emérito da UFMG</small></li></ul></section>
+    <section class="course-help" id="como-usar"><h2>Como usar as apresentações</h2><p>Navegue com <kbd>←</kbd>, <kbd>→</kbd> ou <kbd>Espaço</kbd>. Em telas de toque, deslize horizontalmente. Use <strong>Sumário</strong> para escolher um tópico e <strong>Visão geral</strong> para visualizar o conjunto dos slides. <strong>Índice</strong> retorna a esta página.</p><p>O controle de tela cheia depende das permissões do navegador. Os botões A−/A+ permitem ajustar exemplos de código. Nas atividades, clique em <strong>Ver resposta</strong>; nas visualizações, use <strong>Anterior</strong>, <strong>Reproduzir</strong>, <strong>Próximo</strong> e <strong>Reiniciar</strong>.</p><p>A organização em blocos é pedagógica e não define calendário de aulas ou avaliações.</p></section>
+  </main>
+  <footer><div class="container"><p>Prof. Paulo Rettore | Universidade Federal de Lavras (UFLA)</p><p>Conteúdos de Inteligência Artificial</p><p>Notas originais: <a href="https://www.rettore.com.br/lectures-notes/ai-1/" target="_blank" rel="noopener noreferrer">página de IA</a> · Modelo visual: <a href="https://www.rettore.com.br/lectures-notes/ialg/" target="_blank" rel="noopener noreferrer">IAlg</a> · <a href="https://www.rettore.com.br/lectures-notes/ialg/bloco3/aula12.html" target="_blank" rel="noopener noreferrer">exemplo de apresentação</a></p></div></footer>
 </body>
 </html>
-

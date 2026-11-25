@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Comandos SQL, consultas, junções, estrutura, permissões e transações.">
+  <title>Aula 06 — Linguagem SQL — Banco de Dados</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/db.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco2/aula05.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/06-Linguagem_SQL_Pt-Br_.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 06 — Linguagem SQL">
+      <h1>Aula 06</h1>
+      <p class="subtitle">Linguagem SQL</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Banco de Dados</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><h3>Ao final, você deverá conseguir</h3><ul><li>Situar SQL em bancos relacionais e reconhecer que há dialetos de SGBDs.</li><li>Distinguir comandos de dados, definição, controle e transação.</li><li>Escrever consultas com filtros, agregação, ordenação e junções.</li><li>Antecipar o efeito de operações sobre dados, estrutura, permissões e transações.</li></ul></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–13</a>
+    </section><section id="sql-contexto" data-title="SQL em contexto">
+      <h2>SQL em contexto</h2>
+      <div class="slide-content"><h3>Linguagem de consulta estruturada</h3><p>SQL (Structured Query Language) é a linguagem mais difundida para interagir com bancos de dados relacionais. Suas instruções permitem consultar e modificar dados, além de definir estruturas e controlar acessos.</p><div class='info-box'><strong>Ideia central:</strong> SQL é declarativa: descrevemos o resultado desejado; o SGBD decide como executar a operação.</div><p>A nota situa suas origens em projetos da IBM ligados ao System R, entre 1974 e 1977.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="padroes-dialetos" data-title="Padrão SQL e dialetos">
+      <h2>Padrão SQL e dialetos</h2>
+      <div class="slide-content"><h3>Uma linguagem, implementações diversas</h3><p>O padrão SQL evoluiu desde SQL-86, SQL-89 e SQL-92 até versões posteriores, como SQL:1999, SQL:2003, SQL:2008, SQL:2011, SQL:2016, SQL:2019 e SQL:2022.</p><p>Essa evolução ampliou recursos como junções externas, subconsultas, recursão, funções de janela e suporte a formatos como XML e JSON.</p><div class='warning-box'>Oracle, MySQL, MariaDB, PostgreSQL e SQL Server compartilham muitos conceitos, mas detalhes de sintaxe, tipos e recursos podem variar. Confira o dialeto do SGBD usado.</div></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="familias-comandos" data-title="Famílias de comandos">
+      <h2>Famílias de comandos</h2>
+      <div class="slide-content"><h3>Classificação didática</h3><table><thead><tr><th>Grupo</th><th>Finalidade</th><th>Exemplos</th></tr></thead><tbody><tr><td>DDL</td><td>Definir objetos</td><td>CREATE, ALTER, DROP</td></tr><tr><td>DML</td><td>Inserir, alterar e remover dados</td><td>INSERT, UPDATE, DELETE</td></tr><tr><td>DQL</td><td>Consultar dados</td><td>SELECT</td></tr><tr><td>DCL</td><td>Gerenciar privilégios</td><td>GRANT, REVOKE</td></tr><tr><td>DTL/TCL</td><td>Controlar transações</td><td>COMMIT, ROLLBACK</td></tr></tbody></table><p>A separação de SELECT como DQL é uma convenção didática; algumas fontes o classificam dentro de DML.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="vantagens-limites" data-title="Vantagens e limites">
+      <h2>Vantagens e limites</h2>
+      <div class="slide-content"><div class='two-column'><div class='success-box'><h4>Vantagens</h4><ul><li>Conceitos padronizados facilitam aprendizagem e portabilidade.</li><li>Consulta declarativa e expressiva para dados relacionais.</li><li>Restrições e chaves ajudam a preservar integridade.</li></ul></div><div class='warning-box'><h4>Cuidados</h4><ul><li>Consultas complexas exigem atenção e podem conter erros.</li><li>Desempenho depende de esquema, índices, volume e plano de execução.</li><li>SQL é orientada a dados estruturados, não a qualquer tipo de conteúdo.</li></ul></div></div></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="onde-usar-sql" data-title="Onde SQL é usada">
+      <h2>Onde SQL é usada</h2>
+      <div class="slide-content"><h3>Aplicações frequentes</h3><div class='three-column'><div class='box'><strong>Produtos digitais</strong><p>Aplicações web e móveis armazenam e atualizam cadastros e operações.</p></div><div class='box'><strong>Análise</strong><p>Relatórios, painéis de Business Intelligence (BI) e exploração de dados.</p></div><div class='box'><strong>Organizações</strong><p>Finanças, contabilidade, educação e pesquisa usam consultas para gerir e analisar informações.</p></div></div><p>O uso concreto depende do modelo dos dados, das consultas e dos requisitos da aplicação.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="sql-nosql" data-title="SQL e NoSQL">
+      <h2>SQL e NoSQL</h2>
+      <div class="slide-content"><h3>Modelos e necessidades diferentes</h3><table><thead><tr><th>Relacional / SQL</th><th>Famílias NoSQL</th></tr></thead><tbody><tr><td>Tabelas e esquema definido</td><td>Documentos, chave-valor e outros modelos</td></tr><tr><td>Consultas relacionais expressivas; transações ACID (atomicidade, consistência, isolamento e durabilidade)</td><td>Esquemas e escalabilidade variáveis conforme o sistema</td></tr><tr><td>Bom ajuste a relações e integridade estruturadas</td><td>Útil em certos cenários de escala, tráfego ou dados flexíveis</td></tr></tbody></table><p>A nota usa BASE como contraste didático; não significa que todo produto NoSQL tenha as mesmas garantias ou que SQL não escale. Escolha pelo requisito, não pelo rótulo.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="dml-insert" data-title="DML: inserir dados">
+      <h2>DML: inserir dados</h2>
+      <div class="slide-content"><h3>INSERT acrescenta linhas</h3><p>Indicar as colunas torna explícita a correspondência entre nomes e valores. Sem a lista, os valores precisam cobrir as colunas na ordem esperada pelo SGBD.</p><pre class='code-box'><code>INSERT INTO Colaborador (nome, cidade)
+VALUES ('Cristiane', 'Rio de Janeiro');</code></pre><p><strong>Exemplo didático.</strong> Confirme tipos e restrições da tabela antes de inserir.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="dml-update-delete" data-title="DML: atualizar e remover">
+      <h2>DML: atualizar e remover</h2>
+      <div class="slide-content"><h3>UPDATE e DELETE afetam linhas</h3><pre class='code-box'><code>UPDATE Colaborador
+SET cidade = 'Florianópolis'
+WHERE nome = 'Cristiane';
+
+DELETE FROM Colaborador
+WHERE nome = 'Cristiane';</code></pre><p><strong>Exemplo didático.</strong> A cláusula WHERE delimita as linhas-alvo. Sem ela, UPDATE altera todas as linhas e DELETE remove todas as linhas da tabela.</p><div class='warning-box'>Antes de executar uma alteração ou remoção, confira o filtro e as linhas que ele seleciona.</div></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="dql-select" data-title="DQL: consultar com SELECT">
+      <h2>DQL: consultar com SELECT</h2>
+      <div class="slide-content"><h3>Escolha colunas e linhas</h3><p>SELECT define quais colunas aparecem no resultado; FROM indica a tabela. WHERE restringe as linhas por uma condição.</p><pre class='code-box'><code>SELECT nome, cidade
+FROM Colaborador
+WHERE cidade = 'Recife';</code></pre><p><strong>Exemplo didático.</strong> SELECT * solicita todas as colunas; selecionar apenas as necessárias costuma tornar a intenção mais clara.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="agregacoes" data-title="Funções de agregação">
+      <h2>Funções de agregação</h2>
+      <div class="slide-content"><h3>Resumir vários valores</h3><table><thead><tr><th>Função</th><th>Resultado</th></tr></thead><tbody><tr><td>COUNT</td><td>Contagem de linhas ou valores</td></tr><tr><td>SUM</td><td>Soma</td></tr><tr><td>AVG</td><td>Média aritmética</td></tr><tr><td>MAX / MIN</td><td>Maior / menor valor</td></tr></tbody></table><p>Uma agregação resume um conjunto de linhas em um valor. COUNT(*) conta linhas; COUNT(coluna) conta valores não nulos daquela coluna.</p><div class='sequence-flow'><span>Consultar linhas</span> → <span>Agrupar</span> → <span>Filtrar grupos, se necessário</span></div></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6–7</a>
+    </section><section id="group-having" data-title="GROUP BY e HAVING">
+      <h2>GROUP BY e HAVING</h2>
+      <div class="slide-content"><h3>Primeiro agrupe, depois filtre grupos</h3><p>GROUP BY forma grupos com valores iguais nas colunas indicadas. HAVING aplica uma condição ao resultado agregado; WHERE, quando usado, filtra linhas antes do agrupamento.</p><pre class='code-box'><code>SELECT cidade, COUNT(*) AS total
+FROM Colaborador
+GROUP BY cidade
+HAVING COUNT(*) &gt; 10;</code></pre><p><strong>Exemplo didático.</strong> A consulta retorna cidades com mais de dez colaboradores. HAVING é opcional; ao agregar por grupo, inclua no SELECT as colunas de agrupamento e os agregados apropriados.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6–7</a>
+    </section><section id="order-by" data-title="ORDER BY: ordenar resultados">
+      <h2>ORDER BY: ordenar resultados</h2>
+      <div class="slide-content"><h3>Ordenação crescente ou decrescente</h3><p>ORDER BY classifica as linhas retornadas. ASC indica ordem crescente (padrão em muitos SGBDs); DESC, decrescente. Mais de uma coluna permite desempates sucessivos.</p><pre class='code-box'><code>SELECT nome, cidade
+FROM Colaborador
+ORDER BY cidade ASC, nome DESC;</code></pre><p><strong>Exemplo didático.</strong> A ordenação organiza o resultado apresentado; em consulta agregada, pode ordenar por coluna agrupada ou expressão agregada.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7</a>
+    </section><section id="joins-intro" data-title="Junções: combinar tabelas">
+      <h2>Junções: combinar tabelas</h2>
+      <div class="slide-content"><h3>Relacionar dados por uma condição</h3><p>Uma junção consulta duas ou mais tabelas e combina linhas segundo uma condição, normalmente indicada por ON. Use aliases para deixar claro de qual tabela vem cada coluna.</p><div class='diagram-flow'><div class='diagram-node'>Tabela A</div><div class='diagram-arrow'>ON: chave relacionada</div><div class='diagram-node'>Tabela B</div><div class='diagram-arrow'>→ linhas combinadas</div></div><p>INNER, LEFT, RIGHT e FULL diferem principalmente em quais linhas sem correspondência permanecem no resultado. CROSS combina todas as possibilidades.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7–8</a>
+    </section><section id="inner-join" data-title="INNER JOIN">
+      <h2>INNER JOIN</h2>
+      <div class="slide-content"><h3>Somente correspondências</h3><p>INNER JOIN retorna pares de linhas que satisfazem a condição ON. Linhas sem correspondência em qualquer lado não aparecem.</p><pre class='code-box'><code>SELECT A.nome, B.cidade
+FROM Colaborador A
+INNER JOIN Cidade B
+  ON A.idCidade = B.idCidade;</code></pre><p><strong>Exemplo didático.</strong> O resultado associa cada colaborador à cidade cujo identificador coincide. Se houver várias correspondências, cada par correspondente pode gerar uma linha.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8</a>
+    </section><section id="left-join" data-title="LEFT OUTER JOIN">
+      <h2>LEFT OUTER JOIN</h2>
+      <div class="slide-content"><h3>Preserva todas as linhas da esquerda</h3><p>O resultado contém todas as linhas de A. Quando uma linha de A não encontra correspondência em B, as colunas de B aparecem como NULL (ausência de valor).</p><pre class='code-box'><code>SELECT A.nome, B.cidade
+FROM Colaborador A
+LEFT OUTER JOIN Cidade B
+  ON A.idCidade = B.idCidade;</code></pre><p><strong>Exemplo didático.</strong> Use quando a pergunta exige listar cada colaborador, mesmo que a cidade relacionada esteja ausente.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8–9</a>
+    </section><section id="right-join" data-title="RIGHT OUTER JOIN">
+      <h2>RIGHT OUTER JOIN</h2>
+      <div class="slide-content"><h3>Preserva todas as linhas da direita</h3><p>RIGHT OUTER JOIN mantém todas as linhas de B. Uma linha de B sem correspondente em A continua no resultado, com NULL nas colunas de A.</p><pre class='code-box'><code>SELECT A.nome, B.cidade
+FROM Colaborador A
+RIGHT OUTER JOIN Cidade B
+  ON A.idCidade = B.idCidade;</code></pre><p><strong>Exemplo didático.</strong> Essa consulta também mostra cidades sem colaboradores. A ordem das tabelas importa: a preservada é a que está à direita.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=9" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 9–10</a>
+    </section><section id="full-join" data-title="FULL OUTER JOIN">
+      <h2>FULL OUTER JOIN</h2>
+      <div class="slide-content"><h3>Preserva os dois lados</h3><p>FULL OUTER JOIN combina as correspondências e mantém também as linhas sem par de A e de B. Onde faltar correspondência, as colunas do outro lado recebem NULL.</p><div class='comparison-grid'><div class='box'><strong>Correspondência</strong><p>Colunas de A e B combinadas.</p></div><div class='box'><strong>Sem par</strong><p>A linha continua; o lado ausente fica NULL.</p></div></div><pre class='code-box'><code>SELECT A.nome, B.cidade
+FROM Colaborador A
+FULL OUTER JOIN Cidade B
+  ON A.idCidade = B.idCidade;</code></pre><p><strong>Exemplo didático.</strong> Disponibilidade e sintaxe podem variar por dialeto SQL.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=10" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 10</a>
+    </section><section id="cross-join" data-title="CROSS JOIN">
+      <h2>CROSS JOIN</h2>
+      <div class="slide-content"><h3>Produto cartesiano</h3><p>CROSS JOIN combina cada linha de A com cada linha de B, sem condição de correspondência. Com m linhas em A e n em B, o resultado tem m × n combinações.</p><pre class='code-box'><code>SELECT A.nome, B.cidade
+FROM Colaborador A
+CROSS JOIN Cidade B;</code></pre><p><strong>Exemplo didático.</strong> Se A tiver 3 linhas e B tiver 2, serão 6 pares. Use deliberadamente: o resultado pode crescer rapidamente.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=10" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 10–11</a>
+    </section><section id="resumo-joins" data-title="Escolha o tipo de junção">
+      <h2>Escolha o tipo de junção</h2>
+      <div class="slide-content"><table><thead><tr><th>Junção</th><th>Linhas mantidas</th></tr></thead><tbody><tr><td>INNER</td><td>Somente pares correspondentes</td></tr><tr><td>LEFT</td><td>Todas de A + correspondências</td></tr><tr><td>RIGHT</td><td>Todas de B + correspondências</td></tr><tr><td>FULL</td><td>Todas de A e B, correspondam ou não</td></tr><tr><td>CROSS</td><td>Todas as combinações possíveis</td></tr></tbody></table><p>Escolha a junção pela pergunta: quais linhas precisam sobreviver sem par? A figura-resumo da nota também apresenta self join: a mesma tabela participa duas vezes, com aliases distintos.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8–11</a>
+    </section><section id="ddl-create-alter" data-title="DDL: criar e alterar estrutura">
+      <h2>DDL: criar e alterar estrutura</h2>
+      <div class="slide-content"><h3>Definir objetos do banco</h3><p>DDL (Data Definition Language) descreve a estrutura. CREATE TABLE cria uma tabela; ALTER TABLE modifica sua definição, por exemplo, adicionando uma coluna.</p><pre class='code-box'><code>CREATE TABLE Colaborador (
+  id INT,
+  nome VARCHAR(100),
+  cidade VARCHAR(80)
+);
+
+ALTER TABLE Colaborador
+ADD experiencia INT;</code></pre><p><strong>Exemplo didático.</strong> Tipos, limites e forma de ALTER variam entre SGBDs; verifique o dialeto.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=12" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 12</a>
+    </section><section id="ddl-truncate-drop" data-title="TRUNCATE não é DROP">
+      <h2>TRUNCATE não é DROP</h2>
+      <div class="slide-content"><h3>Compare o efeito antes de executar</h3><table><thead><tr><th>Comando</th><th>Efeito didático</th></tr></thead><tbody><tr><td>DELETE FROM tabela WHERE …</td><td>Remove linhas selecionadas; sem WHERE, todas.</td></tr><tr><td>TRUNCATE TABLE tabela</td><td>Remove os dados e conserva a estrutura.</td></tr><tr><td>DROP TABLE tabela</td><td>Remove a tabela e sua estrutura.</td></tr></tbody></table><p>Na classificação adotada pela nota, TRUNCATE é DDL, não DML.</p><div class='warning-box'>Comportamentos operacionais, permissões e possibilidade de desfazer dependem do SGBD. Não trate essas operações como intercambiáveis.</div></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4, 12</a>
+    </section><section id="dcl" data-title="DCL: privilégios de acesso">
+      <h2>DCL: privilégios de acesso</h2>
+      <div class="slide-content"><h3>Conceder ou revogar permissões</h3><p>DCL (Data Control Language) administra privilégios de usuários ou papéis sobre objetos, como tabelas.</p><pre class='code-box'><code>GRANT SELECT ON Colaborador TO estrategia;
+
+REVOKE SELECT ON Colaborador FROM estrategia;</code></pre><p><strong>Exemplo didático.</strong> GRANT concede a permissão indicada; REVOKE revoga uma permissão concedida. WITH GRANT OPTION pode permitir que o beneficiado repasse o privilégio, conforme suporte e regras do SGBD.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=13" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 13</a>
+    </section><section id="transacoes" data-title="Transações: COMMIT e ROLLBACK">
+      <h2>Transações: COMMIT e ROLLBACK</h2>
+      <div class="slide-content"><h3>Controlar um conjunto de operações</h3><p>DTL (Data Transaction Language), também chamada TCL (Transaction Control Language), agrupa comandos de controle transacional. BEGIN/START TRANSACTION inicia conforme o dialeto; SAVEPOINT marca um ponto intermediário.</p><div class='sequence-flow'><div class='step-list'><span>Iniciar</span><span>Executar operações</span><span>COMMIT confirma</span><span>ROLLBACK desfaz</span></div></div><p>COMMIT confirma as alterações da transação; ROLLBACK descarta alterações ainda não confirmadas, respeitadas as regras do SGBD. A sintaxe de início pode variar.</p></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2, 13</a>
+    </section><section id="atividade-consulta" data-title="Atividade: conte por cidade">
+      <h2>Atividade: conte por cidade</h2>
+      <div class="slide-content"><h3>Qual cidade tem mais de um colaborador?</h3><p>Considere a tabela <code>Colaborador(nome, cidade)</code>:</p><table><thead><tr><th>nome</th><th>cidade</th></tr></thead><tbody><tr><td>Lara</td><td>Recife</td></tr><tr><td>Caio</td><td>Recife</td></tr><tr><td>Nara</td><td>Salvador</td></tr></tbody></table><p>Escreva uma consulta que agrupe por cidade, conte as linhas de cada grupo, mantenha apenas grupos com contagem maior que 1 e ordene o resultado.</p><details class='answer'><summary>Ver resposta</summary><p><strong>Exemplo didático.</strong> <code>SELECT cidade, COUNT(*) AS total FROM Colaborador GROUP BY cidade HAVING COUNT(*) &gt; 1 ORDER BY cidade;</code> retorna Recife com total 2. GROUP BY cria os grupos, HAVING filtra a contagem e ORDER BY organiza o resultado.</p></details></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6–7</a>
+    </section><section id="resumo-aula" data-title="Síntese: pensar em SQL">
+      <h2>Síntese: pensar em SQL</h2>
+      <div class="slide-content"><h3>Do objetivo ao comando</h3><ol><li>Identifique se a tarefa consulta dados, altera linhas, define estrutura, controla privilégios ou gerencia transação.</li><li>Em SELECT, determine fonte, filtro, agrupamento, filtro de grupos e ordenação.</li><li>Em junções, decida que linhas sem correspondência precisam permanecer.</li><li>Revise condições e efeitos antes de modificar dados ou estrutura.</li></ol><div class='info-box'>SQL é amplamente padronizada, mas a implementação concreta importa: confira o dialeto e teste operações com cuidado.</div></div>
+      <a class="source-note" href="../notas/06-Linguagem_SQL_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–13</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 07</h1><p class="subtitle">Estruturas de Indexação em Memória Externa — B-tree e Hash</p><p><a href="../bloco3/aula07.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/db-visualizer.js"></script>
+  <script src="../assets/db-slides.js"></script>
+</body>
+</html>

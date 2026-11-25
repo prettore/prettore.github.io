@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Fundamentos do modelo relacional, abstração de dados, componentes e arquiteturas de SGBDs, consultas e transações.">
+  <title>Aula 01 — Conceitos Fundamentais e Arquitetura de SGBDs — Banco de Dados</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/db.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 01 — Conceitos Fundamentais e Arquitetura de SGBDs">
+      <h1>Aula 01</h1>
+      <p class="subtitle">Conceitos Fundamentais e Arquitetura de SGBDs</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Banco de Dados</p></div>
+    </section><section id="objetivos" data-title="Objetivos da aula">
+      <h2>Objetivos da aula</h2>
+      <div class="slide-content"><div class="two-column"><div class="info-box"><h3>Compreender</h3><ul><li>O papel de um sistema de gerenciamento de banco de dados.</li><li>Modelos de dados e fundamentos relacionais.</li><li>Os níveis de abstração e os componentes internos.</li></ul></div><div class="success-box"><h3>Aplicar</h3><ul><li>Relacionar arquiteturas às necessidades de processamento.</li><li>Explicar como consultas são planejadas.</li><li>Descrever concorrência e recuperação após falhas.</li></ul></div></div></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–13</a>
+    </section><section id="banco-sgbd" data-title="Banco de dados e SGBD">
+      <h2>Banco de dados e SGBD</h2>
+      <div class="slide-content"><div class="two-column"><div class="box"><h3>Banco de dados</h3><p>Coleção organizada de dados que descreve atividades de uma ou mais organizações.</p><p><strong>Exemplo didático:</strong> uma universidade registra alunos, docentes, cursos, turmas, matrículas e salas.</p></div><div class="info-box"><h3>SGBD</h3><p>Sistema de gerenciamento de banco de dados: software que apoia armazenamento, consulta, manutenção e integridade dos dados.</p><p>Sem SGBD, cada aplicação precisaria administrar diretamente seus próprios arquivos e regras.</p></div></div></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="por-que-sgbd" data-title="Por que usar um SGBD?">
+      <h2>Por que usar um SGBD?</h2>
+      <div class="slide-content"><div class="sequence-flow"><div class="step-list"><div class="step"><strong>Aplicações</strong><br>Solicitam operações por uma interface comum.</div><div class="step"><strong>SGBD</strong><br>Aplica regras e oculta a representação interna.</div><div class="step"><strong>Dados</strong><br>São armazenados e recuperados conforme a necessidade.</div></div></div><p class="highlight">A abstração evita que cada aplicação tenha de conhecer os detalhes de armazenamento.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="garantias-sgbd" data-title="Proteção e confiabilidade">
+      <h2>Proteção e confiabilidade</h2>
+      <div class="slide-content"><table><thead><tr><th>Necessidade</th><th>Contribuição do SGBD</th></tr></thead><tbody><tr><td>Acesso</td><td>Permissões para usuários e grupos.</td></tr><tr><td>Integridade</td><td>Restrições e regras para manter dados válidos.</td></tr><tr><td>Recuperação</td><td>Recursos de backup e retorno a um estado consistente após falhas.</td></tr></tbody></table><p>Em arquivos isolados, essas responsabilidades tendem a ficar dispersas entre aplicações e procedimentos manuais.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="eficiencia-custos" data-title="Eficiência e escolhas">
+      <h2>Eficiência e escolhas</h2>
+      <div class="slide-content"><div class="two-column"><div class="success-box"><h3>Benefícios</h3><ul><li>Índices e otimizador podem acelerar buscas.</li><li>O acesso concorrente é coordenado.</li><li>Funções comuns reduzem trabalho repetido no desenvolvimento.</li></ul></div><div class="warning-box"><h3>Limites</h3><ul><li>Um SGBD é complexo e pode não servir ao desempenho de aplicações especializadas.</li><li>Uma necessidade fora das linguagens ou recursos disponíveis pode exigir outra estratégia.</li></ul></div></div></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="modelos-de-dados" data-title="O que é um modelo de dados?">
+      <h2>O que é um modelo de dados?</h2>
+      <div class="slide-content"><p>É um conjunto de construtores para descrever dados, abstraindo detalhes de baixo nível do armazenamento.</p><div class="three-column compact"><div class="box"><strong>Relacional</strong><br>Dados representados por relações.</div><div class="box"><strong>Entidade-relacionamento</strong><br>Entidades e vínculos em nível conceitual.</div><div class="box"><strong>Outros modelos</strong><br>Hierárquico, rede, dimensional, orientado a objetos e objeto-relacional.</div></div><p class="figure-label">Modelos diferentes oferecem abstrações adequadas a diferentes formas de representar a informação.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="modelagem-niveis" data-title="Da necessidade à implementação">
+      <h2>Da necessidade à implementação</h2>
+      <div class="slide-content"><div class="sequence-flow"><div class="step-list"><div class="step"><strong>Conceitual</strong><br>Entidades, atributos e relacionamentos do negócio.</div><div class="step"><strong>Lógico</strong><br>Tabelas, colunas, tipos, chaves e restrições.</div><div class="step"><strong>Físico</strong><br>Implementação, índices, particionamento e organização do armazenamento.</div></div></div><p class="info-box">Cada nível responde a perguntas diferentes; decisões físicas não substituem a compreensão do domínio.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="modelo-relacional" data-title="O modelo relacional">
+      <h2>O modelo relacional</h2>
+      <div class="slide-content"><p>No modelo relacional, os dados são descritos por relações, normalmente apresentadas como tabelas. Edgar F. Codd propôs o modelo em 1970.</p><div class="diagram-flow"><div class="diagram-node"><strong>Esquema</strong><br>Define a estrutura dos atributos.</div><div class="diagram-arrow">→</div><div class="diagram-node"><strong>Tuplas</strong><br>Registram ocorrências dos dados.</div></div><p>O esquema funciona como descrição da relação; os tipos indicam que valores cada atributo representa.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4–5</a>
+    </section><section id="relacao-exemplo" data-title="Como ler uma relação">
+      <h2>Como ler uma relação</h2>
+      <div class="slide-content"><p><strong>Exemplo didático</strong> — esquema simplificado de estudantes:</p><pre class="code-box"><code>Alunos(id_aluno, nome, login, idade, media)</code></pre><table class="compact"><thead><tr><th>id_aluno</th><th>nome</th><th>idade</th></tr></thead><tbody><tr><td>53666</td><td>Jones</td><td>18</td></tr><tr><td>53688</td><td>Smith</td><td>19</td></tr></tbody></table><p>Cada coluna é um atributo; cada linha é uma tupla que descreve um aluno. A relação pode conter também atributos omitidos da tabela ilustrativa.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4–5</a>
+    </section><section id="integridade-relacional" data-title="Restrições de integridade">
+      <h2>Restrições de integridade</h2>
+      <div class="slide-content"><p>Uma restrição expressa uma condição que os dados devem satisfazer. Ela reduz estados inválidos e inconsistentes.</p><div class="box"><h3>Exemplo didático</h3><p>Se cada aluno deve ter um identificador próprio, <code>id_aluno</code> precisa ser único na relação <code>Alunos</code>.</p></div><p>Assim, a validade dos dados é tratada como regra do banco, não apenas como convenção informal da aplicação.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="abstracao-ansi" data-title="Três níveis de abstração">
+      <h2>Três níveis de abstração</h2>
+      <div class="slide-content"><div class="sequence-flow"><div class="diagram-node"><strong>Externo</strong><br>Visões para grupos de usuários</div><div class="diagram-arrow">↕</div><div class="diagram-node"><strong>Conceitual</strong><br>Relações e vínculos do banco</div><div class="diagram-arrow">↕</div><div class="diagram-node"><strong>Físico</strong><br>Arquivos, páginas e índices</div></div><p>A arquitetura ANSI/SPARC organiza descrições em níveis. O SGBD mantém a correspondência entre as visões externas e os dados armazenados.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="esquema-conceitual" data-title="Esquema conceitual">
+      <h2>Esquema conceitual</h2>
+      <div class="slide-content"><p>Descreve as relações que representam entidades e relacionamentos relevantes ao domínio. É a visão lógica global do banco.</p><pre class="code-box"><code>Alunos(id_aluno, nome, idade, media)
+Cursos(id_curso, nome, creditos)
+Matriculado(id_aluno, id_curso, nota)</code></pre><p><strong>Exemplo didático.</strong> As relações tornam explícitos estudantes, cursos e matrículas, sem especificar onde os registros ficam no disco.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="esquema-fisico" data-title="Esquema físico">
+      <h2>Esquema físico</h2>
+      <div class="slide-content"><p>Especifica como as relações são armazenadas em dispositivos secundários e quais estruturas auxiliam seu acesso.</p><div class="two-column"><div class="box"><h3>Decisões</h3><ul><li>Organização de arquivos e páginas.</li><li>Estruturas auxiliares, como índices.</li></ul></div><div class="info-box"><h3>Objetivo</h3><p>Atender aos requisitos de armazenamento e recuperação com escolhas físicas adequadas.</p></div></div><p>O projeto físico trata da implementação, não da definição do significado dos dados.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="esquema-externo" data-title="Esquemas externos e visões">
+      <h2>Esquemas externos e visões</h2>
+      <div class="slide-content"><p>Um banco tem um esquema conceitual e um físico, mas pode oferecer várias visões externas, adaptadas e autorizadas para diferentes usuários.</p><div class="box"><h3>Exemplo didático</h3><p>Uma visão de cursos pode expor identificador e nome do curso, nome do docente e total de matriculados, sem apresentar todas as relações internas.</p></div><p>A visão é derivada das relações conceituais; armazená-la como outra cópia pode ser redundante. Metadados dos esquemas são mantidos no catálogo do sistema.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7</a>
+    </section><section id="linguagens-sgbd" data-title="DDL, DML e DCL">
+      <h2>DDL, DML e DCL</h2>
+      <div class="slide-content"><table><thead><tr><th>Linguagem</th><th>Finalidade</th><th>Exemplos de ações</th></tr></thead><tbody><tr><td>DDL — definição</td><td>Definir ou alterar estruturas.</td><td>CREATE, ALTER, DROP</td></tr><tr><td>DML — manipulação</td><td>Consultar e modificar dados.</td><td>Consultar, inserir, atualizar, excluir</td></tr><tr><td>DCL — controle</td><td>Administrar permissões.</td><td>GRANT, REVOKE; DENY em alguns sistemas</td></tr></tbody></table><p>SQL é uma linguagem usada para definir estruturas e manipular dados; detalhes e extensões variam entre produtos.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7</a>
+    </section><section id="ciclo-consulta" data-title="O caminho de uma consulta">
+      <h2>O caminho de uma consulta</h2>
+      <div class="slide-content"><div class="sequence-flow"><div class="step-list"><div class="step">Interface envia comando</div><div class="step">Analisador verifica a sintaxe</div><div class="step">Otimizador escolhe um plano</div><div class="step">Executor processa os dados</div><div class="step">SGBD devolve o resultado</div></div></div><p>A entrada pode vir de formulários, programas de aplicação ou interface SQL.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7–8</a>
+    </section><section id="plano-consulta" data-title="Plano e otimização">
+      <h2>Plano e otimização</h2>
+      <div class="slide-content"><p>O plano de execução descreve como processar uma consulta. Pode ser representado como uma árvore de operadores relacionais e inclui escolhas de métodos de acesso.</p><div class="diagram-flow"><div class="diagram-node">Consulta analisada</div><div class="diagram-arrow">→</div><div class="diagram-node">Otimizador<br><small>considera armazenamento e acessos</small></div><div class="diagram-arrow">→</div><div class="diagram-node">Plano para o executor</div></div><p>O objetivo é encontrar uma avaliação eficiente, não alterar o resultado lógico solicitado.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8</a>
+    </section><section id="armazenamento-buffer" data-title="Arquivos, páginas e buffer">
+      <h2>Arquivos, páginas e buffer</h2>
+      <div class="slide-content"><div class="sequence-flow"><div class="diagram-node"><strong>Disco</strong><br>Arquivos de dados e índices</div><div class="diagram-arrow">↕</div><div class="diagram-node"><strong>Gerenciador de buffer</strong><br>Carrega páginas na memória quando necessário</div><div class="diagram-arrow">↕</div><div class="diagram-node"><strong>Arquivos e métodos de acesso</strong><br>Organizam registros e páginas</div></div><p>Índices oferecem caminhos auxiliares de busca; arquivos heap mantêm páginas não ordenadas.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8</a>
+    </section><section id="controle-recuperacao" data-title="Controle e recuperação internos">
+      <h2>Controle e recuperação internos</h2>
+      <div class="slide-content"><div class="two-column"><div class="info-box"><h3>Concorrência</h3><ul><li>Gerenciador de transações planeja a execução.</li><li>Gerenciador de bloqueios controla pedidos e concessões de locks.</li></ul></div><div class="success-box"><h3>Recuperação</h3><ul><li>Gerenciador de recuperação mantém o log.</li><li>Após uma falha, ajuda a restaurar um estado consistente.</li></ul></div></div><p>Esses componentes cooperam com buffer, arquivos e gerenciamento de espaço em disco.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8–9</a>
+    </section><section id="arquitetura-centralizada" data-title="SGBD centralizado">
+      <h2>SGBD centralizado</h2>
+      <div class="slide-content"><p>Um computador hospeda o SGBD e os aplicativos ou emuladores que o acessam.</p><div class="diagram-flow"><div class="diagram-node">Aplicações e comandos</div><div class="diagram-arrow">↓</div><div class="diagram-node">Servidor central<br>consulta · autorização · transações</div><div class="diagram-arrow">↓</div><div class="diagram-node">Arquivos e índices</div></div><p><strong>Vantagem:</strong> muitos usuários compartilham capacidade central. <strong>Limite:</strong> custo elevado de infraestrutura centralizada, como ambientes de grande porte.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=9" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 9</a>
+    </section><section id="componentes-centrais" data-title="Funções dos componentes">
+      <h2>Funções dos componentes</h2>
+      <div class="slide-content"><table class="compact"><thead><tr><th>Componente</th><th>Responsabilidade principal</th></tr></thead><tbody><tr><td>Autorização</td><td>Verificar permissões.</td></tr><tr><td>Integridade</td><td>Validar regras dos dados.</td></tr><tr><td>Transações</td><td>Coordenar operações concorrentes.</td></tr><tr><td>Arquivos e buffer</td><td>Gerir espaço, cache e transferência entre disco e memória.</td></tr><tr><td>Pré-compilador / compilador DML; interpretador DDL</td><td>Preparar comandos e estruturas para processamento.</td></tr></tbody></table></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=9" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 9</a>
+    </section><section id="cliente-servidor" data-title="SGBD cliente-servidor">
+      <h2>SGBD cliente-servidor</h2>
+      <div class="slide-content"><div class="diagram-flow"><div class="diagram-node"><strong>Cliente</strong><br>Interface e tarefas da aplicação</div><div class="diagram-arrow">comandos ↔ resultados</div><div class="diagram-node"><strong>Servidor</strong><br>Executa consultas e acessa o banco</div></div><div class="two-column"><div class="success-box"><strong>Benefício</strong><br>Divide o processamento e pode reduzir o tráfego de dados na rede.</div><div class="warning-box"><strong>Desafio</strong><br>É preciso tratar transações, confirmações, reversões, procedimentos e gatilhos.</div></div></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=10" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 10</a>
+    </section><section id="sgbd-paralelos" data-title="SGBD paralelo">
+      <h2>SGBD paralelo</h2>
+      <div class="slide-content"><p>Combina gestão de dados com processamento paralelo para aumentar desempenho e confiabilidade.</p><div class="diagram-flow"><div class="diagram-node">Processador A<br>memória + discos</div><div class="diagram-arrow">↔ interconexão</div><div class="diagram-node">Processador B<br>memória + discos</div></div><ul><li>Particionar dados pode elevar a taxa de transferência de E/S.</li><li>Paralelizar consultas reduz o tempo de resposta.</li><li>Paralelizar transações aumenta a capacidade de processamento.</li></ul></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=10" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 10</a>
+    </section><section id="sgbd-distribuido" data-title="Banco de dados distribuído">
+      <h2>Banco de dados distribuído</h2>
+      <div class="slide-content"><p>É uma coleção de bancos logicamente relacionados, distribuídos por uma rede de computadores.</p><div class="diagram-flow"><div class="diagram-node">Sítio A<br>BD local</div><div class="diagram-arrow">↔ rede ↔</div><div class="diagram-node">Sítio B<br>BD local</div><div class="diagram-arrow">↔</div><div class="diagram-node">Sítio C<br>BD local</div></div><p><strong>Homogêneo:</strong> sítios usam o mesmo tipo de SGBD. <strong>Heterogêneo:</strong> combinam tipos diferentes.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=10" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 10–11</a>
+    </section><section id="vantagens-distribuicao" data-title="Benefícios da distribuição">
+      <h2>Benefícios da distribuição</h2>
+      <div class="slide-content"><div class="three-column compact"><div class="box"><strong>Disponibilidade</strong><br>Falha em um sítio não precisa paralisar todos os demais.</div><div class="box"><strong>Proximidade</strong><br>Dados próximos à demanda podem melhorar o desempenho.</div><div class="box"><strong>Autonomia e modularidade</strong><br>Departamentos controlam dados locais; sítios podem evoluir separadamente.</div></div><p class="info-box">Distribuir carga entre servidores pode evitar que um módulo sobrecarregado afete os demais.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=11" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 11</a>
+    </section><section id="desafios-distribuicao" data-title="Custos e desafios distribuídos">
+      <h2>Custos e desafios distribuídos</h2>
+      <div class="slide-content"><ul><li><strong>Complexidade:</strong> transparência, fragmentação, alocação e replicação exigem coordenação.</li><li><strong>Segurança:</strong> sítios e links de rede precisam de proteção.</li><li><strong>Integridade:</strong> aplicar regras em vários nós pode consumir recursos de rede.</li><li><strong>Operação:</strong> infraestrutura, mão de obra especializada e manutenção elevam o custo.</li></ul><p>Os benefícios dependem de uma arquitetura e de uma administração capazes de controlar esses desafios.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=11" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 11</a>
+    </section><section id="consultas-e-dml" data-title="Consultas e linguagens formais">
+      <h2>Consultas e linguagens formais</h2>
+      <div class="slide-content"><p>O modelo relacional permite formular perguntas sobre as relações por linguagens de consulta.</p><div class="two-column"><div class="box"><h3>Cálculo relacional</h3><p>Baseia-se em lógica matemática e expressa o que se deseja obter.</p></div><div class="box"><h3>Álgebra relacional</h3><p>Usa operadores para manipular relações e construir consultas.</p></div></div><p>As duas linguagens formais têm poder equivalente. Em sistemas práticos, SQL permite consultar e também inserir, excluir e modificar dados (DML).</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=12" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 12</a>
+    </section><section id="indices-consultas" data-title="Armazenamento afeta a consulta">
+      <h2>Armazenamento afeta a consulta</h2>
+      <div class="slide-content"><p>O plano escolhido e o tempo de avaliação dependem, em parte, de como os dados estão armazenados.</p><div class="sequence-flow"><div class="diagram-node">Pergunta lógica</div><div class="diagram-arrow">→</div><div class="diagram-node">Plano de acesso</div><div class="diagram-arrow">→</div><div class="diagram-node">Dados recuperados</div></div><p>Um índice adequado pode acelerar buscas, mas deve corresponder às relações e aos padrões de consulta relevantes.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8, 12</a>
+    </section><section id="transacoes" data-title="O que é uma transação?">
+      <h2>O que é uma transação?</h2>
+      <div class="slide-content"><p>Transação é a execução de um programa de usuário no SGBD e a unidade básica de alteração reconhecida pelo sistema.</p><div class="box"><h3>Exemplo didático</h3><p>Em uma reserva de viagem, se o SGBD confirma a operação, a reserva não deve desaparecer após uma falha; se a execução ficou incompleta, alterações parciais não devem permanecer.</p></div><p>O sistema coordena as operações para que o conjunto de transações tenha efeito equivalente a uma ordem serial.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=12" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 12</a>
+    </section><section id="concorrencia-bloqueios" data-title="Concorrência e bloqueios">
+      <h2>Concorrência e bloqueios</h2>
+      <div class="slide-content"><p>Várias transações podem acessar o mesmo objeto. O SGBD coordena esses acessos para evitar interferências e preservar um resultado serializável.</p><table><thead><tr><th>Bloqueio</th><th>Efeito descrito na nota</th></tr></thead><tbody><tr><td>Compartilhado</td><td>Permite que duas transações mantenham bloqueio de leitura no mesmo objeto.</td></tr><tr><td>Exclusivo</td><td>Impede que outra transação mantenha bloqueio no objeto enquanto estiver ativo.</td></tr></tbody></table><p>Um protocolo de bloqueio define regras que as transações seguem para obter e liberar esses bloqueios.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=12" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 12–13</a>
+    </section><section id="exclusao-leitura-escrita" data-title="Leitura enquanto há uma escrita">
+      <h2>Leitura enquanto há uma escrita</h2>
+      <div class="slide-content"><div class="sequence-flow"><div class="step-list"><div class="step"><strong>T1</strong> pede bloqueio exclusivo para modificar o objeto.</div><div class="step"><strong>T2</strong> pede bloqueio compartilhado para ler o mesmo objeto.</div><div class="step"><strong>SGBD</strong> aguarda T1 terminar e liberar o bloqueio.</div><div class="step"><strong>Depois</strong> T2 pode ler sem observar uma escrita concorrente incompleta.</div></div></div><p>A execução é coordenada; as ações não podem ser intercaladas de modo a produzir interferência.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=13" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 13</a>
+    </section><section id="log-wal-checkpoint" data-title="Log, WAL e checkpoint">
+      <h2>Log, WAL e checkpoint</h2>
+      <div class="slide-content"><p>O SGBD registra as escritas em um log para poder desfazer alterações incompletas e preservar alterações confirmadas durante a recuperação.</p><div class="diagram-flow"><div class="diagram-node">Registrar escrita no log em disco</div><div class="diagram-arrow">→</div><div class="diagram-node">Refletir a alteração nos dados</div></div><p><strong>WAL</strong> (Write-Ahead Log, gravação antecipada do log): a entrada do log deve ser gravada antes da alteração correspondente no banco.</p><p><strong>Checkpoint:</strong> registro periódico que pode reduzir o trabalho de recuperação após uma falha.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=13" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 13</a>
+    </section><section id="atividade-integrada" data-title="Atividade: escolha o nível">
+      <h2>Atividade: escolha o nível</h2>
+      <div class="slide-content"><p><strong>Exemplo didático.</strong> Uma universidade quer: (1) definir alunos e matrículas; (2) criar um índice para localizar alunos por identificador; (3) mostrar a cada estudante apenas seus próprios dados. Associe cada decisão ao nível de esquema.</p><details class="answer"><summary>Ver resposta</summary><p>(1) Conceitual: relações e significados do domínio. (2) Físico: índice e estratégia de acesso. (3) Externo: visão autorizada para um perfil de usuário.</p></details></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6–7</a>
+    </section><section id="resumo" data-title="Resumo: do dado à confiabilidade">
+      <h2>Resumo: do dado à confiabilidade</h2>
+      <div class="slide-content"><div class="three-column compact"><div class="box"><strong>Representar</strong><br>Modelos descrevem dados; relações organizam atributos e tuplas.</div><div class="box"><strong>Abstrair e executar</strong><br>Esquemas, consultas, planos, arquivos e índices conectam necessidades ao armazenamento.</div><div class="box"><strong>Proteger</strong><br>Transações, bloqueios e log coordenam concorrência e recuperação.</div></div><p class="highlight">A arquitetura do SGBD integra representação, acesso, armazenamento e controle para que aplicações trabalhem com dados compartilhados de forma confiável.</p></div>
+      <a class="source-note" href="../notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–13</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 02</h1><p class="subtitle">Modelagem de Dados com MER</p><p><a href="../bloco1/aula02.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/db-visualizer.js"></script>
+  <script src="../assets/db-slides.js"></script>
+</body>
+</html>

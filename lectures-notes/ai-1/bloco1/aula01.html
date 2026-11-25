@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Exploração de árvores e grafos: busca em largura, profundidade, custo uniforme, busca gulosa e A*.">
+  <title>Aula 01 — Estratégias de Busca — Inteligência Artificial</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../assets/reveal/fonts.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/ia.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/01-Estrategias de Busca Sem Informacao e de Busca Informada (Pt-Br).pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 01 — Estratégias de Busca">
+      <h1>Aula 01</h1>
+      <p class="subtitle">Estratégias de Busca</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Inteligência Artificial</p></div>
+    </section><section id="objetivos" data-title="Objetivos da aula">
+      <h2>Objetivos da aula</h2>
+      <div class="slide-content"><div class="box"><ul><li>Distinguir busca cega de busca informada e explicar o papel da heurística.</li><li>Comparar largura, profundidade e custo uniforme.</li><li>Interpretar as avaliações da busca gulosa e do A*: h(n), g(n) e f(n).</li><li>Analisar exemplos e reconhecer condições de completude e optimalidade.</li></ul></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–7</a>
+    </section><section id="motivacao_agentes_e_busca" data-title="Por que buscar?">
+      <h2>Por que buscar?</h2>
+      <div class="slide-content"><div class="box"><ul><li>Agentes inteligentes organizam dados para localizar informações necessárias à decisão.</li><li>Em árvores grandes, visitar possibilidades sem estratégia torna a escolha inviável.</li><li>Algoritmos de busca são apresentados como base de muitas soluções de inteligência artificial.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>No xadrez, cada jogada abre respostas do adversário e novas jogadas. A árvore de possibilidades cresce rapidamente; a busca define como visitar seus nós para avaliar caminhos até a vitória.</p></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="motivacao_agentes_e_busca_atividade" data-title="Prática — Por que buscar?">
+      <h2>Prática — Por que buscar?</h2>
+      <div class="slide-content"><div class="warning-box"><p>Pense em um agente que precisa escolher uma ação em uma árvore de estados. O que precisa ser definido além da árvore?</p></div><details class="answer"><summary>Ver resposta</summary><p>É preciso definir uma estratégia de visitação dos nós e um critério para reconhecer ou avaliar o objetivo. O PDF usa o xadrez para mostrar que a árvore sozinha não resolve o problema: é necessário atravessá-la de modo eficiente.</p></details></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="arvores_decisao_busca_cega" data-title="Árvores de decisão e busca cega">
+      <h2>Árvores de decisão e busca cega</h2>
+      <div class="slide-content"><div class="box"><ul><li>Árvores de decisão registram estados e possíveis ações futuras em jogos e programas.</li><li>Na busca sem informação, também chamada busca cega, a escolha não usa uma estimativa de proximidade da meta.</li><li>O PDF introduz três estratégias: busca em largura, busca em profundidade e busca de custo uniforme.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>No jogo de damas descrito, uma jogada das peças cinzas pode abrir três movimentos; as peças brancas respondem com movimentos para casas possíveis. Cada nível representa uma etapa de decisão e os programas podem atribuir valores favoráveis ou desfavoráveis aos nós.</p></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="arvores_decisao_busca_cega_atividade" data-title="Prática — Árvores de decisão e busca cega">
+      <h2>Prática — Árvores de decisão e busca cega</h2>
+      <div class="slide-content"><div class="warning-box"><p>Em uma árvore de jogo, o primeiro nível representa as jogadas de quem inicia e o segundo as respostas. Por que examinar níveis ou ramos de forma organizada é importante?</p></div><details class="answer"><summary>Ver resposta</summary><p>Porque a árvore contém muitas combinações. Uma ordem explícita de exploração permite comparar alternativas, localizar objetivos e evitar que o agente examine possibilidades de modo arbitrário.</p></details></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="busca_em_largura_bfs" data-title="Busca em largura (BFS)">
+      <h2>Busca em largura (BFS)</h2>
+      <div class="slide-content"><div class="box"><ul><li>BFS (Breadth-First Search, busca em largura) conclui um nível antes de avançar ao próximo.</li><li>Sua expansão ocorre em ondas de profundidade: primeiro os nós mais próximos da raiz.</li><li>É adequada para visualizar uma exploração horizontal da árvore, sem usar uma heurística de proximidade.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em uma árvore de estados, a BFS visita primeiro a raiz, depois todos os seus filhos, e só então os netos. Em uma árvore de jogadas, isso permite examinar todas as alternativas de uma mesma profundidade antes de aprofundar.</p></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2-3</a>
+    </section><section id="bfs_passos" data-title="BFS — acompanhe a ordem de visita">
+      <h2>BFS — acompanhe a ordem de visita</h2>
+      <div class="slide-content"><div class="info-box"><p>Árvore de exemplo: A tem filhos B e C; B tem D e E; C tem F e G. BFS percorre todos os nós de um nível antes do seguinte.</p></div><div class="ia-visualizer" data-title="Busca em largura"><script type="application/json">{"steps": [{"cells": ["A", "B", "C", "D", "E", "F", "G"], "active": [0], "caption": "Ordem visitada: A."}, {"cells": ["A", "B", "C", "D", "E", "F", "G"], "active": [1], "caption": "Ordem visitada: A, B."}, {"cells": ["A", "B", "C", "D", "E", "F", "G"], "active": [2], "caption": "Ordem visitada: A, B, C."}, {"cells": ["A", "B", "C", "D", "E", "F", "G"], "active": [3], "caption": "Ordem visitada: A, B, C, D."}, {"cells": ["A", "B", "C", "D", "E", "F", "G"], "active": [4], "caption": "Ordem visitada: A, B, C, D, E."}, {"cells": ["A", "B", "C", "D", "E", "F", "G"], "active": [5], "caption": "Ordem visitada: A, B, C, D, E, F."}, {"cells": ["A", "B", "C", "D", "E", "F", "G"], "active": [6], "caption": "Ordem visitada: A, B, C, D, E, F, G."}]}</script></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2-3</a>
+    </section><section id="bfs_pseudocodigo" data-title="BFS — fila e estados visitados">
+      <h2>BFS — fila e estados visitados</h2>
+      <div class="slide-content"><div class="info-box"><p>Pseudocódigo ilustrativo para um grafo finito. A fila preserva a ordem por níveis; o conjunto evita revisitar estados.</p></div><pre class="code-box"><code>fronteira ← fila contendo o estado inicial
+visitados ← conjunto contendo o inicial
+enquanto a fronteira não estiver vazia:
+    atual ← remover primeiro da fila
+    se atual é objetivo: retornar caminho
+    para cada sucessor de atual:
+        se sucessor não foi visitado:
+            marcar sucessor e guardar predecessor
+            adicionar sucessor ao fim da fila</code></pre></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2-3</a>
+    </section><section id="busca_em_largura_bfs_atividade" data-title="Prática — Busca em largura (BFS)">
+      <h2>Prática — Busca em largura (BFS)</h2>
+      <div class="slide-content"><div class="warning-box"><p>Dada a árvore raiz A, com filhos B e C, e com B tendo D e E e C tendo F e G, qual é uma ordem BFS?</p></div><details class="answer"><summary>Ver resposta</summary><p>A ordem é A, B, C, D, E, F, G. A raiz vem primeiro; depois todos os nós do nível seguinte; só então os quatro nós do próximo nível.</p></details></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2-3</a>
+    </section><section id="busca_em_profundidade_dfs" data-title="Busca em profundidade (DFS)">
+      <h2>Busca em profundidade (DFS)</h2>
+      <div class="slide-content"><div class="box"><ul><li>DFS (Depth-First Search, busca em profundidade) segue um ramo até o fim antes de retornar.</li><li>Ao alcançar um fim, retorna à bifurcação mais próxima ainda não explorada.</li><li>O PDF descreve três ordens recursivas: pré-ordem VED, pós-ordem EDV e em-ordem EVD.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Para cada nó, E representa atravessar o ramo esquerdo, D o ramo direito e V visitar o nó atual. A ordem depende de quando V é executado em relação aos dois ramos.</p></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3-4</a>
+    </section><section id="busca_em_profundidade_dfs_atividade" data-title="Prática — Busca em profundidade (DFS)">
+      <h2>Prática — Busca em profundidade (DFS)</h2>
+      <div class="slide-content"><div class="warning-box"><p>Considere a árvore A(B(D,E),C(F,G)). Produza as sequências em pré-ordem, em-ordem e pós-ordem.</p></div><details class="answer"><summary>Ver resposta</summary><p>Pré-ordem VED: A, B, D, E, C, F, G. Em-ordem EVD: D, B, E, A, F, C, G. Pós-ordem EDV: D, E, B, F, G, C, A. A diferença vem da posição da visita ao nó atual.</p></details></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3-4</a>
+    </section><section id="busca_custo_uniforme" data-title="Busca de custo uniforme">
+      <h2>Busca de custo uniforme</h2>
+      <div class="slide-content"><div class="box"><ul><li>Quando ações têm custos diferentes, a expansão deve considerar o custo acumulado do caminho.</li><li>A busca de custo uniforme é associada ao algoritmo de Dijkstra e pode ser vista como busca de melhor-caminho usando o custo do caminho como avaliação.</li><li>Ela expande em ondas de custo crescente, não em ondas de profundidade uniforme.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>No exemplo do PDF, A→B custa 80 e A→C custa 99. Ao expandir B, surge D com custo 80+97=177; ao expandir C, surge E com 99+211=310.</p></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4-5</a>
+    </section><section id="busca_custo_uniforme_atividade" data-title="Prática — Busca de custo uniforme">
+      <h2>Prática — Busca de custo uniforme</h2>
+      <div class="slide-content"><div class="warning-box"><p>No grafo do exemplo, compare os caminhos A→C→E, de custo 310, e A→B→D→E, de custo 80+97+101. Qual deve ser retornado?</p></div><details class="answer"><summary>Ver resposta</summary><p>Deve ser retornado A→B→D→E, com custo 278, menor que 310. O PDF ressalta que E não é aceito apenas ao ser gerado: ele é reconhecido quando chega a vez de expandi-lo; nesse intervalo, o caminho mais barato substitui o anterior na fronteira.</p></details></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4-5</a>
+    </section><section id="propriedades_custo_uniforme" data-title="O que a busca de custo uniforme garante?">
+      <h2>O que a busca de custo uniforme garante?</h2>
+      <div class="slide-content"><div class="box"><ul><li>Com ramificação finita e custo por ação limitado inferiormente por ε &gt; 0, a busca de custo uniforme é completa e ótima.</li><li>A primeira solução encontrada tem custo tão baixo quanto o de qualquer outro nó ainda na fronteira.</li><li>A expansão em custo crescente evita ciclos infinitos quando os custos das ações são maiores que um valor mínimo positivo ε.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Mesmo que um caminho direto para o objetivo seja gerado cedo, ele pode não ser escolhido imediatamente: outro caminho ainda na fronteira pode obter custo total menor.</p></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="propriedades_custo_uniforme_atividade" data-title="Prática — O que a busca de custo uniforme garante?">
+      <h2>Prática — O que a busca de custo uniforme garante?</h2>
+      <div class="slide-content"><div class="warning-box"><p>Por que uma busca que escolhesse o primeiro objetivo gerado poderia falhar em encontrar o menor custo?</p></div><details class="answer"><summary>Ver resposta</summary><p>Porque gerar um objetivo não prova que o caminho seja o mais barato. Ainda podem existir na fronteira caminhos parciais com custo que, após expansão, produzem uma solução de custo menor. A busca de custo uniforme espera a ordem de expansão por custo.</p></details></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="busca_informada_heuristica" data-title="Busca informada e heurística">
+      <h2>Busca informada e heurística</h2>
+      <div class="slide-content"><div class="box"><ul><li>A busca informada usa heurísticas para guiar a escolha dos nós, em vez de seguir apenas uma ordem fixa.</li><li>Uma heurística estima quão promissor ou próximo da solução é um nó; isso pode criar atalhos em árvores ou grafos grandes.</li><li>O tempo e a complexidade dependem da estrutura, das regras que geram os nós e da eficiência do algoritmo.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Árvores de damas tendem a ser mais simples que árvores de xadrez no exemplo do PDF, porque as regras do xadrez geram possibilidades mais complexas. O texto também cita Minimax e Maxmin como formas de decisão em jogos.</p></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="busca_informada_heuristica_atividade" data-title="Prática — Busca informada e heurística">
+      <h2>Prática — Busca informada e heurística</h2>
+      <div class="slide-content"><div class="warning-box"><p>Uma heurística indica que um nó parece perto da meta, mas ele leva a um beco sem saída. O que isso mostra?</p></div><details class="answer"><summary>Ver resposta</summary><p>Mostra que a heurística é uma estimativa e pode enganar. Ela pode reduzir o trabalho em muitos casos, mas não transforma automaticamente a escolha em garantia de melhor caminho.</p></details></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="greedy_best_first_mecanica" data-title="Greedy Best-First Search">
+      <h2>Greedy Best-First Search</h2>
+      <div class="slide-content"><div class="box"><ul><li>A busca gulosa escolhe o nó que parece mais próximo do objetivo.</li><li>Usa h(n), uma estimativa de distância até a solução; quanto menor h(n), mais promissor o nó.</li><li>Mantém uma fronteira, seleciona o menor h(n), expande seus vizinhos e repete até encontrar a solução ou esvaziar a fronteira.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Se a fronteira contém nós com h(A)=8, h(B)=3 e h(C)=5, a busca gulosa expande B primeiro, pois considera apenas a estimativa de proximidade.</p></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5-6</a>
+    </section><section id="greedy_best_first_mecanica_atividade" data-title="Prática — Greedy Best-First Search">
+      <h2>Prática — Greedy Best-First Search</h2>
+      <div class="slide-content"><div class="warning-box"><p>Na fronteira com B, h(B)=3, e C, h(C)=5, qual nó a busca gulosa seleciona? O que ela ignora nessa escolha?</p></div><details class="answer"><summary>Ver resposta</summary><p>Seleciona B. Ela ignora o custo já percorrido desde a origem; considera somente a estimativa h(n) de distância restante.</p></details></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5-6</a>
+    </section><section id="limites_busca_gulosa" data-title="Velocidade não é optimalidade">
+      <h2>Velocidade não é optimalidade</h2>
+      <div class="slide-content"><div class="box"><ul><li>A busca gulosa pode ser eficiente quando a estimativa aponta para uma direção útil.</li><li>Ela não garante a solução ótima, pois não considera o custo total do caminho.</li><li>Uma heurística imprecisa pode conduzir a caminhos aparentemente promissores que terminam em becos sem saída.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Na analogia da floresta, caminhar sempre na direção visualmente mais próxima da torre pode ignorar uma trilha mais longa no início, mas muito mais eficiente no conjunto.</p></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="limites_busca_gulosa_atividade" data-title="Prática — Velocidade não é optimalidade">
+      <h2>Prática — Velocidade não é optimalidade</h2>
+      <div class="slide-content"><div class="warning-box"><p>Proponha uma situação em que o caminho visualmente mais próximo não seja o caminho de menor custo.</p></div><details class="answer"><summary>Ver resposta</summary><p>Uma rota pode apontar diretamente para a torre, mas encontrar um rio ou uma parede; uma trilha que primeiro se afasta da torre pode contornar o obstáculo e chegar com menor custo total. Isso ilustra a limitação de usar apenas h(n).</p></details></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="a_star_funcao_avaliacao" data-title="A* combina custo e estimativa">
+      <h2>A* combina custo e estimativa</h2>
+      <div class="slide-content"><div class="box"><ul><li>Para cada nó, g(n) é o custo do caminho percorrido desde o início.</li><li>h(n) estima o custo restante do nó até o objetivo.</li><li>A função f(n)=g(n)+h(n) equilibra o que já foi gasto e o que ainda parece faltar; o menor f(n) é escolhido.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Um nó com g=4 e h=6 tem f=10. Outro com g=8 e h=1 tem f=9 e pode ser escolhido primeiro, embora esteja mais distante em custo já percorrido, porque sua estimativa total é menor.</p></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="astar_passos" data-title="A* — qual candidato vem primeiro?">
+      <h2>A* — qual candidato vem primeiro?</h2>
+      <div class="slide-content"><div class="ia-visualizer" data-title="Custo acumulado + estimativa"><script type="application/json">{"steps": [{"cells": ["X: g = 7", "X: h = 4", "X: f = 11", "Y: f = 12"], "active": [0], "caption": "Considere o custo já percorrido até X: g(X) = 7."}, {"cells": ["X: g = 7", "X: h = 4", "X: f = 11", "Y: f = 12"], "active": [1], "caption": "A estimativa de custo restante de X é h(X) = 4."}, {"cells": ["X: g = 7", "X: h = 4", "X: f = 11", "Y: f = 12"], "active": [2], "caption": "Combine os termos: f(X) = 7 + 4 = 11."}, {"cells": ["X: f = 11", "Y: g = 3", "Y: h = 9", "Y: f = 12"], "active": [0], "caption": "Y tem f(Y) = 3 + 9 = 12. Entre esses candidatos, X tem prioridade."}]}</script></div><p class="figure-label">Valores do exercício didático da aula; não representam uma medição experimental.</p></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="a_star_funcao_avaliacao_atividade" data-title="Prática — A* combina custo e estimativa">
+      <h2>Prática — A* combina custo e estimativa</h2>
+      <div class="slide-content"><div class="warning-box"><p>Calcule f para dois nós: X com g(X)=7 e h(X)=4; Y com g(Y)=3 e h(Y)=9. Qual tem prioridade pelo critério descrito?</p></div><details class="answer"><summary>Ver resposta</summary><p>f(X)=11 e f(Y)=12. Portanto, X tem prioridade, pois o A* escolhe o menor valor de f(n), combinando custo acumulado e estimativa restante.</p></details></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="a_star_etapas" data-title="Etapas operacionais do A*">
+      <h2>Etapas operacionais do A*</h2>
+      <div class="slide-content"><div class="box"><ul><li>O nó inicial entra na lista aberta (open list).</li><li>A cada passo, remove-se o nó de menor f(n), avaliam-se seus vizinhos e eles são adicionados à lista.</li><li>Os valores de g(n) e f(n) são recalculados; um vizinho já aberto é atualizado se surgir um valor melhor.</li><li>O processo termina quando o objetivo é encontrado ou quando a lista aberta fica vazia.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em um labirinto, o A* prioriza caminhos que parecem bons pela combinação entre distância percorrida e distância estimada até a saída, evitando expandir rotas longas ou sem saída quando a avaliação as desfavorece.</p></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6-7</a>
+    </section><section id="a_star_etapas_atividade" data-title="Prática — Etapas operacionais do A*">
+      <h2>Prática — Etapas operacionais do A*</h2>
+      <div class="slide-content"><div class="warning-box"><p>Ordene o ciclo do A*: atualizar vizinhos; colocar início na lista aberta; remover menor f; testar objetivo. Qual é a ordem?</p></div><details class="answer"><summary>Ver resposta</summary><p>A ordem é: colocar o início na lista aberta; remover o nó de menor f; testar se é o objetivo e, se não for, atualizar e adicionar os vizinhos; repetir. Se a lista esvaziar, não há solução no espaço explorado.</p></details></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6-7</a>
+    </section><section id="a_star_completude_otimalidade" data-title="Vantagens e condição do A*">
+      <h2>Vantagens e condição do A*</h2>
+      <div class="slide-content"><div class="box"><ul><li>Com ramificação finita e custos por ação ≥ ε &gt; 0, A* é completo sob as condições usuais de busca.</li><li>Admissibilidade exige h(n) ≤ custo real restante. Na busca em árvore, ela garante uma solução ótima.</li><li>Em grafos, uma heurística consistente permite fechar nós sem reabri-los; uma admissível inconsistente exige tratar reaberturas.</li><li>Uma heurística informativa reduz expansões; sua qualidade não elimina as condições de correção do algoritmo.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Se h(n) superestima o custo restante, uma rota realmente barata pode parecer pior do que outra e ser adiada. Uma heurística admissível mantém a condição de optimalidade indicada no documento.</p></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7</a>
+    </section><section id="a_star_completude_otimalidade_atividade" data-title="Prática — Vantagens e condição do A*">
+      <h2>Prática — Vantagens e condição do A*</h2>
+      <div class="slide-content"><div class="warning-box"><p>Avalie duas heurísticas para um mesmo nó cujo custo real restante é 10: h1=7 e h2=12. Qual satisfaz a admissibilidade descrita?</p></div><details class="answer"><summary>Ver resposta</summary><p>h1=7 é admissível porque não supera o custo real de 10. h2=12 não é admissível, pois superestima o custo e pode comprometer a garantia de optimalidade do A*.</p></details></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7</a>
+    </section><section id="resumo" data-title="Resumo — critérios para escolher a busca">
+      <h2>Resumo — critérios para escolher a busca</h2>
+      <div class="slide-content"><div class="box"><ul><li>Largura explora por profundidade; profundidade segue ramos; custo uniforme ordena pelo custo acumulado.</li><li>Busca gulosa prioriza h(n) e não garante o menor custo.</li><li>A* usa f(n) = g(n) + h(n); suas garantias dependem da heurística e da implementação.</li><li>Defina estado, ações, objetivo e custos antes de escolher o algoritmo.</li></ul></div></div>
+      <a class="source-note" href="../notas/01-Estrategias%20de%20Busca%20Sem%20Informacao%20e%20de%20Busca%20Informada%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–7</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 02</h1><p class="subtitle">Heurísticas e Metaheurísticas</p><p><a href="../bloco1/aula02.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/ia-visualizer.js"></script>
+  <script src="../assets/ia-slides.js"></script>
+</body>
+</html>

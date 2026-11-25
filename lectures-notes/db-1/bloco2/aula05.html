@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Operadores formais para consultar e combinar relações.">
+  <title>Aula 05 — Álgebra Relacional — Banco de Dados</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/db.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco2/aula04.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/05-Algebra_Relacional_Pt-Br_.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 05 — Álgebra Relacional">
+      <h1>Aula 05</h1>
+      <p class="subtitle">Álgebra Relacional</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Banco de Dados</p></div>
+    </section><section id="objetivos" data-title="Objetivos da aula">
+      <h2>Objetivos da aula</h2>
+      <div class="slide-content"><div class='box'><h3>Ao final, você será capaz de</h3><ul><li>Explicar como operadores recebem relações e devolvem relações.</li><li>Usar seleção (σ) para filtrar tuplas e projeção (π) para escolher atributos.</li><li>Combinar relações com operações de conjunto, produto e junções.</li><li>Reconhecer a divisão como consulta do tipo ‘para todos’.</li></ul><p>As expressões podem ser compostas em etapas, formando uma consulta.</p></div></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="esquema" data-title="Esquema e atributos">
+      <h2>Esquema e atributos</h2>
+      <div class="slide-content"><div class='two-column'><div class='info-box'><h3>Relações do exemplo</h3><p><strong>Marinheiros</strong>(id-marin, nome-marin, avaliação, idade)</p><p><strong>Barcos</strong>(id-barco, nome-barco, cor)</p><p><strong>Reservas</strong>(id-marin, id-barco, dia)</p></div><div class='box'><h3>Chaves e referências</h3><p>id-marin identifica Marinheiros; id-barco identifica Barcos; em Reservas, os três atributos formam a chave.</p><p>Atributos podem ser referenciados por nome ou posição. Domínios indicam os tipos de valores.</p></div></div></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1</a>
+    </section><section id="fechamento-relacional" data-title="Operadores com saída relacional">
+      <h2>Operadores com saída relacional</h2>
+      <div class="slide-content"><div class='sequence-flow'><div class='diagram-node'><strong>Relação</strong><br>entrada</div><div class='diagram-arrow'>→</div><div class='diagram-node'><strong>Operador</strong><br>unário ou binário</div><div class='diagram-arrow'>→</div><div class='diagram-node'><strong>Relação</strong><br>resultado</div></div><p>Uma expressão pode ser uma relação, um operador unário aplicado a uma expressão ou um operador binário aplicado a duas expressões. Como o resultado também é relação, operadores podem ser encadeados.</p><p class='highlight'>A álgebra é procedural: a expressão descreve uma receita ou plano para avaliar a consulta.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="selecao" data-title="Seleção: filtrar tuplas">
+      <h2>Seleção: filtrar tuplas</h2>
+      <div class="slide-content"><div class='two-column'><div class='info-box'><h3>Operador σ</h3><p>Conserva as linhas que satisfazem uma condição booleana. Predicados podem comparar atributo e constante, ou dois atributos.</p><p>Condições podem combinar comparações com ∧ (E) e ∨ (OU).</p></div><div class='box'><h3>Forma e efeito</h3><p><strong>σ<sub>condição</sub>(R)</strong></p><p>O esquema de saída é o mesmo da relação de entrada: a seleção filtra tuplas, não colunas.</p><p>Exemplos de comparação: &lt;, ≤, =, ≠, ≥, &gt;.</p></div></div></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="exemplo-selecao" data-title="Seleção em Marinheiros">
+      <h2>Seleção em Marinheiros</h2>
+      <div class="slide-content"><p><strong>Exemplo didático</strong> — M2 contém Yuppy (avaliação 9), Lubber (8), Guppy (5) e Rusty (10).</p><p>A expressão <strong>σ<sub>avaliação&gt;8</sub>(M2)</strong> mantém apenas tuplas com avaliação maior que 8.</p><table><thead><tr><th scope='col'>id-marin</th><th scope='col'>nome-marin</th><th scope='col'>avaliação</th><th scope='col'>idade</th></tr></thead><tbody><tr><td>28</td><td>Yuppy</td><td>9</td><td>35,0</td></tr><tr><td>58</td><td>Rusty</td><td>10</td><td>35,0</td></tr></tbody></table></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="projecao" data-title="Projeção: escolher atributos">
+      <h2>Projeção: escolher atributos</h2>
+      <div class="slide-content"><div class='two-column'><div class='info-box'><h3>Operador π</h3><p>Extrai as colunas indicadas; os demais atributos são descartados.</p><p><strong>π<sub>nome-marin, avaliação</sub>(M2)</strong></p></div><div class='box'><h3>Resultado sobre M2</h3><table><thead><tr><th scope='col'>nome-marin</th><th scope='col'>avaliação</th></tr></thead><tbody><tr><td>Yuppy</td><td>9</td></tr><tr><td>Lubber</td><td>8</td></tr><tr><td>Guppy</td><td>5</td></tr><tr><td>Rusty</td><td>10</td></tr></tbody></table></div></div></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="duplicatas" data-title="Relações como conjuntos">
+      <h2>Relações como conjuntos</h2>
+      <div class="slide-content"><p>Na álgebra relacional clássica, relações são conjuntos de tuplas. Por isso, projeção elimina linhas duplicadas.</p><div class='code-box'><p>π<sub>idade</sub>(M2) = {35,0; 55,5}</p></div><p>Embora três marinheiros de M2 tenham idade 35,0, essa idade aparece uma única vez no resultado projetado.</p><p class='compact'>A nota observa que sistemas reais podem trabalhar com multiconjuntos e omitir a eliminação custosa; aqui adotamos a semântica de conjunto.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="composicao" data-title="Compor operações">
+      <h2>Compor operações</h2>
+      <div class="slide-content"><p>Como toda expressão resulta em relação, o resultado de uma operação pode alimentar a próxima.</p><div class='sequence-flow'><div class='diagram-node'>M2</div><div class='diagram-arrow'>→</div><div class='diagram-node'>σ<sub>avaliação&gt;8</sub></div><div class='diagram-arrow'>→</div><div class='diagram-node'>π<sub>nome-marin, avaliação</sub></div></div><p><strong>Exemplo didático:</strong> π<sub>nome-marin, avaliação</sub>(σ<sub>avaliação&gt;8</sub>(M2)) devolve Yuppy–9 e Rusty–10.</p><p>A ordem expressa primeiro a seleção e, em seguida, a projeção.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="compatibilidade-conjuntos" data-title="Compatibilidade à união">
+      <h2>Compatibilidade à união</h2>
+      <div class="slide-content"><div class='info-box'><h3>Pré-requisito das operações de conjunto</h3><p>União (∪), intersecção (∩) e diferença (−) exigem relações compatíveis à união:</p><ul><li>Mesmo número de atributos.</li><li>Atributos correspondentes, na mesma ordem, com o mesmo domínio.</li></ul></div><p>Os nomes não precisam coincidir. O esquema do resultado é definido pelo esquema da relação à esquerda.</p><p class='warning-box'>Marinheiros e Reservas não são compatíveis: têm número e domínios de atributos diferentes.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4–5</a>
+    </section><section id="operacoes-conjunto" data-title="União, intersecção e diferença">
+      <h2>União, intersecção e diferença</h2>
+      <div class="slide-content"><p>M1 e M2 são instâncias compatíveis de Marinheiros. A união reúne tuplas; a intersecção retém as comuns; a diferença mantém as da primeira que não aparecem na segunda.</p><table><thead><tr><th scope='col'>Expressão</th><th scope='col'>Resultado ilustrativo</th></tr></thead><tbody><tr><td>M1 ∪ M2</td><td>5 tuplas distintas; cada tupla compartilhada aparece uma vez</td></tr><tr><td>M1 ∩ M2</td><td>Lubber (31) e Rusty (58)</td></tr><tr><td>M1 − M2</td><td>Dustin (22)</td></tr></tbody></table><p class='compact'>A diferença é direcional: em geral, R − S não é igual a S − R.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="produto-cartesiano" data-title="Produto cartesiano">
+      <h2>Produto cartesiano</h2>
+      <div class="slide-content"><div class='two-column'><div class='box'><h3>R × S</h3><p>Forma uma tupla para cada par de tuplas, uma de R e outra de S, concatenando seus atributos.</p><p>Esquema: atributos de R seguidos pelos de S.</p></div><div class='info-box'><h3>Exemplo da nota</h3><p>M1 tem 3 tuplas e R1 tem 2; M1 × R1 forma 6 pares.</p><p>Ambas contêm id-marin. Os atributos homônimos no produto deixam de ter nome distinto e precisam ser identificados por posição ou renomeados.</p></div></div></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4–5</a>
+    </section><section id="renomear" data-title="Renomear atributos">
+      <h2>Renomear atributos</h2>
+      <div class="slide-content"><p>O operador <strong>ρ</strong> renomeia uma relação ou seus atributos, ajudando a resolver conflitos de nomes em resultados intermediários.</p><div class='code-box'><p>ρ<sub>C(1 → id-marin1, 5 → id-marin2)</sub>(M1 × R1)</p></div><p>No produto, os campos nas posições 1 e 5 representam o identificador do marinheiro vindo de cada lado. Nomes distintos permitem referi-los sem ambiguidade.</p><p class='compact'>A nota caracteriza renomear como conveniência sintática; os operadores adicionais são definidos em termos dos básicos.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="juncoes-visao-geral" data-title="Junção: combinar relações">
+      <h2>Junção: combinar relações</h2>
+      <div class="slide-content"><div class='diagram-flow'><div class='diagram-node'>Marinheiros</div><div class='diagram-arrow'>⋈ condição</div><div class='diagram-node'>Reservas</div><div class='diagram-arrow'>→</div><div class='diagram-node'>Dados relacionados</div></div><p>Junção combina atributos de duas relações com base em uma condição; é uma forma frequente de reunir informações relacionadas.</p><p class='highlight'>As modalidades apresentadas são junção condicional (theta), equijunção e junção natural.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6–8</a>
+    </section><section id="juncao-theta" data-title="Junção condicional (theta)">
+      <h2>Junção condicional (theta)</h2>
+      <div class="slide-content"><div class='info-box'><h3>Definição</h3><p>A junção theta (⋈) equivale a produto cartesiano seguido de seleção:</p><p><strong>R ⋈<sub>c</sub> S = σ<sub>c</sub>(R × S)</strong></p></div><p>A condição c pode comparar valores de atributos das duas relações, inclusive atributos com nomes diferentes, e pode incluir literais.</p><p>A expressão preserva as combinações que satisfazem o predicado.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="exemplo-theta" data-title="Aplicar uma condição de junção">
+      <h2>Aplicar uma condição de junção</h2>
+      <div class="slide-content"><p><strong>Exemplo didático</strong> — TabelaA.d = TabelaB.f. O produto cartesiano gera pares; a condição retém apenas valores iguais.</p><table><thead><tr><th scope='col'>c</th><th scope='col'>d</th><th scope='col'>e</th><th scope='col'>f</th></tr></thead><tbody><tr><td>ValorA</td><td>50</td><td>ValorD</td><td>50</td></tr><tr><td>ValorC</td><td>70</td><td>ValorF</td><td>70</td></tr></tbody></table><p>ValorB–65 não encontra par; ValorE–80 também não encontra correspondência.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7</a>
+    </section><section id="equijuncao" data-title="Equijunção">
+      <h2>Equijunção</h2>
+      <div class="slide-content"><p>Equijunção é uma junção condicional cuja condição usa igualdade entre atributos relacionados.</p><p><strong>Exemplo didático:</strong> M1 ⋈<sub>M1.id-marin = R1.id-marin</sub> R1 associa cada marinheiro às suas reservas.</p><table><thead><tr><th scope='col'>id-marin</th><th scope='col'>nome</th><th scope='col'>id-barco</th><th scope='col'>dia</th></tr></thead><tbody><tr><td>22</td><td>Dustin</td><td>101</td><td>10/10/96</td></tr><tr><td>58</td><td>Rusty</td><td>103</td><td>11/12/96</td></tr></tbody></table><p class='compact'>A figura da nota apresenta o atributo de ligação uma vez no resultado ilustrado.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7</a>
+    </section><section id="juncao-natural" data-title="Junção natural">
+      <h2>Junção natural</h2>
+      <div class="slide-content"><div class='two-column'><div class='info-box'><h3>Regra</h3><p>A junção natural iguala automaticamente todos os atributos de mesmo nome nas duas relações.</p><p>Os atributos comuns aparecem uma só vez no resultado.</p></div><div class='box'><h3>Exemplo</h3><p>Entre M1 e R1, o único atributo comum é id-marin. Assim, M1 ⋈ R1 corresponde à junção por esse atributo.</p><p>Sem atributos de mesmo nome, a junção natural reduz-se ao produto cartesiano.</p></div></div></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7–8</a>
+    </section><section id="divisao-conceito" data-title="Divisão: consultas ‘para todos’">
+      <h2>Divisão: consultas ‘para todos’</h2>
+      <div class="slide-content"><p>A divisão (÷) expressa consultas em que se procura quem está relacionado a <strong>todos</strong> os elementos de um conjunto-alvo.</p><div class='sequence-flow'><div class='diagram-node'>Pares<br>estudante–tarefa</div><div class='diagram-arrow'>÷</div><div class='diagram-node'>Tarefas exigidas</div><div class='diagram-arrow'>→</div><div class='diagram-node'>Estudantes que fizeram todas</div></div><p>Os atributos do divisor devem corresponder a atributos da relação dividida; o resultado retém os atributos restantes que satisfazem o requisito universal.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8</a>
+    </section><section id="divisao-exemplo-tarefas" data-title="Divisão por tarefas">
+      <h2>Divisão por tarefas</h2>
+      <div class="slide-content"><p><strong>Exemplo didático</strong> — ProjectoBD exige Basedados1 e Basedados2. Em Finalizado, Fred e Sara completaram as duas tarefas; Pedro completou apenas Basedados1.</p><table><thead><tr><th scope='col'>Finalizado ÷ ProjectoBD</th></tr></thead><tbody><tr><td>Fred</td></tr><tr><td>Sara</td></tr></tbody></table><p>A divisão seleciona estudantes relacionados a cada tarefa do divisor, não apenas a uma delas.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8</a>
+    </section><section id="divisao-exemplo-cpf" data-title="Outro exemplo de divisão">
+      <h2>Outro exemplo de divisão</h2>
+      <div class="slide-content"><p><strong>Exemplo didático</strong> — Suponha Cliente(nome, cpf) e um divisor com os CPFs 1234 e 9908.</p><table><thead><tr><th scope='col'>nome</th><th scope='col'>cpf</th></tr></thead><tbody><tr><td>Daniel</td><td>1234</td></tr><tr><td>Carlos</td><td>2233</td></tr><tr><td>Diego</td><td>9908</td></tr><tr><td>Robert</td><td>3276</td></tr></tbody></table><p>Cliente ÷ CPFProcurado devolve os nomes ligados a todos os CPFs exigidos: Daniel e Diego.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8–9</a>
+    </section><section id="atividade-operadores" data-title="Atividade: filtrar e projetar">
+      <h2>Atividade: filtrar e projetar</h2>
+      <div class="slide-content"><div class='box'><h3>Desafio</h3><p>Com M2, escreva uma expressão que retorne somente os nomes dos marinheiros com avaliação maior que 8. Quais nomes aparecem?</p><details class='answer'><summary>Ver resposta</summary><p><strong>π<sub>nome-marin</sub>(σ<sub>avaliação&gt;8</sub>(M2))</strong>. Primeiro, a seleção mantém Yuppy (9) e Rusty (10); depois, a projeção descarta os demais atributos. Resultado: Yuppy e Rusty.</p></details></div></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–4</a>
+    </section><section id="atividade-divisao" data-title="Atividade: interpretar a divisão">
+      <h2>Atividade: interpretar a divisão</h2>
+      <div class="slide-content"><div class='box'><h3>Desafio</h3><p>Em Finalizado ÷ ProjectoBD, por que Pedro não aparece no resultado, embora tenha concluído uma tarefa do projeto?</p><details class='answer'><summary>Ver resposta</summary><p>A divisão exige correspondência com <strong>todas</strong> as tarefas de ProjectoBD: Basedados1 e Basedados2. Pedro só concluiu Basedados1; Fred e Sara concluíram ambas, por isso são retornados.</p></details></div></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8</a>
+    </section><section id="resumo" data-title="Resumo dos operadores">
+      <h2>Resumo dos operadores</h2>
+      <div class="slide-content"><div class='comparison-grid'><div class='box'><strong>σ</strong><br>Filtra tuplas</div><div class='box'><strong>π</strong><br>Escolhe atributos; relações são conjuntos</div><div class='box'><strong>∪ ∩ −</strong><br>Operações de conjunto; exigem compatibilidade</div><div class='box'><strong>× ⋈ ρ</strong><br>Combina, relaciona ou renomeia atributos</div><div class='box'><strong>÷</strong><br>Expressa requisitos ‘para todos’</div></div><p class='success-box'>Toda expressão algébrica retorna uma relação e pode ser composta com outras operações para representar uma consulta.</p></div>
+      <a class="source-note" href="../notas/05-Algebra_Relacional_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–8</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 06</h1><p class="subtitle">Linguagem SQL</p><p><a href="../bloco2/aula06.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/db-visualizer.js"></script>
+  <script src="../assets/db-slides.js"></script>
+</body>
+</html>

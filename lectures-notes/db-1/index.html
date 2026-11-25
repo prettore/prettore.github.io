@@ -1,55 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>DB-1: Banco de Dados</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background-color: #f9f9f9;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    li {
-      background: #fff;
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 6px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    a {
-      text-decoration: none;
-      color: #0066cc;
-      font-weight: bold;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Nove aulas de Banco de Dados do Prof. Paulo Rettore: slides HTML, notas em PDF, exemplos e atividades. Universidade Federal de Lavras.">
+  <title>Banco de Dados (DB-1) — Prof. Paulo Rettore</title>
+  <link rel="icon" href="assets/ufla-logo.webp">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/db.css">
 </head>
 <body>
-
-<h1>DB-1: Banco de Dados</h1>
-<ul>
-  <li><a href="01-Conceitos Fundamentais e Arquitetura de SGBDs (Pt-Br).pdf" download>01 - Conceitos Fundamentais e Arquitetura de SGBDs (Pt-Br)</a></li>
-  <li><a href="02-Modelagem de Dados com MER (Pt-Br).pdf" download>02 - Modelagem de Dados com MER (Pt-Br)</a></li>
-  <li><a href="03-Modelo de Dados Relacional (Pt-Br).pdf" download>03 - Modelo de Dados Relacional (Pt-Br)</a></li>
-  <li><a href="04-Normalizacao (Pt-Br).pdf" download>04 - Normalização (Pt-Br)</a></li>
-  <li><a href="05-Algebra Relacional (Pt-Br).pdf" download>05 - Álgebra Relacional (Pt-Br)</a></li>
-  <li><a href="06-Linguagem SQL (Pt-Br).pdf" download>06 - Linguagem SQL (Pt-Br)</a></li>
-  <li><a href="07-Estruturas de Indexacao em Memoria Externa - B-tree e Hash (Pt-Br).pdf" download>07 - Estruturas de Indexação em Memória Externa (Pt-Br)</a></li>
-  <li><a href="08-Indexacao Primaria, Secundaria e com Multiplas Chaves (Pt-Br).pdf" download>08 - Indexação Primária, Secundária e com Múltiplas Chaves (Pt-Br)</a></li>
-  <li><a href="09-Ordenacao Externa (Pt-Br).pdf" download>09 - Ordenação Externa (Pt-Br)</a></li>
-</ul>
-
+  <a href="#conteudo" class="skip-link">Ir para o conteúdo</a>
+  <header><div class="container header-content"><div><div class="site-title">Banco de Dados (DB-1)</div><div class="site-subtitle">Prof. Paulo Rettore</div></div><img src="assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA" class="logo"></div></header>
+  <nav aria-label="Navegação principal"><div class="container"><ul><li><a href="index.html">Início</a></li><li><a href="#bloco1">Bloco 1</a></li><li><a href="#bloco2">Bloco 2</a></li><li><a href="#bloco3">Bloco 3</a></li><li><a href="#como-usar">Como usar</a></li></ul></div></nav>
+  <main class="container" id="conteudo">
+    <h1>Aulas de Banco de Dados</h1>
+    <p class="course-intro">Da modelagem à consulta e ao acesso eficiente aos dados: estude os fundamentos dos SGBDs, o projeto relacional, a linguagem SQL e as estruturas de armazenamento. Cada aula combina explicações, exemplos e atividades baseadas nas notas da disciplina.</p>
+    <p class="course-note">9 aulas · 251 slides HTML · notas originais em PDF</p>
+    <div class="blocks-container"><section class="block-card" id="bloco1"><h2 class="block-title">Bloco 1: Fundamentos e modelagem</h2><p>Aulas 01–03: conceitos, MER e modelo relacional.</p><ul class="lecture-list"><li><a class="schedule-item" href="bloco1/aula01.html"><strong>Aula 01</strong><span class="schedule-content">Conceitos Fundamentais e Arquitetura de SGBDs</span></a>
+            <div class="lesson-actions"><a href="bloco1/aula01.html">Abrir slides →</a><a class="pdf-link" href="notas/01-Conceitos_Fundamentais_e_Arquitetura_de_SGBDs_Pt-Br_.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">36 slides · 13 páginas na nota original</span></li><li><a class="schedule-item" href="bloco1/aula02.html"><strong>Aula 02</strong><span class="schedule-content">Modelagem de Dados com MER</span></a>
+            <div class="lesson-actions"><a href="bloco1/aula02.html">Abrir slides →</a><a class="pdf-link" href="notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">28 slides · 15 páginas na nota original</span></li><li><a class="schedule-item" href="bloco1/aula03.html"><strong>Aula 03</strong><span class="schedule-content">Modelo de Dados Relacional</span></a>
+            <div class="lesson-actions"><a href="bloco1/aula03.html">Abrir slides →</a><a class="pdf-link" href="notas/03-Modelo_de_Dados_Relacional_Pt-Br_.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">33 slides · 19 páginas na nota original</span></li></ul></section><section class="block-card" id="bloco2"><h2 class="block-title">Bloco 2: Projeto e consultas</h2><p>Aulas 04–06: normalização, álgebra relacional e SQL.</p><ul class="lecture-list"><li><a class="schedule-item" href="bloco2/aula04.html"><strong>Aula 04</strong><span class="schedule-content">Normalização</span></a>
+            <div class="lesson-actions"><a href="bloco2/aula04.html">Abrir slides →</a><a class="pdf-link" href="notas/04-Normalizacao_Pt-Br_.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">30 slides · 12 páginas na nota original</span></li><li><a class="schedule-item" href="bloco2/aula05.html"><strong>Aula 05</strong><span class="schedule-content">Álgebra Relacional</span></a>
+            <div class="lesson-actions"><a href="bloco2/aula05.html">Abrir slides →</a><a class="pdf-link" href="notas/05-Algebra_Relacional_Pt-Br_.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">25 slides · 9 páginas na nota original</span></li><li><a class="schedule-item" href="bloco2/aula06.html"><strong>Aula 06</strong><span class="schedule-content">Linguagem SQL</span></a>
+            <div class="lesson-actions"><a href="bloco2/aula06.html">Abrir slides →</a><a class="pdf-link" href="notas/06-Linguagem_SQL_Pt-Br_.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">28 slides · 14 páginas na nota original</span></li></ul></section><section class="block-card" id="bloco3"><h2 class="block-title">Bloco 3: Armazenamento e acesso</h2><p>Aulas 07–09: estruturas de índices e ordenação externa.</p><ul class="lecture-list"><li><a class="schedule-item" href="bloco3/aula07.html"><strong>Aula 07</strong><span class="schedule-content">Estruturas de Indexação em Memória Externa — B-tree e Hash</span></a>
+            <div class="lesson-actions"><a href="bloco3/aula07.html">Abrir slides →</a><a class="pdf-link" href="notas/07-Estruturas_de_Indexacao_em_Memoria_Externa_-_B-tree_e_Hash_Pt-Br_.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">31 slides · 20 páginas na nota original</span></li><li><a class="schedule-item" href="bloco3/aula08.html"><strong>Aula 08</strong><span class="schedule-content">Indexação Primária, Secundária e com Múltiplas Chaves</span></a>
+            <div class="lesson-actions"><a href="bloco3/aula08.html">Abrir slides →</a><a class="pdf-link" href="notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">28 slides · 7 páginas na nota original</span></li><li><a class="schedule-item" href="bloco3/aula09.html"><strong>Aula 09</strong><span class="schedule-content">Ordenação Externa</span></a>
+            <div class="lesson-actions"><a href="bloco3/aula09.html">Abrir slides →</a><a class="pdf-link" href="notas/09-Ordenacao_Externa_Pt-Br_.pdf" target="_blank" rel="noopener noreferrer">Nota em PDF</a></div>
+            <span class="lesson-meta">12 slides · 2 páginas na nota original</span></li></ul></section></div>
+    <p class="course-note">A organização em três blocos é pedagógica e não define calendário de aulas ou avaliações.</p>
+    <section class="course-help" id="como-usar"><h2>Como usar as apresentações</h2><p>Navegue com <kbd>←</kbd> <kbd>→</kbd> ou <kbd>Espaço</kbd>. Em telas de toque, deslize horizontalmente. Use <strong>Sumário</strong> para escolher um tópico e <strong>Visão geral</strong> para visualizar o conjunto.</p><p>Os botões <strong>A− / A+</strong> ajustam o tamanho dos códigos. Clique em <strong>Ver resposta</strong> para conferir as atividades e nos controles das visualizações para acompanhar cada passo. <strong>Índice</strong> retorna a esta página.</p><p>As apresentações são adaptações didáticas das notas de aula. O PDF original está disponível no link ao lado de cada aula no índice. Referências discretas nos slides indicam as páginas dos conceitos; exemplos acrescentados são identificados como didáticos.</p></section>
+  </main>
+  <footer><div class="container"><p>Prof. Paulo Rettore | Universidade Federal de Lavras (UFLA)</p><p>Disciplina: Banco de Dados</p><p>Baseado nas <a href="https://www.rettore.com.br/lectures-notes/db-1/" target="_blank" rel="noopener noreferrer">notas originais de DB-1</a> · Padrão visual do <a href="https://www.rettore.com.br/lectures-notes/ialg/" target="_blank" rel="noopener noreferrer">projeto IAlg</a></p></div></footer>
 </body>
 </html>

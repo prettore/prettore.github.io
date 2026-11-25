@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Como índices organizam caminhos de acesso e aceleram buscas em arquivos de dados.">
+  <title>Aula 08 — Indexação Primária, Secundária e com Múltiplas Chaves — Banco de Dados</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/db.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco3/aula07.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 08 — Indexação Primária, Secundária e com Múltiplas Chaves">
+      <h1>Aula 08</h1>
+      <p class="subtitle">Indexação Primária, Secundária e com Múltiplas Chaves</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Banco de Dados</p></div>
+    </section><section id="objetivos" data-title="O que você vai aprender">
+      <h2>O que você vai aprender</h2>
+      <div class="slide-content"><div class='box'><p>Ao final, você deverá conseguir:</p><ul><li>distinguir organização clusterizada de acesso não clusterizado;</li><li>explicar índices primários densos e esparsos e quando cada um se aplica;</li><li>descrever índices secundários e combinar resultados de múltiplas chaves;</li><li>seguir uma busca multinível e avaliar seus custos e benefícios.</li></ul><p class='highlight'>Ideia central: um índice reduz o espaço de busca, mas também precisa ser armazenado e mantido.</p></div></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–7</a>
+    </section><section id="mapa-indices" data-title="Duas formas de pensar índices">
+      <h2>Duas formas de pensar índices</h2>
+      <div class="slide-content"><div class='diagram-flow'><div class='diagram-node'><strong>Índice</strong><br>caminho de acesso</div><div class='diagram-arrow'>↙︎ <span>ordena os dados</span>　↘︎ <span>aponta para os dados</span></div><div class='two-column'><div class='diagram-node'><strong>Clusterizado</strong><br>ordem física acompanha uma chave</div><div class='diagram-node'><strong>Não clusterizado</strong><br>estrutura separada com referências</div></div></div><p class='info-box'>No modelo clássico da nota, índices primários e secundários descrevem métodos de acesso sobre arquivos; os termos comerciais de um SGBD podem variar.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–3</a>
+    </section><section id="clusterizado-conceito" data-title="Índice clusterizado">
+      <h2>Índice clusterizado</h2>
+      <div class="slide-content"><div class='two-column'><div class='box'><h3>Organização</h3><p>Os registros são armazenados no disco segundo a ordem da chave de agrupamento. Registros com o mesmo valor ficam próximos.</p></div><div class='box'><h3>Entrada do índice</h3><p>No modelo descrito, cada valor distinto aponta para o primeiro bloco que contém aquele valor — a âncora do bloco.</p><p>Por isso, é um índice esparso: não precisa de uma entrada para cada registro.</p></div></div><p class='figure-label'>A ordem física dos dados é parte da estratégia de acesso.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="clusterizado-exemplo" data-title="Agrupar registros por chave">
+      <h2>Agrupar registros por chave</h2>
+      <div class="slide-content"><p><strong>Exemplo didático</strong>: uma empresa consulta clientes com frequência pelo primeiro nome.</p><div class='sequence-flow'><div class='diagram-node'>Índice: Ana → bloco A</div><div class='diagram-arrow'>aponta para a âncora</div><div class='diagram-node'>Bloco A: Ana / Ana / Ana</div><div class='diagram-node'>Bloco seguinte: Beto / Beto</div></div><p>O índice guarda uma entrada por nome distinto; a partir do primeiro registro do grupo, percorrem-se os registros próximos que compartilham o valor. Na organização clusterizada, os grupos seguem a ordem da chave no arquivo.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="clusterizado-trocas" data-title="Benefícios e manutenção do agrupamento">
+      <h2>Benefícios e manutenção do agrupamento</h2>
+      <div class="slide-content"><div class='two-column'><div class='success-box'><h3>Quando ajuda</h3><ul><li>consultas pela chave de agrupamento;</li><li>leituras de vários registros próximos;</li><li>varredura ordenada por essa chave.</li></ul></div><div class='warning-box'><h3>O que custa</h3><ul><li>inserções e exclusões podem deslocar registros e alterar âncoras;</li><li>uma tabela só pode ter uma ordem física principal por vez no modelo clássico.</li></ul></div></div><p>O projeto deve ponderar o padrão de consulta e a frequência de atualização.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="nao-clusterizado" data-title="Índice não clusterizado">
+      <h2>Índice não clusterizado</h2>
+      <div class="slide-content"><div class='box'><p>O índice não clusterizado fica separado do arquivo de dados e mantém referências aos registros. A tabela não é fisicamente reorganizada para seguir cada índice desse tipo.</p><div class='sequence-flow'><div class='diagram-node'>Índice por cidade</div><div class='diagram-arrow'>referências</div><div class='diagram-node'>Registros no arquivo</div></div><ul><li>Podem coexistir diversos índices não clusterizados.</li><li>Índices em atributos diferentes atendem a buscas diferentes.</li><li>O custo é espaço adicional e manutenção quando os dados mudam.</li></ul></div></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="primario-definicao" data-title="Índice primário: a âncora de cada bloco">
+      <h2>Índice primário: a âncora de cada bloco</h2>
+      <div class="slide-content"><p>No modelo clássico da nota, o arquivo de dados está ordenado pela chave de ordenação. O índice primário também é ordenado e contém uma entrada por bloco de dados.</p><table><thead><tr><th>Entrada do índice</th><th>Destino</th></tr></thead><tbody><tr><td>chave do primeiro registro do bloco</td><td>bloco correspondente</td></tr><tr><td>próxima chave âncora</td><td>próximo bloco</td></tr></tbody></table><p class='info-box'>Aqui, “índice primário” é um conceito de organização de arquivo. Não é automaticamente sinônimo da restrição <code>PRIMARY KEY</code> de uma linguagem SQL.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="denso-como-funciona" data-title="Índice denso">
+      <h2>Índice denso</h2>
+      <div class="slide-content"><p>Um índice denso registra cada chave de pesquisa (ou cada registro, conforme a representação) e aponta diretamente para o registro, ou para uma lista de registros quando a chave se repete.</p><p><strong>Exemplo didático</strong>: cada código abaixo tem uma referência própria.</p><table><thead><tr><th>Chave</th><th>Referência</th><th>Chave</th><th>Referência</th></tr></thead><tbody><tr><td>10</td><td>R1</td><td>40</td><td>R4</td></tr><tr><td>20</td><td>R2</td><td>50</td><td>R5</td></tr><tr><td>30</td><td>R3</td><td>60</td><td>R6</td></tr></tbody></table></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="denso-custos" data-title="Denso: rapidez e espaço">
+      <h2>Denso: rapidez e espaço</h2>
+      <div class="slide-content"><div class='two-column'><div class='success-box'><h3>Vantagem</h3><p>Como há referências detalhadas para as chaves de pesquisa, a localização pode ir diretamente ao registro ou à lista associada.</p></div><div class='warning-box'><h3>Limite</h3><p>Mais entradas ocupam mais espaço. Inserções, exclusões e alterações na chave também exigem atualizar o índice.</p></div></div><p>O índice denso favorece a precisão do caminho de busca; sua utilidade deve ser comparada com o custo de armazenar e manter as entradas.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="esparso-como-funciona" data-title="Índice esparso">
+      <h2>Índice esparso</h2>
+      <div class="slide-content"><p>O índice esparso guarda entradas apenas para algumas chaves, em geral as âncoras dos blocos. Para que a busca funcione, o arquivo de dados precisa estar ordenado pela chave.</p><p><strong>Exemplo didático</strong> — arquivo ordenado em blocos:</p><table><thead><tr><th>Âncora no índice</th><th>Bloco de dados</th></tr></thead><tbody><tr><td>10</td><td>B1: 10, 20</td></tr><tr><td>30</td><td>B2: 30, 40</td></tr><tr><td>50</td><td>B3: 50, 60</td></tr><tr><td>70</td><td>B4: 70, 80</td></tr></tbody></table></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="esparso-busca" data-title="Como buscar em um índice esparso">
+      <h2>Como buscar em um índice esparso</h2>
+      <div class="slide-content"><p><strong>Exemplo didático</strong>: para localizar a chave 60 no exemplo anterior, escolha a maior âncora que não ultrapassa 60: 50.</p><div class='sequence-flow'><div class='step-list'><strong>1</strong><br>Encontrar 50 no índice</div><div class='diagram-arrow'>→</div><div class='step-list'><strong>2</strong><br>Acessar B3</div><div class='diagram-arrow'>→</div><div class='step-list'><strong>3</strong><br>Percorrer B3 até 60</div></div><p>Menos entradas reduzem espaço; a busca pode exigir examinar registros dentro do bloco após chegar à âncora.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="esparso-tradeoffs" data-title="Esparso: compacto, mas dependente da ordem">
+      <h2>Esparso: compacto, mas dependente da ordem</h2>
+      <div class="slide-content"><div class='comparison-grid'><div class='success-box'><h3>Vantagens</h3><ul><li>menos espaço para o índice;</li><li>menos entradas a manter em atualizações;</li><li>bom ajuste a arquivos ordenados.</li></ul></div><div class='warning-box'><h3>Cuidados</h3><ul><li>precisa da ordenação compatível dos dados;</li><li>pode exigir varredura dentro do bloco;</li><li>a busca pode ser menos direta que no índice denso.</li></ul></div></div><p>Inserções que mudem a organização física podem exigir manutenção das âncoras.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="denso-esparso-comparacao" data-title="Denso ou esparso?">
+      <h2>Denso ou esparso?</h2>
+      <div class="slide-content"><table><thead><tr><th>Critério</th><th>Denso</th><th>Esparso</th></tr></thead><tbody><tr><th>Entradas</th><td>para cada chave/registro de busca</td><td>para algumas chaves, tipicamente âncoras</td></tr><tr><th>Espaço</th><td>maior</td><td>menor</td></tr><tr><th>Localização</th><td>mais direta</td><td>pode percorrer o bloco</td></tr><tr><th>Pré-condição clássica</th><td>não exige âncora por bloco</td><td>arquivo ordenado pela chave</td></tr></tbody></table><p class='highlight'>Escolher depende do espaço disponível, da organização do arquivo e do padrão de busca.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="primario-secundario" data-title="Primário e secundário">
+      <h2>Primário e secundário</h2>
+      <div class="slide-content"><table><thead><tr><th></th><th>Primário (modelo clássico)</th><th>Secundário</th></tr></thead><tbody><tr><th>Relação com arquivo</th><td>chave acompanha a ordenação do arquivo</td><td>oferece outro caminho de acesso</td></tr><tr><th>Entradas</th><td>uma âncora por bloco</td><td>geralmente denso</td></tr><tr><th>Chave</th><td>ordenação do arquivo</td><td>pode ser única ou ter duplicatas</td></tr><tr><th>Quantidade</th><td>vinculado à organização principal</td><td>podem existir vários por arquivo</td></tr></tbody></table><p>O tipo de índice descreve a estrutura de acesso, não uma garantia de sintaxe SQL específica.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="secundario-conceito" data-title="Índice secundário">
+      <h2>Índice secundário</h2>
+      <div class="slide-content"><p>É um caminho adicional para acessar o arquivo quando já existe uma organização ou índice primário. O arquivo pode receber vários índices secundários sobre atributos diferentes.</p><div class='two-column'><div class='diagram-node'><strong>Chave única</strong><br>um valor → um registro</div><div class='diagram-node'><strong>Chave repetida</strong><br>um valor → vários registros</div></div><p>Como os registros não precisam estar fisicamente ordenados por cada atributo secundário, a estrutura costuma ser densa e aponta aos registros correspondentes.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="secundario-exemplo" data-title="Acesso alternativo por atributo">
+      <h2>Acesso alternativo por atributo</h2>
+      <div class="slide-content"><p><strong>Exemplo didático</strong>: a tabela de clientes está organizada pelo código, mas uma busca frequente pede todos os clientes chamados Ana.</p><div class='sequence-flow'><div class='diagram-node'>Índice secundário Nome</div><div class='diagram-arrow'>Ana →</div><div class='diagram-node'>R1, R3</div><div class='diagram-arrow'>endereços</div><div class='diagram-node'>Registros no arquivo</div></div><p>O índice por nome lista as referências dos registros correspondentes; a ordem física principal continua vinculada ao código.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="multiplas-chaves" data-title="Busca com múltiplas chaves">
+      <h2>Busca com múltiplas chaves</h2>
+      <div class="slide-content"><p>Uma consulta pode usar uma ou mais chaves e combinar conjuntos de registros obtidos em diferentes índices secundários. As combinações mais comuns na nota são:</p><div class='two-column'><div class='diagram-node'><strong>AND (E)</strong><br>interseção: satisfaz todos os critérios</div><div class='diagram-node'><strong>OR (OU)</strong><br>união: satisfaz ao menos um critério</div></div><p>Fazer a combinação nos arquivos de índice pode reduzir buscas no arquivo de dados e operações de leitura/escrita (I/O, do inglês input/output).</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="multiplas-and" data-title="Combinar índices com AND">
+      <h2>Combinar índices com AND</h2>
+      <div class="slide-content"><p><strong>Exemplo didático</strong>: catálogo com índices por gênero e ano.</p><table><thead><tr><th>Condição</th><th>Referências encontradas</th></tr></thead><tbody><tr><td>Gênero = Jazz</td><td>R1, R2, R5</td></tr><tr><td>Ano = 2020</td><td>R2, R5, R8</td></tr><tr><td>Jazz AND 2020</td><td><strong>R2, R5</strong></td></tr></tbody></table><p>A interseção conserva somente as referências presentes nos dois resultados; depois, o SGBD busca os registros correspondentes.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="multiplas-or" data-title="Combinar índices com OR">
+      <h2>Combinar índices com OR</h2>
+      <div class="slide-content"><p><strong>Exemplo didático</strong>: uma busca pede clientes de Recife <em>ou</em> clientes ativos.</p><table><thead><tr><th>Condição</th><th>Referências</th></tr></thead><tbody><tr><td>Cidade = Recife</td><td>R2, R4</td></tr><tr><td>Status = Ativo</td><td>R1, R2, R3</td></tr><tr><td>Recife OR Ativo</td><td><strong>R1, R2, R3, R4</strong></td></tr></tbody></table><p>A união inclui cada registro que aparece em qualquer lista; referências repetidas, como R2, entram uma vez no conjunto.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="multiplas-fluxo" data-title="Da condição às linhas encontradas">
+      <h2>Da condição às linhas encontradas</h2>
+      <div class="slide-content"><div class='sequence-flow'><div class='step-list'><strong>1 · Consultar</strong><br>ler cada índice compatível</div><div class='diagram-arrow'>→</div><div class='step-list'><strong>2 · Combinar</strong><br>interseção AND ou união OR</div><div class='diagram-arrow'>→</div><div class='step-list'><strong>3 · Acessar</strong><br>buscar os registros apontados</div></div><p class='info-box'>A combinação reduz candidatos antes de acessar os dados. O benefício depende de quantos registros cada índice seleciona e do custo de buscar suas referências.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="multiniveis-por-que" data-title="Por que criar índices multiníveis?">
+      <h2>Por que criar índices multiníveis?</h2>
+      <div class="slide-content"><p>Quando um arquivo de índice cresce demais, procurar nele também custa acessos. Um índice multinível organiza índices em hierarquia: um nível superior direciona para intervalos de um nível inferior, até chegar ao índice que aponta para os dados.</p><div class='box'><p class='highlight'>Analogia: como o índice de um livro que leva a uma seção e, dentro dela, a uma página específica.</p><p>O objetivo é diminuir o espaço examinado em cada etapa. Há uma contrapartida: mais níveis e estruturas para manter tornam o sistema mais complexo.</p></div></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="multiniveis-fluxo" data-title="Percurso em níveis">
+      <h2>Percurso em níveis</h2>
+      <div class="slide-content"><div class='diagram-flow'><div class='diagram-node'><strong>Nível superior</strong><br>direciona ao intervalo</div><div class='diagram-arrow'>↓</div><div class='diagram-node'><strong>Nível intermediário</strong><br>refina o caminho</div><div class='diagram-arrow'>↓</div><div class='diagram-node'><strong>Nível inferior</strong><br>aponta ao bloco de dados</div><div class='diagram-arrow'>↓</div><div class='diagram-node'><strong>Registro</strong><br>resultado da busca</div></div><p>Na organização apresentada, cada nível usa entradas ordenadas; os níveis adicionais indexam o nível anterior, até que o índice superior caiba em um bloco.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="multiniveis-acessos" data-title="Contar acessos a blocos">
+      <h2>Contar acessos a blocos</h2>
+      <div class="slide-content"><p>No modelo simplificado da nota, o percurso lê um bloco por nível de índice e depois o bloco de dados.</p><div class='code-box compact'><p><strong>Acessos ≈ níveis do índice + 1 bloco de dados</strong></p><p>Exemplo didático: dois níveis de índice + um bloco de dados = <strong>3 acessos a blocos</strong>.</p></div><p>Essa contagem ilustra o caminho; não inclui efeitos como blocos já presentes em memória, leituras adicionais ou detalhes de implementação.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="escolha-projeto" data-title="Escolher exige ponderar consultas e atualizações">
+      <h2>Escolher exige ponderar consultas e atualizações</h2>
+      <div class="slide-content"><div class='two-column'><div class='box'><h3>Pergunte sobre buscas</h3><ul><li>qual atributo aparece nos filtros?</li><li>é preciso localizar um registro ou percorrer grupos?</li><li>as consultas combinam critérios?</li></ul></div><div class='box'><h3>Pergunte sobre dados</h3><ul><li>qual é a ordenação útil?</li><li>quantas inserções e exclusões ocorrem?</li><li>há espaço para índices adicionais?</li></ul></div></div><p class='highlight'>Não existe técnica superior em todos os cenários: escolha conforme dados, consultas e custo de manutenção.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2, 4, 6–7</a>
+    </section><section id="atividade" data-title="Atividade: selecione o caminho de acesso">
+      <h2>Atividade: selecione o caminho de acesso</h2>
+      <div class="slide-content"><p><strong>Exemplo didático</strong>: um arquivo está ordenado por código e possui índice primário esparso. É necessário localizar todos os registros da cidade de Recife. Qual plano combina melhor com os conceitos da aula?</p><ol><li>Ordenar fisicamente o arquivo de novo para cada consulta.</li><li>Criar ou usar um índice secundário por cidade, obter as referências de Recife e acessar os registros.</li><li>Procurar Recife no índice primário de códigos.</li></ol><details class='answer'><summary>Ver resposta</summary><p><strong>Opção 2.</strong> O índice primário esparso é adequado à ordenação por código; não resolve diretamente busca por cidade. Um índice secundário cria esse caminho alternativo e pode apontar para várias referências, pois muitos registros podem compartilhar a cidade.</p></details></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="resumo" data-title="Resumo: caminhos, densidade e hierarquia">
+      <h2>Resumo: caminhos, densidade e hierarquia</h2>
+      <div class="slide-content"><ul><li><strong>Clusterizado:</strong> dados seguem a ordem da chave; âncoras agrupam valores e mudanças podem exigir manutenção física.</li><li><strong>Primário denso ou esparso:</strong> mais referências diretas versus menos entradas e busca dentro do bloco; o esparso pressupõe arquivo ordenado.</li><li><strong>Secundário:</strong> oferece outro caminho, inclusive para atributos repetidos; índices de múltiplas chaves combinam conjuntos com AND/OR.</li><li><strong>Multinível:</strong> organiza índices em hierarquia para reduzir a busca, ao custo de estruturas adicionais.</li></ul><p class='highlight'>Projeto de índice é uma troca entre rapidez, espaço e manutenção.</p></div>
+      <a class="source-note" href="../notas/08-Indexacao_Primaria_Secundaria_e_com_Multiplas_Chaves_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–7</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 09</h1><p class="subtitle">Ordenação Externa</p><p><a href="../bloco3/aula09.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/db-visualizer.js"></script>
+  <script src="../assets/db-slides.js"></script>
+</body>
+</html>

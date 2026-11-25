@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Aprendizado supervisionado, não supervisionado e por reforço; generalização e escolha de técnicas.">
+  <title>Aula 05 — Aprendizados — Inteligência Artificial</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../assets/reveal/fonts.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/ia.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco2/aula04.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/05-Aprendizados (Pt-Br).pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 05 — Aprendizados">
+      <h1>Aula 05</h1>
+      <p class="subtitle">Aprendizados</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Inteligência Artificial</p></div>
+    </section><section id="objetivos" data-title="Objetivos da aula">
+      <h2>Objetivos da aula</h2>
+      <div class="slide-content"><div class="box"><ul><li>Distinguir aprendizado supervisionado, não supervisionado e por reforço.</li><li>Relacionar técnicas à previsão, classificação, agrupamento e interação.</li><li>Explicar generalização, overfitting, validação cruzada e hiperparâmetros.</li><li>Interpretar política, função de valor e aprendizagem por interação.</li></ul></div></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–3</a>
+    </section><section id="mapa_dos_tres_paradigmas" data-title="Três formas de aprender">
+      <h2>Três formas de aprender</h2>
+      <div class="slide-content"><div class="box"><ul><li>Supervisionado: aprende com dados rotulados e respostas conhecidas.</li><li>Não supervisionado: procura padrões em dados sem rótulos.</li><li>Por reforço: aprende ao agir em um ambiente e receber recompensas ou penalidades.</li><li>Cada abordagem reúne técnicas e aplicações próprias.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Prever um valor ou categoria sugere supervisão; agrupar consumidores sugere ausência de supervisão; aprender a jogar envolve interação e recompensa.</p></div></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–3</a>
+    </section><section id="mapa_dos_tres_paradigmas_atividade" data-title="Prática — Três formas de aprender">
+      <h2>Prática — Três formas de aprender</h2>
+      <div class="slide-content"><div class="warning-box"><p>Classifique cada situação: (a) prever o preço de um imóvel a partir de exemplos com preço conhecido; (b) descobrir grupos de consumidores sem categorias prévias; (c) um agente aprender a vencer um jogo recebendo recompensa.</p></div><details class="answer"><summary>Ver resposta</summary><p>(a) Supervisionado, porque há respostas conhecidas para treinar a previsão. (b) Não supervisionado, porque o objetivo é encontrar grupos em dados não rotulados. (c) Por reforço, porque o agente interage com o ambiente e recebe retorno sobre suas ações.</p></details></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–3</a>
+    </section><section id="aprendizado_supervisionado_definicao" data-title="Supervisionado: aprender com exemplos rotulados">
+      <h2>Supervisionado: aprender com exemplos rotulados</h2>
+      <div class="slide-content"><div class="box"><ul><li>O conjunto de treinamento já contém os dados e as respostas corretas.</li><li>O modelo aprende a relação entre entradas e respostas.</li><li>Depois, o objetivo é prever a resposta para novos dados.</li><li>A qualidade depende de generalizar além dos exemplos vistos.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Se exemplos de transações já estão associados a categorias, o modelo pode aprender a prever a categoria de uma nova transação.</p></div></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="aprendizado_supervisionado_definicao_atividade" data-title="Prática — Supervisionado: aprender com exemplos rotulados">
+      <h2>Prática — Supervisionado: aprender com exemplos rotulados</h2>
+      <div class="slide-content"><div class="warning-box"><p>Em uma frase, explique por que um conjunto com entradas, mas sem respostas conhecidas, não atende à definição de aprendizado supervisionado apresentada no PDF.</p></div><details class="answer"><summary>Ver resposta</summary><p>Porque, no supervisionado, o modelo precisa receber dados rotulados, isto é, exemplos em que a resposta correta esteja disponível durante o treinamento. Sem esse rótulo, não há resposta conhecida para orientar a aprendizagem nessa abordagem.</p></details></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="tecnicas_supervisionadas" data-title="Técnicas para prever valores e categorias">
+      <h2>Técnicas para prever valores e categorias</h2>
+      <div class="slide-content"><div class="box"><ul><li>Regressão linear: usada para prever valores contínuos.</li><li>Classificação: usada para prever categorias.</li><li>Classificadores incluem SVM (máquina de vetores de suporte), KNN (k vizinhos mais próximos) e árvores de decisão.</li><li>Redes neurais podem modelar relações complexas.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Prever um valor numérico é um caso de regressão; decidir entre categorias é um caso de classificação. O PDF cita SVM, KNN e árvores de decisão como exemplos de técnicas classificatórias.</p></div></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="tecnicas_supervisionadas_atividade" data-title="Prática — Técnicas para prever valores e categorias">
+      <h2>Prática — Técnicas para prever valores e categorias</h2>
+      <div class="slide-content"><div class="warning-box"><p>Escolha a família mais adequada para cada objetivo: (a) estimar um valor contínuo; (b) atribuir uma categoria; (c) representar uma relação complexa entre variáveis.</p></div><details class="answer"><summary>Ver resposta</summary><p>(a) Regressão linear. (b) Classificação, com técnicas como SVM, KNN ou árvores de decisão. (c) Redes neurais, que o PDF descreve como capazes de modelar relações complexas.</p></details></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="generalizacao_e_avaliacao" data-title="Evitar ajuste excessivo">
+      <h2>Evitar ajuste excessivo</h2>
+      <div class="slide-content"><div class="box"><ul><li>Overfitting ocorre quando o modelo se ajusta demais aos dados de treino.</li><li>Nesse caso, o desempenho pode não se manter em dados novos.</li><li>Validação cruzada divide os dados e testa o modelo em diferentes subconjuntos.</li><li>Tuning de hiperparâmetros ajusta configurações para melhorar o desempenho.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Um modelo que funciona muito bem nos exemplos usados no treinamento, mas falha em novos exemplos, ilustra o problema de overfitting.</p></div></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="generalizacao_e_avaliacao_atividade" data-title="Prática — Evitar ajuste excessivo">
+      <h2>Prática — Evitar ajuste excessivo</h2>
+      <div class="slide-content"><div class="warning-box"><p>Uma equipe observa desempenho alto no treino e baixo em dados novos. Que conceito descreve o problema e que procedimento do PDF pode ajudar a avaliá-lo? Diferencie esse procedimento do tuning de hiperparâmetros.</p></div><details class="answer"><summary>Ver resposta</summary><p>O problema é overfitting. A validação cruzada pode avaliar o comportamento do modelo em diferentes subconjuntos, em vez de olhar apenas para o treino. O tuning de hiperparâmetros tem outra função: ajustar parâmetros de configuração do modelo para tentar melhorar seu desempenho.</p></details></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="aprendizado_nao_supervisionado" data-title="Não supervisionado: encontrar estrutura">
+      <h2>Não supervisionado: encontrar estrutura</h2>
+      <div class="slide-content"><div class="box"><ul><li>O modelo recebe dados não rotulados.</li><li>Em vez de prever respostas fornecidas, procura padrões ou estruturas ocultas.</li><li>A análise parte das semelhanças e relações presentes nos próprios dados.</li><li>O resultado pode apoiar descoberta de grupos ou representação mais compacta.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Dado um conjunto de consumidores sem categorias prontas, o modelo pode procurar grupos de consumidores com características semelhantes.</p></div></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="aprendizado_nao_supervisionado_atividade" data-title="Prática — Não supervisionado: encontrar estrutura">
+      <h2>Prática — Não supervisionado: encontrar estrutura</h2>
+      <div class="slide-content"><div class="warning-box"><p>O que muda entre a pergunta &#x27;qual é a categoria correta deste exemplo?&#x27; e a pergunta &#x27;quais grupos ou estruturas aparecem nestes dados sem rótulos?&#x27;</p></div><details class="answer"><summary>Ver resposta</summary><p>A primeira pergunta pressupõe respostas conhecidas e corresponde ao aprendizado supervisionado. A segunda busca estruturas nos próprios dados, sem respostas previamente fornecidas, e corresponde ao aprendizado não supervisionado.</p></details></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="tecnicas_nao_supervisionadas" data-title="Clustering, PCA e autoencoders">
+      <h2>Clustering, PCA e autoencoders</h2>
+      <div class="slide-content"><div class="box"><ul><li>Clustering agrupa dados similares.</li><li>O PDF cita K-means, DBSCAN e clustering hierárquico.</li><li>PCA (Principal Component Analysis, análise de componentes principais) reduz dimensões retendo direções de maior variância.</li><li>Autoencoders são redes neurais usadas para compressão de dados.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em uma tabela com muitas características, clustering pode formar grupos de itens semelhantes; PCA pode reduzir o número de dimensões; um autoencoder pode apoiar a compressão.</p></div></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="tecnicas_nao_supervisionadas_atividade" data-title="Prática — Clustering, PCA e autoencoders">
+      <h2>Prática — Clustering, PCA e autoencoders</h2>
+      <div class="slide-content"><div class="warning-box"><p>Associe cada objetivo à técnica citada: (a) agrupar itens semelhantes; (b) reduzir a dimensionalidade preservando informação relevante; (c) comprimir dados com uma rede neural.</p></div><details class="answer"><summary>Ver resposta</summary><p>(a) Clustering, incluindo K-means, DBSCAN ou clustering hierárquico. (b) PCA. (c) Autoencoder.</p></details></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="aplicacoes_nao_supervisionadas" data-title="Aplicações: segmentar e comprimir">
+      <h2>Aplicações: segmentar e comprimir</h2>
+      <div class="slide-content"><div class="box"><ul><li>Segmentação de clientes agrupa consumidores com características semelhantes.</li><li>A segmentação pode revelar grupos sem categorias definidas previamente.</li><li>Compressão de dados reduz o tamanho de grandes volumes de informação.</li><li>As duas aplicações exploram estrutura sem depender de rótulos fornecidos no treinamento.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Uma empresa pode analisar características de consumidores para formar segmentos; em outro contexto, pode buscar uma representação menor para um grande volume de dados.</p></div></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="aplicacoes_nao_supervisionadas_atividade" data-title="Prática — Aplicações: segmentar e comprimir">
+      <h2>Prática — Aplicações: segmentar e comprimir</h2>
+      <div class="slide-content"><div class="warning-box"><p>Para uma base de consumidores sem classes pré-definidas, proponha uma aplicação coerente com o PDF e indique o que o agrupamento deve representar.</p></div><details class="answer"><summary>Ver resposta</summary><p>Uma aplicação coerente é a segmentação de clientes. O agrupamento deve reunir consumidores com características semelhantes, sem afirmar antecipadamente quais categorias existirão.</p></details></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2</a>
+    </section><section id="aprendizado_por_reforco" data-title="Aprender por interação e retorno">
+      <h2>Aprender por interação e retorno</h2>
+      <div class="slide-content"><div class="box"><ul><li>O modelo interage com um ambiente e escolhe ações.</li><li>As ações recebem recompensas ou penalidades.</li><li>A aprendizagem busca maximizar a recompensa ao longo do tempo.</li><li>O foco não é um conjunto fixo de respostas rotuladas, mas a interação contínua.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em um jogo, um agente pode experimentar ações e receber retorno conforme seus resultados, ajustando seu comportamento ao longo das interações.</p></div></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="reforco_passos" data-title="Agente e ambiente — o ciclo de interação">
+      <h2>Agente e ambiente — o ciclo de interação</h2>
+      <div class="slide-content"><div class="ia-visualizer" data-title="Aprendizado por reforço"><script type="application/json">{"steps": [{"cells": ["Estado", "Ação", "Ambiente", "Recompensa", "Novo estado"], "active": [0], "caption": "O agente observa o estado disponível."}, {"cells": ["Estado", "Ação", "Ambiente", "Recompensa", "Novo estado"], "active": [1], "caption": "Sua política orienta a escolha de uma ação."}, {"cells": ["Estado", "Ação", "Ambiente", "Recompensa", "Novo estado"], "active": [2, 3], "caption": "A ação afeta o ambiente, que produz um retorno e uma transição."}, {"cells": ["Estado", "Ação", "Ambiente", "Recompensa", "Novo estado"], "active": [4], "caption": "A experiência orienta atualizações para futuras decisões e recompensas acumuladas."}]}</script></div></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="aprendizado_por_reforco_atividade" data-title="Prática — Aprender por interação e retorno">
+      <h2>Prática — Aprender por interação e retorno</h2>
+      <div class="slide-content"><div class="warning-box"><p>Descreva o ciclo mínimo de um agente por reforço usando quatro elementos: estado, ação, retorno do ambiente e próxima decisão.</p></div><details class="answer"><summary>Ver resposta</summary><p>O agente observa um estado, escolhe uma ação, recebe uma recompensa ou penalidade do ambiente e usa essa experiência para orientar decisões futuras. O objetivo de longo prazo é maximizar a recompensa acumulada, conforme a definição da aula.</p></details></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="conceitos_do_reforco" data-title="Política, valor e atualização">
+      <h2>Política, valor e atualização</h2>
+      <div class="slide-content"><div class="box"><ul><li>Política define qual ação o agente deve tomar em cada estado.</li><li>Função de valor avalia quão bom é estar em um estado considerando recompensas futuras.</li><li>Q-learning aprende valores de ações; a convergência para uma política ótima requer hipóteses de exploração e atualização.</li><li>Aprendizagem por diferença temporal atualiza valores a partir de diferenças entre previsões de recompensas consecutivas.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Em um estado de jogo, a política escolhe uma ação; a função de valor estima a qualidade desse estado considerando o futuro; o agente pode explorar para aprender uma política melhor.</p></div></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="conceitos_do_reforco_atividade" data-title="Prática — Política, valor e atualização">
+      <h2>Prática — Política, valor e atualização</h2>
+      <div class="slide-content"><div class="warning-box"><p>Um agente precisa escolher ações e avaliar estados. Qual conceito responde a cada pergunta: (a) &#x27;qual ação devo tomar neste estado?&#x27;; (b) &#x27;quão bom é este estado considerando o futuro?&#x27;; (c) &#x27;qual algoritmo aprende uma política ótima explorando o ambiente?&#x27;.</p></div><details class="answer"><summary>Ver resposta</summary><p>(a) Política. (b) Função de valor. (c) Q-learning. A aprendizagem por diferença temporal, também citada no PDF, trata da atualização com base em diferenças entre previsões consecutivas.</p></details></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="aplicacoes_e_escolha_da_abordagem" data-title="Aplicações e escolha do paradigma">
+      <h2>Aplicações e escolha do paradigma</h2>
+      <div class="slide-content"><div class="box"><ul><li>O aprendizado por reforço é usado em jogos, controle robótico e otimização de processos industriais.</li><li>Supervisionado, não supervisionado e reforço resolvem problemas diferentes.</li><li>A escolha começa por perguntar se existem rótulos e se há interação com um ambiente.</li><li>A conclusão do PDF destaca que as três abordagens ampliam o conjunto de problemas tratáveis em aprendizado de máquina.</li></ul></div><div class="info-box"><p><strong>Exemplo didático</strong></p><p>Previsão com respostas conhecidas aponta para supervisão; segmentação sem categorias prontas aponta para não supervisão; controle de um robô com retorno das ações aponta para reforço.</p></div></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="aplicacoes_e_escolha_da_abordagem_atividade" data-title="Prática — Aplicações e escolha do paradigma">
+      <h2>Prática — Aplicações e escolha do paradigma</h2>
+      <div class="slide-content"><div class="warning-box"><p>Caso final: um sistema deve controlar um robô, escolhendo ações e recebendo retorno do ambiente. Qual paradigma é o mais alinhado ao caso e quais aplicações semelhantes são citadas no PDF?</p></div><details class="answer"><summary>Ver resposta</summary><p>O paradigma mais alinhado é o aprendizado por reforço, porque o sistema interage com um ambiente e recebe recompensas ou penalidades. O PDF cita controle robótico, jogos e otimização de processos industriais como aplicações dessa abordagem.</p></details></div>
+      <a class="source-note" href="../notas/05-Aprendizados%20%28Pt-Br%29.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 06</h1><p class="subtitle">NLP &amp; LLMs</p><p><a href="../bloco3/aula06.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/ia-visualizer.js"></script>
+  <script src="../assets/ia-slides.js"></script>
+</body>
+</html>

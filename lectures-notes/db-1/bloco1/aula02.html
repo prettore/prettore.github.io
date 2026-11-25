@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Entidades, relacionamentos e restrições para projetar modelos conceituais claros.">
+  <title>Aula 02 — Modelagem de Dados com MER — Banco de Dados</title>
+  <link rel="icon" href="../assets/ufla-logo.webp">
+  <link rel="stylesheet" href="../assets/reveal/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/theme/simple.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/db.css">
+</head>
+<body class="slides-page">
+  <div class="logo-container"><img src="../assets/ufla-logo.webp" alt="Universidade Federal de Lavras — UFLA"></div>
+  <nav class="slide-toolbar" aria-label="Navegação da apresentação">
+    <a href="../index.html">Índice</a><a href="../bloco1/aula01.html" title="Abrir aula anterior">Aula anterior</a>
+    <button type="button" data-slide-action="menu" aria-expanded="false" aria-controls="slide-menu">Sumário</button>
+    <button type="button" data-slide-action="overview" title="Ver todos os slides (tecla O)">Visão geral</button>
+    <button type="button" class="fullscreen-button" data-slide-action="fullscreen">Tela cheia</button>
+    <div class="menu-list" id="slide-menu" hidden></div>
+  </nav>
+  <noscript><style>.slides-page{overflow:auto}.reveal .slides,.reveal section{position:static!important;transform:none!important;display:block!important;height:auto!important;overflow:visible!important}</style><div class="no-js">Ative JavaScript para a navegação interativa. Você também pode consultar <a href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf">a nota em PDF</a>.</div></noscript>
+  <div class="reveal"><div class="slides">
+    <section class="title-slide" data-title="Aula 02 — Modelagem de Dados com MER">
+      <h1>Aula 02</h1>
+      <p class="subtitle">Modelagem de Dados com MER</p>
+      <div class="author"><p><strong>Prof. Paulo Rettore</strong></p><p>Universidade Federal de Lavras</p><p>Banco de Dados</p></div>
+    </section><section id="objetivos" data-title="Objetivos de aprendizagem">
+      <h2>Objetivos de aprendizagem</h2>
+      <div class="slide-content"><div class="box"><h3>Ao final desta aula, você poderá</h3><ul><li>Distinguir entidades, atributos e relacionamentos no Modelo Entidade-Relacionamento (MER).</li><li>Interpretar chaves, cardinalidades, participação total/parcial, entidades fracas e hierarquias.</li><li>Escolher entre relacionamentos binários, ternários e agregação conforme os fatos a representar.</li></ul></div><p>O foco é o <strong>projeto conceitual</strong>: explicitar o significado e as regras dos dados antes de decidir como armazená-los.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–14</a>
+    </section><section id="entidades" data-title="Entidade e conjunto de entidades">
+      <h2>Entidade e conjunto de entidades</h2>
+      <div class="slide-content"><p>Uma <strong>entidade</strong> é um objeto distinguível do mundo real; exemplos do material são um funcionário ou um departamento. Um <strong>conjunto de entidades</strong> agrupa objetos da mesma categoria.</p><div class="two-column"><div class="info-box"><h4>Entidade</h4><p>O funcionário identificado pelo CPF 123…</p></div><div class="info-box"><h4>Conjunto</h4><p>Funcionários: todos os funcionários descritos pelo modelo.</p></div></div><p>O limite do conjunto depende do problema: modele apenas os objetos relevantes aos requisitos.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="atributos-e-chaves" data-title="Atributos, domínios e chaves">
+      <h2>Atributos, domínios e chaves</h2>
+      <div class="slide-content"><p><strong>Atributos</strong> descrevem entidades; cada atributo admite valores em um <strong>domínio</strong> (por exemplo, texto ou um intervalo numérico).</p><ul><li>CPF, nome e vaga descrevem Funcionários.</li><li>Uma <strong>chave candidata</strong> identifica univocamente uma entidade.</li><li>Uma das candidatas é escolhida como <strong>chave primária</strong>; no diagrama ER, seus atributos aparecem sublinhados.</li></ul><p class="warning-box">Escolha a chave conforme a regra de identidade do domínio, não apenas porque um campo parece conveniente.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–2</a>
+    </section><section id="notacao-er" data-title="Lendo um diagrama ER">
+      <h2>Lendo um diagrama ER</h2>
+      <div class="slide-content"><div class="diagram-flow"><div class="diagram-node">Funcionários</div><div class="diagram-arrow">—</div><div class="diagram-node">Trabalha_em</div><div class="diagram-arrow">—</div><div class="diagram-node">Departamentos</div></div><div class="compact"><p>Entidades são retângulos; relacionamentos, losangos; atributos, ovais. O atributo-chave é sublinhado. Uma linha conecta cada participante à relação.</p></div><p class="figure-label">Exemplo didático: o diagrama afirma que funcionários podem trabalhar em departamentos; ainda não diz, por si só, quantos vínculos são permitidos.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–3</a>
+    </section><section id="relacionamentos-e-atributos" data-title="Relacionamentos também têm dados">
+      <h2>Relacionamentos também têm dados</h2>
+      <div class="slide-content"><p>Um <strong>relacionamento</strong> associa duas ou mais entidades. Um conjunto de relacionamentos reúne associações do mesmo tipo; conjuntos distintos podem ligar as mesmas entidades.</p><div class="box"><h4>Trabalha_em</h4><p>Associa um Funcionário a um Departamento. O atributo <em>desde</em> registra quando aquele vínculo começou.</p></div><p>O valor de <em>desde</em> pertence ao vínculo, não necessariamente ao funcionário ou ao departamento isoladamente.</p><p class="figure-label">Exemplo didático baseado na nota: a data de início varia conforme o par funcionário–departamento.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=2" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 2–3</a>
+    </section><section id="instancia-de-relacionamentos" data-title="Instância: um retrato dos vínculos">
+      <h2>Instância: um retrato dos vínculos</h2>
+      <div class="slide-content"><p>Uma <strong>instância</strong> de um conjunto de relacionamentos é o conjunto de associações existentes em determinado momento — um retrato dos dados, não a regra do modelo.</p><table><thead><tr><th>CPF</th><th>ID do departamento</th><th>Desde</th></tr></thead><tbody><tr><td>123…</td><td>51</td><td>3/3/93</td></tr><tr><td>231…</td><td>56</td><td>2/2/92</td></tr></tbody></table><p class="compact">As linhas exemplificam vínculos concretos; a definição de Trabalha_em e suas restrições descreve quais instâncias são válidas.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3</a>
+    </section><section id="grau-do-relacionamento" data-title="Binário ou ternário?">
+      <h2>Binário ou ternário?</h2>
+      <div class="slide-content"><p>O <strong>grau</strong> é o número de conjuntos de entidades participantes: binário envolve dois; ternário envolve três.</p><div class="two-column"><div class="info-box"><h4>Binário</h4><p>Funcionário — Trabalha_em — Departamento</p></div><div class="info-box"><h4>Ternário</h4><p>Funcionário + Departamento + Localidade: registra onde aquele funcionário trabalha para aquele departamento.</p></div></div><p class="figure-label">Exemplo didático baseado na nota: se a localidade faz parte do fato, ela participa do mesmo relacionamento.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=3" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 3–4</a>
+    </section><section id="relacionamento-recursivo" data-title="Relacionamento recursivo e papéis">
+      <h2>Relacionamento recursivo e papéis</h2>
+      <div class="slide-content"><p>Um conjunto de relacionamentos pode ligar entidades do <strong>mesmo conjunto</strong>. Em <em>Reporta_a</em>, ambos os participantes são Funcionários, mas ocupam papéis diferentes.</p><div class="diagram-flow"><div class="diagram-node">Funcionário<br><small>subordinado</small></div><div class="diagram-arrow">→</div><div class="diagram-node">Reporta_a</div><div class="diagram-arrow">→</div><div class="diagram-node">Funcionário<br><small>supervisor</small></div></div><p>Os nomes dos papéis eliminam a ambiguidade: indicam quem reporta a quem.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=4" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 4</a>
+    </section><section id="restricoes-de-chave" data-title="Cardinalidade e restrição de chave">
+      <h2>Cardinalidade e restrição de chave</h2>
+      <div class="slide-content"><p>Uma restrição de chave limita quantas associações podem envolver uma entidade em um relacionamento. Na convenção da nota, a seta indica esse limite máximo; ela não afirma participação obrigatória.</p><table><thead><tr><th>Relação</th><th>Leitura</th></tr></thead><tbody><tr><td>Gerência: Funcionário–Departamento</td><td>Um funcionário pode gerenciar vários departamentos; cada departamento tem no máximo um gerente (1:N).</td></tr><tr><td>Trabalha_em</td><td>Vários funcionários podem trabalhar em vários departamentos (N:N).</td></tr><tr><td>Gerência com limite nos dois lados</td><td>Cada lado associa-se a no máximo um do outro (1:1).</td></tr></tbody></table></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=5" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 5</a>
+    </section><section id="chaves-em-ternarios" data-title="Restrições em relações ternárias">
+      <h2>Restrições em relações ternárias</h2>
+      <div class="slide-content"><p>Restrições de chave também podem ser aplicadas a relacionamentos com três participantes. Não reduza automaticamente a regra ternária a várias regras binárias: o limite depende do conjunto de participantes e da semântica declarada.</p><div class="box"><h4>Trabalha_em3</h4><p>Funcionário + Departamento + Localidade. Na instância ilustrada pela nota, a restrição indicada para Funcionários permite a cada funcionário uma única combinação de departamento e localidade.</p></div><p>Departamentos e localidades podem aparecer em associações com vários funcionários; a restrição indicada é assimétrica.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6</a>
+    </section><section id="participacao-total-parcial" data-title="Participação total ou parcial">
+      <h2>Participação total ou parcial</h2>
+      <div class="slide-content"><div class="two-column"><div class="success-box"><h4>Total</h4><p>Toda entidade do conjunto deve participar de ao menos um relacionamento daquele tipo. A nota representa isso com linha grossa.</p></div><div class="info-box"><h4>Parcial</h4><p>Algumas entidades podem não participar. Uma linha simples indica participação parcial.</p></div></div><p>Na nota, todo Departamento deve ter gerente: participação total de Departamentos em Gerência. Nem todo Funcionário gerencia: participação parcial de Funcionários.</p><p><strong>Não confunda:</strong> seta limita o máximo; participação total estabelece o mínimo de uma associação.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=6" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 6–7</a>
+    </section><section id="entidades-fracas" data-title="Entidades fracas e identidade">
+      <h2>Entidades fracas e identidade</h2>
+      <div class="slide-content"><p>Uma <strong>entidade fraca</strong> não tem identidade própria suficiente: sua identificação combina uma chave parcial com a chave da entidade proprietária.</p><ul><li>A proprietária identifica; a entidade fraca depende dela.</li><li>O relacionamento identificador é 1:N: uma proprietária pode identificar várias fracas; cada fraca tem uma proprietária.</li><li>A participação da entidade fraca no identificador é total.</li></ul><p class="compact">A chave parcial pode repetir entre proprietárias diferentes; sozinha, não identifica globalmente.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=7" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 7–8</a>
+    </section><section id="exemplo-fraca" data-title="Exemplo: dependente de uma apólice">
+      <h2>Exemplo: dependente de uma apólice</h2>
+      <div class="slide-content"><p class="figure-label">Exemplo didático baseado na Figura 2.11</p><div class="diagram-flow"><div class="diagram-node">Apólice<br><small>id-apólice</small></div><div class="diagram-arrow">1 → N</div><div class="diagram-node">Dependentes<br><small>nome parcial, idade</small></div></div><p>O nome do dependente pode repetir em apólices distintas. A identidade completa é <strong>(id-apólice, nome do dependente)</strong>; cada dependente depende de uma apólice identificadora.</p><p>Assim, não se exige que o nome parcial seja único no conjunto inteiro.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8</a>
+    </section><section id="hierarquias-de-classe" data-title="Hierarquias É-UM">
+      <h2>Hierarquias É-UM</h2>
+      <div class="slide-content"><p>Uma hierarquia <strong>É-UM (IS-A)</strong> relaciona uma subclasse a uma superclasse. A subclasse herda os atributos e vínculos gerais da superclasse e acrescenta características próprias.</p><div class="sequence-flow"><div class="diagram-node">Funcionários</div><div class="diagram-arrow">↓ É-UM</div><div class="two-column"><div class="diagram-node">Funcionários horistas<br><small>salário-hora</small></div><div class="diagram-node">Funcionários contratados<br><small>id-contrato</small></div></div></div><p>Uma consulta por Funcionários inclui também as entidades das subclasses.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8–9</a>
+    </section><section id="sobreposicao-cobertura" data-title="Sobreposição e cobertura">
+      <h2>Sobreposição e cobertura</h2>
+      <div class="slide-content"><table><thead><tr><th>Restrição</th><th>Pergunta</th><th>Exemplo</th></tr></thead><tbody><tr><td>Sobreposição</td><td>Uma entidade pode pertencer a mais de uma subclasse?</td><td>Um funcionário pode ser contratado e sênior?</td></tr><tr><td>Cobertura</td><td>As subclasses, juntas, abrangem toda a superclasse?</td><td>Todo veículo motorizado é barco ou carro?</td></tr></tbody></table><p>Na convenção descrita na nota, sem declaração presume-se não sobreposição e não cobertura. Registre explicitamente a regra do domínio quando diferente.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=9" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 9</a>
+    </section><section id="motivos-para-subclasses" data-title="Quando criar subclasses">
+      <h2>Quando criar subclasses</h2>
+      <div class="slide-content"><ul><li><strong>Atributo específico:</strong> salário-hora só faz sentido para horistas; contrato pode descrever contratados.</li><li><strong>Elegibilidade em relações:</strong> restringir Gerência a funcionários seniores evita permitir qualquer funcionário como gerente.</li></ul><p>Generalização reúne conjuntos que compartilham propriedades em uma superclasse; especialização separa subconjuntos com características distintivas.</p><p class="figure-label">Exemplo didático baseado na nota: especializar Funcionários em horistas e contratados preserva o que é comum no nível geral.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=8" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 8–9</a>
+    </section><section id="agregacao" data-title="Agregação: relacionar um vínculo">
+      <h2>Agregação: relacionar um vínculo</h2>
+      <div class="slide-content"><p>Às vezes, outro fato se refere a uma <strong>associação inteira</strong>, não a uma entidade participante isolada. Agregação trata um relacionamento e seus participantes como uma unidade para participar de outro relacionamento.</p><div class="box"><p><strong>Dentro da agregação:</strong> Departamento — Financia — Projeto</p><p><strong>Fora:</strong> (financiamento agregado) — Monitora — Funcionário</p></div><p>Exemplo: funcionário monitora o financiamento de um projeto por um departamento. A moldura tracejada da notação destaca o relacionamento agregado.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=9" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 9–10</a>
+    </section><section id="decisoes-de-projeto" data-title="Decisões do projeto conceitual">
+      <h2>Decisões do projeto conceitual</h2>
+      <div class="slide-content"><div class="step-list"><ol><li>O conceito é entidade, atributo ou relacionamento?</li><li>Quais conjuntos participam de cada relacionamento?</li><li>O fato exige vínculo binário ou ternário?</li><li>Outro vínculo precisa referir-se a uma associação inteira (agregação)?</li></ol></div><p>As escolhas devem preservar os fatos e as restrições do domínio, sem acrescentar associações que não foram afirmadas.</p><p class="warning-box">Um diagrama plausível visualmente ainda pode codificar uma regra errada.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=10" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 10</a>
+    </section><section id="periodos-no-relacionamento" data-title="Entidade ou atributo: períodos repetidos">
+      <h2>Entidade ou atributo: períodos repetidos</h2>
+      <div class="slide-content"><p>Um relacionamento entre Funcionário e Departamento identifica o par. Se o mesmo par puder trabalhar junto em mais de um período, vários valores de <em>de</em>/<em>até</em> não cabem como descrições de um único vínculo sem perder a distinção entre ocorrências.</p><div class="two-column"><div class="info-box"><h4>Um período</h4><p>Trabalha_em com datas descritivas pode bastar.</p></div><div class="success-box"><h4>Períodos repetidos</h4><p>Modele Duração como conceito próprio, com <em>de</em> e <em>até</em>, associado ao fato de trabalho.</p></div></div><p class="figure-label">Exemplo didático baseado nas Figuras 2.14–2.15.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=11" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 11</a>
+    </section><section id="atributo-da-entidade-ou-relacao" data-title="Entidade ou relacionamento: orçamento">
+      <h2>Entidade ou relacionamento: orçamento</h2>
+      <div class="slide-content"><p>Atribua cada dado ao conceito que ele descreve. Se <em>orçamento</em> é uma verba independente para cada departamento gerenciado, pode descrever Gerência. Se é um total próprio do gerente, repetir o valor em cada vínculo produz redundância e sugere uma associação errada.</p><div class="comparison-grid"><div class="info-box"><h4>Por departamento</h4><p>Orçamento pertence ao vínculo gerente–departamento.</p></div><div class="info-box"><h4>Por gerente</h4><p>Orçamento pertence à entidade Gerente.</p></div></div><p>A data <em>desde</em> ainda pode variar por departamento mesmo quando o orçamento é do gerente.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=11" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 11–12</a>
+    </section><section id="heuristica-alocacao-de-dados" data-title="Cheque a semântica de cada atributo">
+      <h2>Cheque a semântica de cada atributo</h2>
+      <div class="slide-content"><p>Antes de anexar um atributo, pergunte:</p><ol><li>Seu valor depende de uma entidade?</li><li>Depende do vínculo entre participantes?</li><li>Pode haver mais de um valor para a mesma ocorrência identificada?</li></ol><p>Colocar no vínculo um dado que descreve uma entidade pode repetir informação e gerar inconsistências. Se datas ou ocorrências se repetem, reavalie se há uma entidade ou ocorrência identificável a modelar.</p><p class="compact">O objetivo aqui é evitar redundância conceitual; normalização de tabelas é assunto posterior.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=11" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 11–12</a>
+    </section><section id="binarios-ou-ternarios-apolice" data-title="Binários ou ternário: apólices">
+      <h2>Binários ou ternário: apólices</h2>
+      <div class="slide-content"><p>Na nota, um ternário Funcionário–Apólice–Dependente parece unir proprietário, apólice e beneficiário, mas as regras têm papéis diferentes: cada apólice pertence a um funcionário, enquanto uma apólice pode cobrir vários dependentes.</p><div class="diagram-flow"><div class="diagram-node">Funcionário</div><div class="diagram-arrow">—</div><div class="diagram-node">Proprietário</div><div class="diagram-arrow">—</div><div class="diagram-node">Apólice</div></div><div class="diagram-flow"><div class="diagram-node">Apólice</div><div class="diagram-arrow">—</div><div class="diagram-node">Beneficiário</div><div class="diagram-arrow">—</div><div class="diagram-node">Dependente</div></div><p>Dois binários representam as associações distintas sem restringir acidentalmente uma apólice a um só dependente.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=12" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 12–13</a>
+    </section><section id="ternario-contratos" data-title="Quando o ternário é essencial">
+      <h2>Quando o ternário é essencial</h2>
+      <div class="slide-content"><p>Um contrato diz que um <strong>fornecedor</strong> entrega certo <strong>suprimento</strong> a certo <strong>departamento</strong>; <em>quantidade</em> descreve essa combinação específica.</p><div class="diagram-flow"><div class="diagram-node">Fornecedor</div><div class="diagram-node">Suprimento</div><div class="diagram-node">Departamento</div></div><div class="box"><p><strong>Contratos</strong> liga os três participantes; atributo: quantidade.</p></div><p>Três binários separados podem registrar que cada par é possível, sem afirmar que aquele departamento compra aquele suprimento daquele fornecedor. Também não localizam bem a quantidade do contrato.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=13" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 13–14</a>
+    </section><section id="agregacao-ou-ternario" data-title="Agregação ou ternário?">
+      <h2>Agregação ou ternário?</h2>
+      <div class="slide-content"><p>Se um funcionário apenas associa-se a Projeto e Departamento, um ternário pode bastar. Use agregação quando o fato se refere ao financiamento específico (a associação Projeto–Departamento) ou quando precisa impor restrição sobre cada financiamento.</p><div class="comparison-grid"><div class="info-box"><h4>Ternário</h4><p>Participam Projeto, Departamento e Funcionário; adequado se basta registrar a combinação.</p></div><div class="success-box"><h4>Agregação</h4><p>Monitora refere-se a cada Financia; permite expressar que cada financiamento tem no máximo um monitor.</p></div></div><p>A escolha segue a semântica e as restrições desejadas.</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=14" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 14</a>
+    </section><section id="atividade-modelagem" data-title="Atividade: escolha o grau">
+      <h2>Atividade: escolha o grau</h2>
+      <div class="slide-content"><p class="figure-label">Exemplo didático</p><p>Uma universidade precisa registrar qual fornecedor entrega cada material a cada departamento e a quantidade contratada. Separadamente, registra se um fornecedor pode fornecer um material. Qual modelagem expressa o contrato sem inferir uma entrega inexistente?</p><details class="answer"><summary>Ver resposta</summary><p>Use o relacionamento ternário <strong>Contrato(Fornecedor, Material, Departamento)</strong> com atributo quantidade. A possibilidade de fornecimento pode ser um fato binário separado. Saber que cada par é possível não prova que a combinação tripla ocorreu; o ternário registra o contrato concreto.</p></details></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=13" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 13–14</a>
+    </section><section id="resumo" data-title="Resumo: preserve o significado">
+      <h2>Resumo: preserve o significado</h2>
+      <div class="slide-content"><ul><li>Entidades têm atributos em domínios; chaves identificam instâncias.</li><li>Relacionamentos registram associações e podem ter atributos próprios.</li><li>Setas limitam o máximo; participação total exige ao menos um vínculo.</li><li>Entidade fraca combina chave parcial e chave da proprietária; hierarquias expressam É-UM.</li><li>Ternário guarda fatos sobre uma combinação de três participantes; agregação permite relacionar um vínculo como unidade.</li></ul><p class="highlight">Teste final de projeto: o modelo representa exatamente os fatos e as restrições exigidos — nem menos, nem mais?</p></div>
+      <a class="source-note" href="../notas/02-Modelagem_de_Dados_com_MER_Pt-Br_.pdf#page=1" target="_blank" rel="noopener noreferrer" title="Consultar a nota que fundamenta este slide">Nota-base · p. 1–14</a>
+    </section><section class="title-slide next-slide" data-title="Próxima etapa"><p class="next-label">PRÓXIMA AULA</p><h1>Aula 03</h1><p class="subtitle">Modelo de Dados Relacional</p><p><a href="../bloco1/aula03.html">Abrir próxima aula</a></p></section>
+  </div></div>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script src="../assets/ialg-slide-zoom.js"></script>
+  <script src="../assets/db-visualizer.js"></script>
+  <script src="../assets/db-slides.js"></script>
+</body>
+</html>
